@@ -29,7 +29,7 @@ void expi(float a, CkFftComplex& out)
     out.imag = sinf(a);
 }
 
-void fftimpl(CkFftComplex* input, CkFftComplex* output, int count, int stride)
+void fftimpl(const CkFftComplex* input, CkFftComplex* output, int count, int stride)
 {
     if (count == 1)
     {
@@ -82,8 +82,6 @@ void CkFft(const CkFftComplex* input, CkFftComplex* output, int count)
     assert(isPowerOfTwo(count)); // XXX better error handling?
     fftimpl(input, output, count, 1);
 }
-
-void CkFft(const float* input, float* output, int count);
 
 void CkFftShutdown() {}
 
