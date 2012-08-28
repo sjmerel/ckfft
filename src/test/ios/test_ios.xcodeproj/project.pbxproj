@@ -7,21 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AA07933E15EC725900CA8D95 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA07933D15EC725900CA8D95 /* main.cpp */; };
 		AA07934015EC752600CA8D95 /* helpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA07933F15EC752600CA8D95 /* helpers.mm */; };
+		AA07934415ED417E00CA8D95 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA07934315ED417E00CA8D95 /* main.mm */; };
+		AA07935A15ED430D00CA8D95 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA07935815ED430D00CA8D95 /* test.cpp */; };
+		AA07936F15ED44F300CA8D95 /* input.txt in Resources */ = {isa = PBXBuildFile; fileRef = AA07936E15ED44F300CA8D95 /* input.txt */; };
 		AA75B62E15EC6A40008151B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA75B62D15EC6A40008151B6 /* Foundation.framework */; };
 		AA75B64515EC6AED008151B6 /* libckfft_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA75B64415EC6AED008151B6 /* libckfft_ios.a */; };
-		AA75B64715EC6B36008151B6 /* input.txt in Resources */ = {isa = PBXBuildFile; fileRef = AA75B64615EC6B36008151B6 /* input.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AA07933D15EC725900CA8D95 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		AA07933F15EC752600CA8D95 /* helpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = helpers.mm; path = ios/helpers.mm; sourceTree = "<group>"; };
+		AA07933F15EC752600CA8D95 /* helpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = helpers.mm; sourceTree = "<group>"; };
+		AA07934315ED417E00CA8D95 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
+		AA07935815ED430D00CA8D95 /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = ../test.cpp; sourceTree = "<group>"; };
+		AA07935915ED430D00CA8D95 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = ../test.h; sourceTree = "<group>"; };
+		AA07936E15ED44F300CA8D95 /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = input.txt; path = ../input.txt; sourceTree = "<group>"; };
 		AA75B62715EC6A40008151B6 /* test_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA75B62D15EC6A40008151B6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		AA75B63315EC6A40008151B6 /* test_ios-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; name = "test_ios-Info.plist"; path = "ios/test_ios-Info.plist"; sourceTree = "<group>"; };
+		AA75B63315EC6A40008151B6 /* test_ios-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "test_ios-Info.plist"; sourceTree = "<group>"; };
 		AA75B64415EC6AED008151B6 /* libckfft_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libckfft_ios.a; path = "../../ckfft/build/Release-iphoneos/libckfft_ios.a"; sourceTree = "<group>"; };
-		AA75B64615EC6B36008151B6 /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = input.txt; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,9 +43,11 @@
 		AA75B61C15EC6A40008151B6 = {
 			isa = PBXGroup;
 			children = (
+				AA07935815ED430D00CA8D95 /* test.cpp */,
+				AA07935915ED430D00CA8D95 /* test.h */,
+				AA07934315ED417E00CA8D95 /* main.mm */,
 				AA07933F15EC752600CA8D95 /* helpers.mm */,
-				AA07933D15EC725900CA8D95 /* main.cpp */,
-				AA75B64615EC6B36008151B6 /* input.txt */,
+				AA07936E15ED44F300CA8D95 /* input.txt */,
 				AA75B64415EC6AED008151B6 /* libckfft_ios.a */,
 				AA75B63215EC6A40008151B6 /* Supporting Files */,
 				AA75B62A15EC6A40008151B6 /* Frameworks */,
@@ -125,7 +130,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA75B64715EC6B36008151B6 /* input.txt in Resources */,
+				AA07936F15ED44F300CA8D95 /* input.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -136,8 +141,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA07933E15EC725900CA8D95 /* main.cpp in Sources */,
 				AA07934015EC752600CA8D95 /* helpers.mm in Sources */,
+				AA07934415ED417E00CA8D95 /* main.mm in Sources */,
+				AA07935A15ED430D00CA8D95 /* test.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -195,9 +201,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ios/test_ios-Prefix.pch";
-				HEADER_SEARCH_PATHS = ../../inc;
-				INFOPLIST_FILE = "ios/test_ios-Info.plist";
+				GCC_PREFIX_HEADER = "test_ios-Prefix.pch";
+				HEADER_SEARCH_PATHS = ../../../inc;
+				INFOPLIST_FILE = "test_ios-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -207,9 +213,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ios/test_ios-Prefix.pch";
-				HEADER_SEARCH_PATHS = ../../inc;
-				INFOPLIST_FILE = "ios/test_ios-Info.plist";
+				GCC_PREFIX_HEADER = "test_ios-Prefix.pch";
+				HEADER_SEARCH_PATHS = ../../../inc;
+				INFOPLIST_FILE = "test_ios-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

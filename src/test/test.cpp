@@ -57,7 +57,9 @@ void write(const vector<CkFftComplex>& values, const char* path)
 
 }
 
-int main(int argc, const char * argv[])
+////////////////////////////////////////
+
+void test()
 {
     /*
     // generate input
@@ -137,7 +139,6 @@ int main(int argc, const char * argv[])
     ////////////////////////////////////////
 
     printf("done!\n");
-    return 0;
 }
 
 
