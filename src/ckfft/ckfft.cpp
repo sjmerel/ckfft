@@ -2,6 +2,17 @@
 #include <assert.h>
 #include <math.h>
 
+////////////////////////////////////////
+// OPTIMIZATIONS:
+//  - factor out count/2, etc
+//  - Complex operations as members? As plain functions?
+//  - NEON
+//  - more special cases than count==1
+//  - precalculate expf factors?  
+//  - lookup table for expf factors?
+//  - fixed point?
+//  - optimizations for real inputs?
+
 namespace
 {
 

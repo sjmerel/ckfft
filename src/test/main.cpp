@@ -5,7 +5,15 @@
 #include <math.h>
 
 #include "ckfft/ckfft.h"
+
 //#include "kiss_fft129/kiss_fft.h"
+
+#if __APPLE__
+#  include <TargetConditionals.h>
+#endif
+#if TARGET_OS_IPHONE
+#  include "ios/helpers.h"
+#endif
 
 using namespace std;
 
@@ -76,7 +84,11 @@ int main(int argc, const char * argv[])
     vector<CkFftComplex> output;
 
     // read input
-    read(input, "input.txt");
+    string path("input.txt");
+#if TARGET_OS_IPHONE
+    makeBundlePath(path);
+#endif
+    read(input, path.c_str());
 
     printf("input:\n");
     printf("-------\n");
