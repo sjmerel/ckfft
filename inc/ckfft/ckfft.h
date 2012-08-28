@@ -14,7 +14,6 @@ struct CkFftComplex
 };
 
 void CkFft(const CkFftComplex* input, CkFftComplex* output, int count);
-void CkFft(const float* input, float* output, int count);
 
 void CkFftShutdown();
 
