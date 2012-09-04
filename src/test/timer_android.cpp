@@ -1,8 +1,4 @@
-#include "ck/core/timer.h"
-#include "ck/core/debug.h"
-
-namespace Cki
-{
+#include "timer.h"
 
 
 void Timer::init()
@@ -14,6 +10,4 @@ void Timer::init()
 }
 
 timespec Timer::s_startTime;
-
-}
 

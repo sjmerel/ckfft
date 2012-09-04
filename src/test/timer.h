@@ -54,7 +54,7 @@ private:
     {
 #if CKFFT_PLATFORM_ANDROID
         timespec now;
-        cloCKFFT_gettime(CLOCKFFT_MONOTONIC, &now);
+        clock_gettime(CLOCK_MONOTONIC, &now);
         time_t s = (now.tv_sec - s_startTime.tv_sec);
         time_t ns = (now.tv_nsec - s_startTime.tv_nsec);
         return s * 1000000000LL + ns;
