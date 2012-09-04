@@ -7,9 +7,19 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA020F0415F45E8700C99C37 /* timer_ios.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA020F0115F45E8700C99C37 /* timer_ios.cpp */; };
+		AA020F0515F45E8700C99C37 /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA020F0215F45E8700C99C37 /* timer.cpp */; };
 		AA07936D15ED44A700CA8D95 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA07936B15ED44A700CA8D95 /* test.cpp */; };
+		AA07937215ED51A800CA8D95 /* libckfft_macos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA07937115ED51A800CA8D95 /* libckfft_macos.a */; };
+		AA0B0E3615F125B1008CB491 /* kiss_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = AA0B0E3515F125B1008CB491 /* kiss_fft.c */; };
 		AA75B61615EC6560008151B6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA75B61515EC6560008151B6 /* main.cpp */; };
-		AA75B61915EC65E3008151B6 /* libckfft_macos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA75B61815EC65E3008151B6 /* libckfft_macos.a */; };
+		AABAE7EB15F66E9100D4BE98 /* stats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE7E915F66E9100D4BE98 /* stats.cpp */; };
+		AABAE7F315F67F4600D4BE98 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE7ED15F67F4600D4BE98 /* tinystr.cpp */; };
+		AABAE7F415F67F4600D4BE98 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE7EF15F67F4600D4BE98 /* tinyxml.cpp */; };
+		AABAE7F515F67F4600D4BE98 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE7F115F67F4600D4BE98 /* tinyxmlerror.cpp */; };
+		AABAE7F615F67F4600D4BE98 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE7F215F67F4600D4BE98 /* tinyxmlparser.cpp */; };
+		AABAE7FA15F68CB800D4BE98 /* input.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA07936A15ED44A700CA8D95 /* input.txt */; };
+		AABAE7FC15F68CC500D4BE98 /* results_macos_x86_64.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = AABAE7FB15F68CBE00D4BE98 /* results_macos_x86_64.xml */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -19,18 +29,34 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				AABAE7FC15F68CC500D4BE98 /* results_macos_x86_64.xml in CopyFiles */,
+				AABAE7FA15F68CB800D4BE98 /* input.txt in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AA020F0115F45E8700C99C37 /* timer_ios.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer_ios.cpp; path = ../timer_ios.cpp; sourceTree = "<group>"; };
+		AA020F0215F45E8700C99C37 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer.cpp; path = ../timer.cpp; sourceTree = "<group>"; };
+		AA020F0315F45E8700C99C37 /* timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timer.h; path = ../timer.h; sourceTree = "<group>"; };
 		AA07936A15ED44A700CA8D95 /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = input.txt; path = ../input.txt; sourceTree = "<group>"; };
 		AA07936B15ED44A700CA8D95 /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = ../test.cpp; sourceTree = "<group>"; };
 		AA07936C15ED44A700CA8D95 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = ../test.h; sourceTree = "<group>"; };
+		AA07937115ED51A800CA8D95 /* libckfft_macos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libckfft_macos.a; path = ../../DerivedData/ckfft/Build/Products/Debug/libckfft_macos.a; sourceTree = "<group>"; };
+		AA0B0E3515F125B1008CB491 /* kiss_fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = kiss_fft.c; path = ../../../ext/kiss_fft130/kiss_fft.c; sourceTree = "<group>"; };
 		AA75B5F815EC6492008151B6 /* test_macos */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test_macos; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA75B61515EC6560008151B6 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		AA75B61815EC65E3008151B6 /* libckfft_macos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libckfft_macos.a; path = ../DerivedData/ckfft/Build/Products/Debug/libckfft_macos.a; sourceTree = "<group>"; };
+		AABAE7E915F66E9100D4BE98 /* stats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stats.cpp; path = ../stats.cpp; sourceTree = "<group>"; };
+		AABAE7EA15F66E9100D4BE98 /* stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stats.h; path = ../stats.h; sourceTree = "<group>"; };
+		AABAE7ED15F67F4600D4BE98 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinystr.cpp; path = ../../../ext/tinyxml/tinystr.cpp; sourceTree = "<group>"; };
+		AABAE7EE15F67F4600D4BE98 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinystr.h; path = ../../../ext/tinyxml/tinystr.h; sourceTree = "<group>"; };
+		AABAE7EF15F67F4600D4BE98 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = ../../../ext/tinyxml/tinyxml.cpp; sourceTree = "<group>"; };
+		AABAE7F015F67F4600D4BE98 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = ../../../ext/tinyxml/tinyxml.h; sourceTree = "<group>"; };
+		AABAE7F115F67F4600D4BE98 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlerror.cpp; path = ../../../ext/tinyxml/tinyxmlerror.cpp; sourceTree = "<group>"; };
+		AABAE7F215F67F4600D4BE98 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlparser.cpp; path = ../../../ext/tinyxml/tinyxmlparser.cpp; sourceTree = "<group>"; };
+		AABAE7F915F67FA500D4BE98 /* kiss_fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kiss_fft.h; path = ../../../ext/kiss_fft130/kiss_fft.h; sourceTree = "<group>"; };
+		AABAE7FB15F68CBE00D4BE98 /* results_macos_x86_64.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = results_macos_x86_64.xml; path = ../results_macos_x86_64.xml; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,7 +64,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA75B61915EC65E3008151B6 /* libckfft_macos.a in Frameworks */,
+				AA07937215ED51A800CA8D95 /* libckfft_macos.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -48,11 +74,19 @@
 		AA75B5ED15EC6492008151B6 = {
 			isa = PBXGroup;
 			children = (
+				AABAE7F815F67F8900D4BE98 /* kiss_fft */,
+				AABAE7F715F67F7400D4BE98 /* tinyxml */,
+				AABAE7E915F66E9100D4BE98 /* stats.cpp */,
+				AABAE7EA15F66E9100D4BE98 /* stats.h */,
+				AA020F0115F45E8700C99C37 /* timer_ios.cpp */,
+				AA020F0215F45E8700C99C37 /* timer.cpp */,
+				AABAE7FB15F68CBE00D4BE98 /* results_macos_x86_64.xml */,
+				AA020F0315F45E8700C99C37 /* timer.h */,
 				AA07936B15ED44A700CA8D95 /* test.cpp */,
 				AA07936C15ED44A700CA8D95 /* test.h */,
 				AA75B61515EC6560008151B6 /* main.cpp */,
 				AA07936A15ED44A700CA8D95 /* input.txt */,
-				AA75B61815EC65E3008151B6 /* libckfft_macos.a */,
+				AA07937115ED51A800CA8D95 /* libckfft_macos.a */,
 				AA75B5F915EC6492008151B6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -63,6 +97,28 @@
 				AA75B5F815EC6492008151B6 /* test_macos */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		AABAE7F715F67F7400D4BE98 /* tinyxml */ = {
+			isa = PBXGroup;
+			children = (
+				AABAE7ED15F67F4600D4BE98 /* tinystr.cpp */,
+				AABAE7EE15F67F4600D4BE98 /* tinystr.h */,
+				AABAE7EF15F67F4600D4BE98 /* tinyxml.cpp */,
+				AABAE7F015F67F4600D4BE98 /* tinyxml.h */,
+				AABAE7F115F67F4600D4BE98 /* tinyxmlerror.cpp */,
+				AABAE7F215F67F4600D4BE98 /* tinyxmlparser.cpp */,
+			);
+			name = tinyxml;
+			sourceTree = "<group>";
+		};
+		AABAE7F815F67F8900D4BE98 /* kiss_fft */ = {
+			isa = PBXGroup;
+			children = (
+				AABAE7F915F67FA500D4BE98 /* kiss_fft.h */,
+				AA0B0E3515F125B1008CB491 /* kiss_fft.c */,
+			);
+			name = kiss_fft;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -118,6 +174,14 @@
 			files = (
 				AA75B61615EC6560008151B6 /* main.cpp in Sources */,
 				AA07936D15ED44A700CA8D95 /* test.cpp in Sources */,
+				AA0B0E3615F125B1008CB491 /* kiss_fft.c in Sources */,
+				AA020F0415F45E8700C99C37 /* timer_ios.cpp in Sources */,
+				AA020F0515F45E8700C99C37 /* timer.cpp in Sources */,
+				AABAE7EB15F66E9100D4BE98 /* stats.cpp in Sources */,
+				AABAE7F315F67F4600D4BE98 /* tinystr.cpp in Sources */,
+				AABAE7F415F67F4600D4BE98 /* tinyxml.cpp in Sources */,
+				AABAE7F515F67F4600D4BE98 /* tinyxmlerror.cpp in Sources */,
+				AABAE7F615F67F4600D4BE98 /* tinyxmlparser.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -174,10 +238,14 @@
 		AA75B60315EC6492008151B6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = ../../../inc;
+				HEADER_SEARCH_PATHS = (
+					../../../inc,
+					../../../ext,
+					../../../src,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../DerivedData/ckfft/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../DerivedData/ckfft/Build/Products/Debug\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -186,10 +254,14 @@
 		AA75B60415EC6492008151B6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = ../../../inc;
+				HEADER_SEARCH_PATHS = (
+					../../../inc,
+					../../../ext,
+					../../../src,
+				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../DerivedData/ckfft/Build/Products/Debug\"",
+					"\"$(SRCROOT)/../../DerivedData/ckfft/Build/Products/Debug\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
