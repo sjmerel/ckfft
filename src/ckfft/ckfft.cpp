@@ -40,7 +40,7 @@ void expi(float a, CkFftComplex& out)
     out.imag = sinf(a);
 }
 
-void fftimpl(const CkFftComplex* input, CkFftComplex* output, int count, int stride)
+void fftimpl(const CkFftComplex* input, CkFftComplex* output, int count, int stride, bool inverse)
 {
     if (count == 1)
     {
@@ -49,8 +49,8 @@ void fftimpl(const CkFftComplex* input, CkFftComplex* output, int count, int str
     else
     {
         // DFT of even and odd elements
-        fftimpl(input, output, count/2, stride*2);
-        fftimpl(input + stride, output + count/2, count/2, stride*2);
+        fftimpl(input, output, count/2, stride*2, inverse);
+        fftimpl(input + stride, output + count/2, count/2, stride*2, inverse);
 
         // reshuffle
         CkFftComplex tmp;
@@ -63,6 +63,10 @@ void fftimpl(const CkFftComplex* input, CkFftComplex* output, int count, int str
 
             CkFftComplex a;
             float theta = -2.0f * M_PI * i / count; // TODO factor out of loop
+            if (inverse)
+            {
+                theta = -theta; // TODO pass theta in as argument?
+            }
             expi(theta, a);
 
             CkFftComplex b;
@@ -90,8 +94,29 @@ void CkFftInit() {}
 
 void CkFft(const CkFftComplex* input, CkFftComplex* output, int count)
 {
-    assert(isPowerOfTwo(count)); // XXX better error handling?
-    fftimpl(input, output, count, 1);
+    // XXX better error handling?
+    assert(isPowerOfTwo(count)); 
+    assert(count > 0);
+    assert(input != output);
+
+    fftimpl(input, output, count, 1, false);
+}
+
+void CkInvFft(const CkFftComplex* input, CkFftComplex* output, int count)
+{
+    // XXX better error handling?
+    assert(isPowerOfTwo(count)); 
+    assert(count > 0);
+    assert(input != output);
+
+    fftimpl(input, output, count, 1, true);
+
+    // TODO do this in fftimpl?
+    for (int i = 0; i < count; ++i)
+    {
+        output[i].real /= count;
+        output[i].imag /= count;
+    }
 }
 
 void CkFftShutdown() {}
