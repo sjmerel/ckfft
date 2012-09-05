@@ -20,6 +20,7 @@
 		AABAE7F615F67F4600D4BE98 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE7F215F67F4600D4BE98 /* tinyxmlparser.cpp */; };
 		AABAE7FA15F68CB800D4BE98 /* input.txt in CopyFiles */ = {isa = PBXBuildFile; fileRef = AA07936A15ED44A700CA8D95 /* input.txt */; };
 		AABAE7FC15F68CC500D4BE98 /* results_macos_x86_64.xml in CopyFiles */ = {isa = PBXBuildFile; fileRef = AABAE7FB15F68CBE00D4BE98 /* results_macos_x86_64.xml */; };
+		AAEEDCE715F7D70300E43A09 /* platform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAEEDCE615F7D70300E43A09 /* platform.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +58,7 @@
 		AABAE7F215F67F4600D4BE98 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlparser.cpp; path = ../../../ext/tinyxml/tinyxmlparser.cpp; sourceTree = "<group>"; };
 		AABAE7F915F67FA500D4BE98 /* kiss_fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kiss_fft.h; path = ../../../ext/kiss_fft130/kiss_fft.h; sourceTree = "<group>"; };
 		AABAE7FB15F68CBE00D4BE98 /* results_macos_x86_64.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = results_macos_x86_64.xml; path = ../results_macos_x86_64.xml; sourceTree = "<group>"; };
+		AAEEDCE615F7D70300E43A09 /* platform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = platform.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,11 +82,12 @@
 				AABAE7EA15F66E9100D4BE98 /* stats.h */,
 				AA020F0115F45E8700C99C37 /* timer_ios.cpp */,
 				AA020F0215F45E8700C99C37 /* timer.cpp */,
-				AABAE7FB15F68CBE00D4BE98 /* results_macos_x86_64.xml */,
 				AA020F0315F45E8700C99C37 /* timer.h */,
 				AA07936B15ED44A700CA8D95 /* test.cpp */,
 				AA07936C15ED44A700CA8D95 /* test.h */,
+				AAEEDCE615F7D70300E43A09 /* platform.cpp */,
 				AA75B61515EC6560008151B6 /* main.cpp */,
+				AABAE7FB15F68CBE00D4BE98 /* results_macos_x86_64.xml */,
 				AA07936A15ED44A700CA8D95 /* input.txt */,
 				AA07937115ED51A800CA8D95 /* libckfft_macos.a */,
 				AA75B5F915EC6492008151B6 /* Products */,
@@ -182,6 +185,7 @@
 				AABAE7F415F67F4600D4BE98 /* tinyxml.cpp in Sources */,
 				AABAE7F515F67F4600D4BE98 /* tinyxmlerror.cpp in Sources */,
 				AABAE7F615F67F4600D4BE98 /* tinyxmlparser.cpp in Sources */,
+				AAEEDCE715F7D70300E43A09 /* platform.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

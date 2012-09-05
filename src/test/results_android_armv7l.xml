@@ -1,0 +1,4 @@
+<ckfft_test>
+    <ckfft error="0" time="3.23183" />
+    <kiss_fft error="1.84622e-06" time="0.356164" />
+</ckfft_test>

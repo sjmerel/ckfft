@@ -7,24 +7,47 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AA07934015EC752600CA8D95 /* helpers.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA07933F15EC752600CA8D95 /* helpers.mm */; };
 		AA07934415ED417E00CA8D95 /* main.mm in Sources */ = {isa = PBXBuildFile; fileRef = AA07934315ED417E00CA8D95 /* main.mm */; };
 		AA07935A15ED430D00CA8D95 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA07935815ED430D00CA8D95 /* test.cpp */; };
 		AA07936F15ED44F300CA8D95 /* input.txt in Resources */ = {isa = PBXBuildFile; fileRef = AA07936E15ED44F300CA8D95 /* input.txt */; };
 		AA07937415ED520D00CA8D95 /* libckfft_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA07937315ED520D00CA8D95 /* libckfft_ios.a */; };
 		AA75B62E15EC6A40008151B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA75B62D15EC6A40008151B6 /* Foundation.framework */; };
+		AABAE80415F7099800D4BE98 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE7FE15F7099800D4BE98 /* tinystr.cpp */; };
+		AABAE80515F7099800D4BE98 /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE80015F7099800D4BE98 /* tinyxml.cpp */; };
+		AABAE80615F7099800D4BE98 /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE80215F7099800D4BE98 /* tinyxmlerror.cpp */; };
+		AABAE80715F7099800D4BE98 /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE80315F7099800D4BE98 /* tinyxmlparser.cpp */; };
+		AABAE80E15F709B600D4BE98 /* stats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE80915F709B600D4BE98 /* stats.cpp */; };
+		AABAE80F15F709B600D4BE98 /* timer_ios.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE80B15F709B600D4BE98 /* timer_ios.cpp */; };
+		AABAE81015F709B600D4BE98 /* timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE80C15F709B600D4BE98 /* timer.cpp */; };
+		AABAE81315F709CD00D4BE98 /* kiss_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = AABAE81115F709CD00D4BE98 /* kiss_fft.c */; };
+		AAEEDCE315F7C27B00E43A09 /* results_ios_iPod4_1.xml in Resources */ = {isa = PBXBuildFile; fileRef = AAEEDCE215F7C27B00E43A09 /* results_ios_iPod4_1.xml */; };
+		AAEEDCE915F7D72A00E43A09 /* platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAEEDCE815F7D72A00E43A09 /* platform.mm */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		AA07933F15EC752600CA8D95 /* helpers.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = helpers.mm; sourceTree = "<group>"; };
 		AA07934315ED417E00CA8D95 /* main.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = main.mm; sourceTree = "<group>"; };
 		AA07935815ED430D00CA8D95 /* test.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = test.cpp; path = ../test.cpp; sourceTree = "<group>"; };
 		AA07935915ED430D00CA8D95 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = ../test.h; sourceTree = "<group>"; };
 		AA07936E15ED44F300CA8D95 /* input.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = input.txt; path = ../input.txt; sourceTree = "<group>"; };
-		AA07937315ED520D00CA8D95 /* libckfft_ios.a */ = {isa = PBXFileReference; lastKnownFileType = file; name = libckfft_ios.a; path = "../../ckfft/build/Release-iphoneos/libckfft_ios.a"; sourceTree = "<group>"; };
+		AA07937315ED520D00CA8D95 /* libckfft_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libckfft_ios.a; path = "../../ckfft/build/Release-iphoneos/libckfft_ios.a"; sourceTree = "<group>"; };
 		AA75B62715EC6A40008151B6 /* test_ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = test_ios.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA75B62D15EC6A40008151B6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AA75B63315EC6A40008151B6 /* test_ios-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "test_ios-Info.plist"; sourceTree = "<group>"; };
+		AABAE7FE15F7099800D4BE98 /* tinystr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinystr.cpp; path = ../../../ext/tinyxml/tinystr.cpp; sourceTree = "<group>"; };
+		AABAE7FF15F7099800D4BE98 /* tinystr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinystr.h; path = ../../../ext/tinyxml/tinystr.h; sourceTree = "<group>"; };
+		AABAE80015F7099800D4BE98 /* tinyxml.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxml.cpp; path = ../../../ext/tinyxml/tinyxml.cpp; sourceTree = "<group>"; };
+		AABAE80115F7099800D4BE98 /* tinyxml.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = tinyxml.h; path = ../../../ext/tinyxml/tinyxml.h; sourceTree = "<group>"; };
+		AABAE80215F7099800D4BE98 /* tinyxmlerror.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlerror.cpp; path = ../../../ext/tinyxml/tinyxmlerror.cpp; sourceTree = "<group>"; };
+		AABAE80315F7099800D4BE98 /* tinyxmlparser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = tinyxmlparser.cpp; path = ../../../ext/tinyxml/tinyxmlparser.cpp; sourceTree = "<group>"; };
+		AABAE80915F709B600D4BE98 /* stats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stats.cpp; path = ../stats.cpp; sourceTree = "<group>"; };
+		AABAE80A15F709B600D4BE98 /* stats.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = stats.h; path = ../stats.h; sourceTree = "<group>"; };
+		AABAE80B15F709B600D4BE98 /* timer_ios.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer_ios.cpp; path = ../timer_ios.cpp; sourceTree = "<group>"; };
+		AABAE80C15F709B600D4BE98 /* timer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = timer.cpp; path = ../timer.cpp; sourceTree = "<group>"; };
+		AABAE80D15F709B600D4BE98 /* timer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = timer.h; path = ../timer.h; sourceTree = "<group>"; };
+		AABAE81115F709CD00D4BE98 /* kiss_fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = kiss_fft.c; path = ../../../ext/kiss_fft130/kiss_fft.c; sourceTree = "<group>"; };
+		AABAE81215F709CD00D4BE98 /* kiss_fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kiss_fft.h; path = ../../../ext/kiss_fft130/kiss_fft.h; sourceTree = "<group>"; };
+		AAEEDCE215F7C27B00E43A09 /* results_ios_iPod4_1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = results_ios_iPod4_1.xml; path = ../results_ios_iPod4_1.xml; sourceTree = "<group>"; };
+		AAEEDCE815F7D72A00E43A09 /* platform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = platform.mm; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,10 +66,18 @@
 		AA75B61C15EC6A40008151B6 = {
 			isa = PBXGroup;
 			children = (
+				AABAE81415F709D900D4BE98 /* kiss_fft */,
+				AABAE80815F7099D00D4BE98 /* tinyxml */,
+				AABAE80915F709B600D4BE98 /* stats.cpp */,
+				AABAE80A15F709B600D4BE98 /* stats.h */,
+				AABAE80B15F709B600D4BE98 /* timer_ios.cpp */,
+				AABAE80C15F709B600D4BE98 /* timer.cpp */,
+				AABAE80D15F709B600D4BE98 /* timer.h */,
 				AA07935815ED430D00CA8D95 /* test.cpp */,
 				AA07935915ED430D00CA8D95 /* test.h */,
 				AA07934315ED417E00CA8D95 /* main.mm */,
-				AA07933F15EC752600CA8D95 /* helpers.mm */,
+				AAEEDCE815F7D72A00E43A09 /* platform.mm */,
+				AAEEDCE215F7C27B00E43A09 /* results_ios_iPod4_1.xml */,
 				AA07936E15ED44F300CA8D95 /* input.txt */,
 				AA07937315ED520D00CA8D95 /* libckfft_ios.a */,
 				AA75B63215EC6A40008151B6 /* Supporting Files */,
@@ -77,6 +108,28 @@
 				AA75B63315EC6A40008151B6 /* test_ios-Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		AABAE80815F7099D00D4BE98 /* tinyxml */ = {
+			isa = PBXGroup;
+			children = (
+				AABAE7FE15F7099800D4BE98 /* tinystr.cpp */,
+				AABAE7FF15F7099800D4BE98 /* tinystr.h */,
+				AABAE80015F7099800D4BE98 /* tinyxml.cpp */,
+				AABAE80115F7099800D4BE98 /* tinyxml.h */,
+				AABAE80215F7099800D4BE98 /* tinyxmlerror.cpp */,
+				AABAE80315F7099800D4BE98 /* tinyxmlparser.cpp */,
+			);
+			name = tinyxml;
+			sourceTree = "<group>";
+		};
+		AABAE81415F709D900D4BE98 /* kiss_fft */ = {
+			isa = PBXGroup;
+			children = (
+				AABAE81115F709CD00D4BE98 /* kiss_fft.c */,
+				AABAE81215F709CD00D4BE98 /* kiss_fft.h */,
+			);
+			name = kiss_fft;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -131,6 +184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA07936F15ED44F300CA8D95 /* input.txt in Resources */,
+				AAEEDCE315F7C27B00E43A09 /* results_ios_iPod4_1.xml in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -141,9 +195,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA07934015EC752600CA8D95 /* helpers.mm in Sources */,
 				AA07934415ED417E00CA8D95 /* main.mm in Sources */,
 				AA07935A15ED430D00CA8D95 /* test.cpp in Sources */,
+				AABAE80415F7099800D4BE98 /* tinystr.cpp in Sources */,
+				AABAE80515F7099800D4BE98 /* tinyxml.cpp in Sources */,
+				AABAE80615F7099800D4BE98 /* tinyxmlerror.cpp in Sources */,
+				AABAE80715F7099800D4BE98 /* tinyxmlparser.cpp in Sources */,
+				AABAE80E15F709B600D4BE98 /* stats.cpp in Sources */,
+				AABAE80F15F709B600D4BE98 /* timer_ios.cpp in Sources */,
+				AABAE81015F709B600D4BE98 /* timer.cpp in Sources */,
+				AABAE81315F709CD00D4BE98 /* kiss_fft.c in Sources */,
+				AAEEDCE915F7D72A00E43A09 /* platform.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -202,7 +264,11 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "test_ios-Prefix.pch";
-				HEADER_SEARCH_PATHS = ../../../inc;
+				HEADER_SEARCH_PATHS = (
+					../../../inc,
+					../../../ext,
+					../../../src,
+				);
 				INFOPLIST_FILE = "test_ios-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -214,7 +280,11 @@
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "test_ios-Prefix.pch";
-				HEADER_SEARCH_PATHS = ../../../inc;
+				HEADER_SEARCH_PATHS = (
+					../../../inc,
+					../../../ext,
+					../../../src,
+				);
 				INFOPLIST_FILE = "test_ios-Info.plist";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;

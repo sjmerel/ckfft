@@ -22,13 +22,11 @@
 
 #include "timer.h"
 #include "stats.h"
+#include "platform.h"
 
 #include "kiss_fft130/kiss_fft.h"
 #include "tinyxml/tinyxml.h"
 
-#if CKFFT_PLATFORM_IOS
-#  include "ios/helpers.h"
-#endif
 
 
 using namespace std;
@@ -266,35 +264,6 @@ private:
 
 ////////////////////////////////////////
 
-int fileGetSize(const char* path)
-{
-    struct stat statBuf;
-    if (stat(path, &statBuf) == 0)
-    {
-        if (statBuf.st_mode & S_IFREG)
-        {
-            return (int) statBuf.st_size;
-        }
-        else
-        {
-            return -1;
-        }
-    }
-    else
-    {
-        return -1;
-    }
-}
-
-void fileRead(char* buf, int size, const char* path)
-{
-    FILE* file = fopen(path, "rb");
-    fread(buf, 1, size, file);
-    fclose(file);
-}
-
-////////////////////////////////////////
-
 struct Results
 {
     float error;
@@ -305,14 +274,16 @@ typedef map<string, Results> ResultsMap;
 
 void getResultsName(string& name)
 {
+    name = "results_";
+
 #if CKFFT_PLATFORM_IOS
-    name = "ios";
+    name += "ios";
 #elif CKFFT_PLATFORM_ANDROID
-    name = "android";
+    name += "android";
 #elif CKFFT_PLATFORM_MACOS
-    name = "macos";
+    name += "macos";
 #elif CKFFT_PLATFORM_WIN
-    name = "win";
+    name += "win";
 #endif
 
     name += "_";
@@ -329,20 +300,23 @@ void getResultsName(string& name)
             name[i] = '_';
         }
     }
+
+    name += ".xml";
 }
 
-void readResults(ResultsMap& resultsMap, const char* path)
+void readResults(ResultsMap& resultsMap)
 {
-    int size = fileGetSize(path);
-    if (size > 0)
+    string dir;
+    getInputDir(dir);
+
+    string name;
+    getResultsName(name);
+
+    string path = dir + "/" + name;
+
+    TiXmlDocument doc;
+    if (doc.LoadFile(path.c_str()))
     {
-        char* buf = new char[size+1];
-        buf[size] = '\0';
-        fileRead(buf, size, path);
-
-        TiXmlDocument doc;
-        doc.Parse(buf);
-
         TiXmlElement* elem = doc.FirstChildElement("ckfft_test")->FirstChildElement();
         while (elem)
         {
@@ -353,11 +327,11 @@ void readResults(ResultsMap& resultsMap, const char* path)
             elem = elem->NextSiblingElement();
         }
 
-        delete[] buf;
+        CKFFT_PRINTF("read results from %s\n", path.c_str());
     }
 }
 
-void writeResults(const ResultsMap& resultsMap, const char* path)
+void writeResults(const ResultsMap& resultsMap)
 {
     TiXmlDocument resultsDoc;
     TiXmlElement* rootElem = new TiXmlElement("ckfft_test");
@@ -371,7 +345,21 @@ void writeResults(const ResultsMap& resultsMap, const char* path)
         rootElem->LinkEndChild(elem);
     }
 
-    resultsDoc.SaveFile(path);
+    string dir;
+    getOutputDir(dir);
+    dir += "/out";
+
+    mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
+
+    string name;
+    getResultsName(name);
+
+    string path = dir + "/" + name;
+
+    if (resultsDoc.SaveFile(path.c_str()))
+    {
+        CKFFT_PRINTF("wrote results to %s\n", path.c_str());
+    }
 }
 
 ////////////////////////////////////////
@@ -382,10 +370,9 @@ void test(vector<FftTester*>& testers, ResultsMap& resultsMap, const ResultsMap&
 
     // read input
     vector<CkFftComplex> input;
-    string path("input.txt");
-#if TARGET_OS_IPHONE
-    makeBundlePath(path);
-#endif
+    string path;
+    getInputDir(path);
+    path += "/input.txt";
     read(input, path.c_str());
     int count = (int) input.size();
 
@@ -394,50 +381,46 @@ void test(vector<FftTester*>& testers, ResultsMap& resultsMap, const ResultsMap&
     output.resize(count);
     zero(output);
 
-    // calculate output
-    FftTester* tester = testers[0];
-    float time = tester->test(&input[0], &output[0], count, false);
+    // allocate reference output
+    vector<CkFftComplex> refOutput;
+    refOutput.resize(count);
+    zero(refOutput);
 
-    Results results;
-    results.error = 0.0f;
-    results.time = time;
-    resultsMap[tester->getName()] = results;
-
-    Results prevResults = results;
-    ResultsMap::const_iterator it = prevResultsMap.find(tester->getName());
-    if (it != prevResultsMap.end())
-    {
-        prevResults = it->second;
-    }
+    float baseTime;
 
     CKFFT_PRINTF("    name       err      time      norm    change\n");
     CKFFT_PRINTF("------------------------------------------------\n");
-    CKFFT_PRINTF("%8s: %f  %f  %f  %7.2f%%", tester->getName(), 0.0f, time, 1.0f, (time - prevResults.time)/prevResults.time);
-    CKFFT_PRINTF("\n");
 
-    for (int i = 1; i < testers.size(); ++i)
+    // note that testers[0] is ckfft
+    for (int i = 0; i < testers.size(); ++i)
     {
-
-        // allocate reference output
-        vector<CkFftComplex> refOutput;
-        refOutput.resize(count);
-        zero(refOutput);
-
-        // calculate reference output
+        // calculate output
         FftTester* tester = testers[i];
-        float refTime = tester->test(&input[0], &refOutput[0], count, false);
-        float err = compare(output, refOutput);
+        float time = tester->test(&input[0], (i == 0 ? &output[0] : &refOutput[0]) , count, false);
+        if (i == 0)
+        {
+            baseTime = time;
+        }
 
-        Results results;
-        results.error = err;
-        results.time = refTime;
-        resultsMap[tester->getName()] = results;
-
-        CKFFT_PRINTF("%8s: %f  %f  %f", tester->getName(), err, refTime, refTime / time);
+        float err = (i == 0 ? 0.0f : compare(output, refOutput));
         if (err > k_thresh)
         {
             CKFFT_PRINTF("   ****** FAILED ******");
         }
+
+        Results results;
+        results.error = err;
+        results.time = time;
+        resultsMap[tester->getName()] = results;
+
+        Results prevResults = results;
+        ResultsMap::const_iterator it = prevResultsMap.find(tester->getName());
+        if (it != prevResultsMap.end())
+        {
+            prevResults = it->second;
+        }
+
+        CKFFT_PRINTF("%8s: %f  %f  %f  %7.2f%%", tester->getName(), err, time, time/baseTime, (time - prevResults.time)/prevResults.time);
         CKFFT_PRINTF("\n");
     }
 
@@ -483,22 +466,21 @@ void test()
     testers.push_back(new CkFftTester());
     testers.push_back(new KissTester());
 
-    string resultsName;
-    getResultsName(resultsName);
     ResultsMap prevResultsMap;
-    readResults(prevResultsMap, resultsName.c_str());
+    readResults(prevResultsMap);
+    CKFFT_PRINTF("\n");
 
     ResultsMap resultsMap;
     test(testers, resultsMap, prevResultsMap);
 
-    writeResults(resultsMap, resultsName.c_str());
+    CKFFT_PRINTF("\n");
+    writeResults(resultsMap);
 
     for (int i = 0; i < testers.size(); ++i)
     {
         delete testers[i];
     }
 
-    CKFFT_PRINTF("\n");
     CKFFT_PRINTF("done!\n");
 }
 
