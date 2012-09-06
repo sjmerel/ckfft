@@ -1,20 +1,15 @@
 #include <assert.h>
 #include <math.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 #include <sys/utsname.h>
-
-#if CKFFT_PLATFORM_WIN
-#  define unlink _unlink
-#  define S_IFREG _S_IFREG
-#else
-#  include <unistd.h>
-#endif
 
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <map>
 #include <string>
+#include <algorithm>
 
 #include "ckfft/ckfft.h"
 #include "ckfft/platform.h"
@@ -23,6 +18,18 @@
 #include "timer.h"
 #include "stats.h"
 #include "platform.h"
+
+#if CKFFT_PLATFORM_WIN
+#  define unlink _unlink
+#  define S_IFREG _S_IFREG
+#else
+#  include <unistd.h>
+#endif
+
+#if CKFFT_PLATFORM_MACOS || CKFFT_PLATFORM_IOS
+#  include <Accelerate/Accelerate.h>
+#endif
+
 
 #include "kiss_fft130/kiss_fft.h"
 #include "tinyxml/tinyxml.h"
@@ -220,6 +227,7 @@ protected:
     }
 };
 
+// TODO: use fixed-point KISS?
 class KissTester : public FftTester
 {
 public:
@@ -261,6 +269,86 @@ private:
     vector<kiss_fft_cpx> m_kissOutput;
     kiss_fft_cfg m_cfg;
 };
+
+#if CKFFT_PLATFORM_IOS || CKFFT_PLATFORM_MACOS
+class AccelerateTester : public FftTester
+{
+public:
+    virtual const char* getName() { return "accelerate"; }
+
+protected:
+    virtual void init()
+    {
+        m_accInputR.resize(m_count);
+        m_accInputI.resize(m_count);
+        for (int i = 0; i < m_count; ++i)
+        {
+            m_accInputR[i] = m_input[i].real;
+            m_accInputI[i] = m_input[i].imag;
+        }
+        m_accInput.realp = &m_accInputR[0];
+        m_accInput.imagp = &m_accInputI[0];
+
+        m_accOutputR.resize(m_count);
+        m_accOutputI.resize(m_count);
+        m_accOutput.realp = &m_accOutputR[0];
+        m_accOutput.imagp = &m_accOutputI[0];
+
+        int tempBytes = std::min(16384, (int) (m_count * sizeof(float)));
+        m_accTemp.realp = (float*) malloc(tempBytes);
+        m_accTemp.imagp = (float*) malloc(tempBytes);
+
+        // determine log2(m_count)
+        m_logCount = 0;
+        int count = m_count;
+        while (count > 1)
+        {
+            ++m_logCount;
+            count >>= 1;
+        }
+
+        m_setup = vDSP_create_fftsetup(m_logCount, kFFTRadix2);
+    }
+
+    virtual void fft()
+    {
+        vDSP_fft_zopt(
+                m_setup,//FFTSetup __vDSP_setup,
+                &m_accInput, // DSPSplitComplex *__vDSP_signal,
+                1, //vDSP_Stride __vDSP_signalStride,
+                &m_accOutput, //DSPSplitComplex *__vDSP_result,
+                1, //vDSP_Stride __vDSP_strideResult,
+                &m_accTemp,
+                m_logCount, //vDSP_Length __vDSP_log2n,
+                kFFTDirection_Forward //FFTDirection __vDSP_direction
+                );
+
+    }
+
+    virtual void shutdown()
+    {
+        for (int i = 0; i < m_count; ++i)
+        {
+            m_output[i].real = m_accOutputR[i];
+            m_output[i].imag = m_accOutputI[i];
+        }
+        free(m_accTemp.realp);
+        free(m_accTemp.imagp);
+        vDSP_destroy_fftsetup(m_setup);
+    }
+
+private:
+    vector<float> m_accInputR;
+    vector<float> m_accInputI;
+    DSPSplitComplex m_accInput;
+    vector<float> m_accOutputR;
+    vector<float> m_accOutputI;
+    DSPSplitComplex m_accOutput;
+    DSPSplitComplex m_accTemp;
+    int m_logCount;
+    FFTSetup m_setup;
+};
+#endif
 
 ////////////////////////////////////////
 
@@ -388,8 +476,8 @@ void test(vector<FftTester*>& testers, ResultsMap& resultsMap, const ResultsMap&
 
     float baseTime;
 
-    CKFFT_PRINTF("    name       err      time      norm    change\n");
-    CKFFT_PRINTF("------------------------------------------------\n");
+    CKFFT_PRINTF("        name       err      time      norm    change\n");
+    CKFFT_PRINTF("----------------------------------------------------\n");
 
     // note that testers[0] is ckfft
     for (int i = 0; i < testers.size(); ++i)
@@ -403,11 +491,6 @@ void test(vector<FftTester*>& testers, ResultsMap& resultsMap, const ResultsMap&
         }
 
         float err = (i == 0 ? 0.0f : compare(output, refOutput));
-        if (err > k_thresh)
-        {
-            CKFFT_PRINTF("   ****** FAILED ******");
-        }
-
         Results results;
         results.error = err;
         results.time = time;
@@ -420,7 +503,11 @@ void test(vector<FftTester*>& testers, ResultsMap& resultsMap, const ResultsMap&
             prevResults = it->second;
         }
 
-        CKFFT_PRINTF("%8s: %f  %f  %f  %7.2f%%", tester->getName(), err, time, time/baseTime, (time - prevResults.time)/prevResults.time);
+        CKFFT_PRINTF("%12s: %f  %f  %f  %7.2f%%", tester->getName(), err, time, time/baseTime, (time - prevResults.time)/prevResults.time);
+        if (err > k_thresh)
+        {
+            CKFFT_PRINTF("   ****** FAILED ******");
+        }
         CKFFT_PRINTF("\n");
     }
 
@@ -465,6 +552,9 @@ void test()
     vector<FftTester*> testers;
     testers.push_back(new CkFftTester());
     testers.push_back(new KissTester());
+#if CKFFT_PLATFORM_IOS || CKFFT_PLATFORM_MACOS
+    testers.push_back(new AccelerateTester());
+#endif
 
     ResultsMap prevResultsMap;
     readResults(prevResultsMap);

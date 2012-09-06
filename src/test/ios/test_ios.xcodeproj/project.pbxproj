@@ -22,6 +22,7 @@
 		AABAE81315F709CD00D4BE98 /* kiss_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = AABAE81115F709CD00D4BE98 /* kiss_fft.c */; };
 		AAEEDCE315F7C27B00E43A09 /* results_ios_iPod4_1.xml in Resources */ = {isa = PBXBuildFile; fileRef = AAEEDCE215F7C27B00E43A09 /* results_ios_iPod4_1.xml */; };
 		AAEEDCE915F7D72A00E43A09 /* platform.mm in Sources */ = {isa = PBXBuildFile; fileRef = AAEEDCE815F7D72A00E43A09 /* platform.mm */; };
+		AAEEDCEB15F7E8D100E43A09 /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AAEEDCEA15F7E8D100E43A09 /* Accelerate.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		AABAE81215F709CD00D4BE98 /* kiss_fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = kiss_fft.h; path = ../../../ext/kiss_fft130/kiss_fft.h; sourceTree = "<group>"; };
 		AAEEDCE215F7C27B00E43A09 /* results_ios_iPod4_1.xml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = results_ios_iPod4_1.xml; path = ../results_ios_iPod4_1.xml; sourceTree = "<group>"; };
 		AAEEDCE815F7D72A00E43A09 /* platform.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = platform.mm; sourceTree = "<group>"; };
+		AAEEDCEA15F7E8D100E43A09 /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AAEEDCEB15F7E8D100E43A09 /* Accelerate.framework in Frameworks */,
 				AA07937415ED520D00CA8D95 /* libckfft_ios.a in Frameworks */,
 				AA75B62E15EC6A40008151B6 /* Foundation.framework in Frameworks */,
 			);
@@ -66,6 +69,7 @@
 		AA75B61C15EC6A40008151B6 = {
 			isa = PBXGroup;
 			children = (
+				AAEEDCEA15F7E8D100E43A09 /* Accelerate.framework */,
 				AABAE81415F709D900D4BE98 /* kiss_fft */,
 				AABAE80815F7099D00D4BE98 /* tinyxml */,
 				AABAE80915F709B600D4BE98 /* stats.cpp */,
