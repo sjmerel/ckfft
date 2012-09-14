@@ -12,6 +12,7 @@
 		AA07936D15ED44A700CA8D95 /* test.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA07936B15ED44A700CA8D95 /* test.cpp */; };
 		AA07937215ED51A800CA8D95 /* libckfft_macos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA07937115ED51A800CA8D95 /* libckfft_macos.a */; };
 		AA0B0E3615F125B1008CB491 /* kiss_fft.c in Sources */ = {isa = PBXBuildFile; fileRef = AA0B0E3515F125B1008CB491 /* kiss_fft.c */; };
+		AA2EE78C1603962900184F4B /* Accelerate.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA2EE78B1603962900184F4B /* Accelerate.framework */; };
 		AA75B61615EC6560008151B6 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA75B61515EC6560008151B6 /* main.cpp */; };
 		AABAE7EB15F66E9100D4BE98 /* stats.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE7E915F66E9100D4BE98 /* stats.cpp */; };
 		AABAE7F315F67F4600D4BE98 /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AABAE7ED15F67F4600D4BE98 /* tinystr.cpp */; };
@@ -46,6 +47,7 @@
 		AA07936C15ED44A700CA8D95 /* test.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = test.h; path = ../test.h; sourceTree = "<group>"; };
 		AA07937115ED51A800CA8D95 /* libckfft_macos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libckfft_macos.a; path = ../../DerivedData/ckfft/Build/Products/Debug/libckfft_macos.a; sourceTree = "<group>"; };
 		AA0B0E3515F125B1008CB491 /* kiss_fft.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = kiss_fft.c; path = ../../../ext/kiss_fft130/kiss_fft.c; sourceTree = "<group>"; };
+		AA2EE78B1603962900184F4B /* Accelerate.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accelerate.framework; path = System/Library/Frameworks/Accelerate.framework; sourceTree = SDKROOT; };
 		AA75B5F815EC6492008151B6 /* test_macos */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test_macos; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA75B61515EC6560008151B6 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		AABAE7E915F66E9100D4BE98 /* stats.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = stats.cpp; path = ../stats.cpp; sourceTree = "<group>"; };
@@ -66,6 +68,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA2EE78C1603962900184F4B /* Accelerate.framework in Frameworks */,
 				AA07937215ED51A800CA8D95 /* libckfft_macos.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,6 +76,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AA2EE78E1603964A00184F4B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AA07937115ED51A800CA8D95 /* libckfft_macos.a */,
+				AA2EE78B1603962900184F4B /* Accelerate.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AA75B5ED15EC6492008151B6 = {
 			isa = PBXGroup;
 			children = (
@@ -89,7 +101,7 @@
 				AA75B61515EC6560008151B6 /* main.cpp */,
 				AABAE7FB15F68CBE00D4BE98 /* results_macos_x86_64.xml */,
 				AA07936A15ED44A700CA8D95 /* input.txt */,
-				AA07937115ED51A800CA8D95 /* libckfft_macos.a */,
+				AA2EE78E1603964A00184F4B /* Frameworks */,
 				AA75B5F915EC6492008151B6 /* Products */,
 			);
 			sourceTree = "<group>";

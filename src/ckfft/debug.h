@@ -1,5 +1,6 @@
 #pragma once
 #include "ckfft/platform.h"
+#include <stdio.h>
 
 
 ////////////////////////////////////////

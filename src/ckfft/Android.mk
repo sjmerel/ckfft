@@ -6,7 +6,7 @@ include $(CLEAR_VARS)
 
 LOCAL_MODULE := ckfft
 LOCAL_SRC_FILES := ckfft.cpp
-LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../inc 
+LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../inc $(LOCAL_PATH)/../../src
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../../inc
 
 include $(BUILD_STATIC_LIBRARY)

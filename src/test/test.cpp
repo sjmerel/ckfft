@@ -19,17 +19,9 @@
 #include "stats.h"
 #include "platform.h"
 
-#if CKFFT_PLATFORM_WIN
-#  define unlink _unlink
-#  define S_IFREG _S_IFREG
-#else
-#  include <unistd.h>
-#endif
-
 #if CKFFT_PLATFORM_MACOS || CKFFT_PLATFORM_IOS
 #  include <Accelerate/Accelerate.h>
 #endif
-
 
 #include "kiss_fft130/kiss_fft.h"
 #include "tinyxml/tinyxml.h"
@@ -41,20 +33,33 @@ using namespace std;
 ////////////////////////////////////////
 
 // print data
-void print(const vector<CkFftComplex>& values)
+void print(const CkFftComplex* values, int count)
 {
-    for (int i = 0; i < values.size(); ++i)
+    for (int i = 0; i < count; ++i)
     {
         CkFftComplex value = values[i];
         CKFFT_PRINTF("%f + %f i\n", value.real, value.imag);
     }
 }
 
+void print(const vector<CkFftComplex>& values, int count = 0)
+{
+    if (count <= 0)
+    {
+        count = (int) values.size();
+    }
+    print(&values[0], count);
+}
+
 // print two data sets for side-by-side comparison
-void print(const vector<CkFftComplex>& values1, const vector<CkFftComplex>& values2)
+void print(const vector<CkFftComplex>& values1, const vector<CkFftComplex>& values2, int count = 0)
 {
     assert(values1.size() == values2.size());
-    for (int i = 0; i < values1.size(); ++i)
+    if (count <= 0)
+    {
+        count = (int) values1.size();
+    }
+    for (int i = 0; i < count; ++i)
     {
         CkFftComplex value1 = values1[i];
         CkFftComplex value2 = values2[i];
@@ -96,13 +101,18 @@ void write(const vector<CkFftComplex>& values, const char* path)
 }
 
 // set data to 0
-void zero(vector<CkFftComplex>& values)
+void zero(CkFftComplex* values, int count)
 {
-    for (int i = 0; i < values.size(); ++i)
+    for (int i = 0; i < count; ++i)
     {
         values[i].real = 0.0f;
         values[i].imag = 0.0f;
     }
+}
+
+void zero(vector<CkFftComplex>& values)
+{
+    zero(&values[0], (int) values.size());
 }
 
 // compare two data sets; return RMS difference of all components
@@ -165,6 +175,7 @@ public:
         m_output = output;
         m_count = count;
         m_inverse = inverse;
+        zero(output, count);
 
         init();
 
@@ -206,25 +217,28 @@ public:
 protected:
     virtual void init()
     {
-        CkFftInit();
+        m_context = CkFftInit(m_count);
     }
 
     virtual void fft()
     {
         if (m_inverse)
         {
-            CkInvFft(m_input, m_output, m_count);
+            CkInvFft(m_context, m_input, m_output, m_count);
         }
         else
         {
-            CkFft(m_input, m_output, m_count);
+            CkFft(m_context, m_input, m_output, m_count);
         }
     }
 
     virtual void shutdown()
     {
-        CkFftShutdown();
+        CkFftShutdown(m_context);
     }
+
+private:
+    CkFftContext* m_context;
 };
 
 // TODO: use fixed-point KISS?
@@ -270,6 +284,27 @@ private:
     kiss_fft_cfg m_cfg;
 };
 
+class LibAVTester : public FftTester
+{
+public:
+    virtual const char* getName() { return "libav"; }
+
+protected:
+    virtual void init()
+    {
+    }
+
+    virtual void fft()
+    {
+    }
+
+    virtual void shutdown()
+    {
+    }
+
+private:
+};
+
 #if CKFFT_PLATFORM_IOS || CKFFT_PLATFORM_MACOS
 class AccelerateTester : public FftTester
 {
@@ -294,9 +329,12 @@ protected:
         m_accOutput.realp = &m_accOutputR[0];
         m_accOutput.imagp = &m_accOutputI[0];
 
+        // malloc returns 16-byte alignment
         int tempBytes = std::min(16384, (int) (m_count * sizeof(float)));
         m_accTemp.realp = (float*) malloc(tempBytes);
         m_accTemp.imagp = (float*) malloc(tempBytes);
+        assert(((size_t) m_accTemp.realp) % 16 == 0);
+        assert(((size_t) m_accTemp.imagp) % 16 == 0);
 
         // determine log2(m_count)
         m_logCount = 0;
@@ -320,7 +358,7 @@ protected:
                 1, //vDSP_Stride __vDSP_strideResult,
                 &m_accTemp,
                 m_logCount, //vDSP_Length __vDSP_log2n,
-                kFFTDirection_Forward //FFTDirection __vDSP_direction
+                (m_inverse ? kFFTDirection_Inverse : kFFTDirection_Forward) //FFTDirection __vDSP_direction
                 );
 
     }
@@ -351,14 +389,6 @@ private:
 #endif
 
 ////////////////////////////////////////
-
-struct Results
-{
-    float error;
-    float time;
-};
-
-typedef map<string, Results> ResultsMap;
 
 void getResultsName(string& name)
 {
@@ -392,7 +422,7 @@ void getResultsName(string& name)
     name += ".xml";
 }
 
-void readResults(ResultsMap& resultsMap)
+void readResults(TiXmlDocument& doc)
 {
     string dir;
     getInputDir(dir);
@@ -402,37 +432,18 @@ void readResults(ResultsMap& resultsMap)
 
     string path = dir + "/" + name;
 
-    TiXmlDocument doc;
     if (doc.LoadFile(path.c_str()))
     {
-        TiXmlElement* elem = doc.FirstChildElement("ckfft_test")->FirstChildElement();
-        while (elem)
-        {
-            Results results;
-            elem->QueryFloatAttribute("error", &results.error);
-            elem->QueryFloatAttribute("time", &results.time);
-            resultsMap[elem->Value()] = results;
-            elem = elem->NextSiblingElement();
-        }
-
         CKFFT_PRINTF("read results from %s\n", path.c_str());
+    }
+    else
+    {
+        doc.LinkEndChild(new TiXmlElement("ckfft_test"));
     }
 }
 
-void writeResults(const ResultsMap& resultsMap)
+void writeResults(const TiXmlDocument& doc)
 {
-    TiXmlDocument resultsDoc;
-    TiXmlElement* rootElem = new TiXmlElement("ckfft_test");
-    resultsDoc.LinkEndChild(rootElem);
-
-    for (ResultsMap::const_iterator it = resultsMap.begin(); it != resultsMap.end(); ++it)
-    {
-        TiXmlElement* elem = new TiXmlElement(it->first.c_str());
-        elem->SetDoubleAttribute("error", it->second.error);
-        elem->SetDoubleAttribute("time", it->second.time);
-        rootElem->LinkEndChild(elem);
-    }
-
     string dir;
     getOutputDir(dir);
     dir += "/out";
@@ -444,17 +455,96 @@ void writeResults(const ResultsMap& resultsMap)
 
     string path = dir + "/" + name;
 
-    if (resultsDoc.SaveFile(path.c_str()))
+    if (doc.SaveFile(path.c_str()))
     {
-        CKFFT_PRINTF("wrote results to %s\n", path.c_str());
+        CKFFT_PRINTF("\nwrote results to %s\n", path.c_str());
     }
 }
 
 ////////////////////////////////////////
 
-void test(vector<FftTester*>& testers, ResultsMap& resultsMap, const ResultsMap& prevResultsMap)
+void test(const char* testName, 
+          TiXmlDocument& doc,
+          vector<FftTester*>& testers, 
+          const vector<CkFftComplex>& input, 
+          vector<CkFftComplex>& output, 
+          bool inverse)
 {
     const float k_thresh = 0.0001f; // threshold for RMS comparison
+
+    int count = (int) input.size();
+
+    // allocate reference output
+    vector<CkFftComplex> refOutput;
+    refOutput.resize(count);
+
+    float baseTime;
+
+    CKFFT_PRINTF("\n");
+    CKFFT_PRINTF("%s:\n", testName);
+    CKFFT_PRINTF("        name       err      time      norm    change\n");
+    CKFFT_PRINTF("----------------------------------------------------\n");
+
+    // find XML element containing results for this test (or create one)
+    TiXmlElement* rootElem = doc.FirstChildElement("ckfft_test");
+    TiXmlElement* testElem = rootElem->FirstChildElement(testName);
+    if (!testElem)
+    {
+        testElem = new TiXmlElement(testName);
+        rootElem->LinkEndChild(testElem);
+    }
+
+    // note that testers[0] is ckfft
+    for (int i = 0; i < testers.size(); ++i)
+    {
+        // calculate output
+        FftTester* tester = testers[i];
+        float time = tester->test(&input[0], (i == 0 ? &output[0] : &refOutput[0]), count, inverse);
+
+        if (i == 0)
+        {
+            baseTime = time;
+        }
+
+        float err = (i == 0 ? 0.0f : compare(output, refOutput));
+
+        float prevTime = time;
+
+        // find XML element for containing results for this tester
+        TiXmlElement* testerElem = testElem->FirstChildElement(tester->getName());
+        if (testerElem)
+        {
+            testerElem->QueryFloatAttribute("time", &prevTime);
+        }
+        else
+        {
+            testerElem = new TiXmlElement(tester->getName());
+            testElem->LinkEndChild(testerElem);
+        }
+
+        testerElem->SetDoubleAttribute("error", err);
+        testerElem->SetDoubleAttribute("time", time);
+
+        CKFFT_PRINTF("%12s: %f  %f  %f  %7.2f%%", tester->getName(), err, time, time/baseTime, 100.0f*(time - prevTime)/prevTime);
+        if (err > k_thresh)
+        {
+            CKFFT_PRINTF("   ****** FAILED ******");
+        }
+        CKFFT_PRINTF("\n");
+    }
+}
+
+void test()
+{
+    Timer::init();
+
+    vector<FftTester*> testers;
+    testers.push_back(new CkFftTester());
+    testers.push_back(new KissTester());
+//    testers.push_back(new LibAVTester());
+#if CKFFT_PLATFORM_IOS || CKFFT_PLATFORM_MACOS
+    testers.push_back(new AccelerateTester());
+#endif
 
     // read input
     vector<CkFftComplex> input;
@@ -467,111 +557,33 @@ void test(vector<FftTester*>& testers, ResultsMap& resultsMap, const ResultsMap&
     // allocate output
     vector<CkFftComplex> output;
     output.resize(count);
-    zero(output);
 
-    // allocate reference output
-    vector<CkFftComplex> refOutput;
-    refOutput.resize(count);
-    zero(refOutput);
-
-    float baseTime;
-
-    CKFFT_PRINTF("        name       err      time      norm    change\n");
-    CKFFT_PRINTF("----------------------------------------------------\n");
-
-    // note that testers[0] is ckfft
-    for (int i = 0; i < testers.size(); ++i)
-    {
-        // calculate output
-        FftTester* tester = testers[i];
-        float time = tester->test(&input[0], (i == 0 ? &output[0] : &refOutput[0]) , count, false);
-        if (i == 0)
-        {
-            baseTime = time;
-        }
-
-        float err = (i == 0 ? 0.0f : compare(output, refOutput));
-        Results results;
-        results.error = err;
-        results.time = time;
-        resultsMap[tester->getName()] = results;
-
-        Results prevResults = results;
-        ResultsMap::const_iterator it = prevResultsMap.find(tester->getName());
-        if (it != prevResultsMap.end())
-        {
-            prevResults = it->second;
-        }
-
-        CKFFT_PRINTF("%12s: %f  %f  %f  %7.2f%%", tester->getName(), err, time, time/baseTime, (time - prevResults.time)/prevResults.time);
-        if (err > k_thresh)
-        {
-            CKFFT_PRINTF("   ****** FAILED ******");
-        }
-        CKFFT_PRINTF("\n");
-    }
-
-
-    /*
     // allocate inverse output
     vector<CkFftComplex> invOutput;
     invOutput.resize(count);
-    zero(invOutput);
 
-    // calculate inverse output
-    testCkFft(output, invOutput, true);
+    // read results xml
+    TiXmlDocument doc;
+    readResults(doc);
 
-    // allocate reference inverse output
-    vector<CkFftComplex> refInvOutput;
-    refInvOutput.resize(count);
-    zero(refInvOutput);
+    CKFFT_PRINTF("\n%d iterations\n", k_reps);
 
-    // calculate reference inverse output
-    testKissFft(refOutput, refInvOutput, true);
+    char testName[128];
 
-    rms = compare(output, refOutput);
-    CKFFT_PRINTF("inverse vs reference: %f\n", rms);
-    if (rms > k_thresh)
-    {
-        return false;
-    }
+    // TODO other sizes of FFT
 
-    rms = compare(input, invOutput);
-    CKFFT_PRINTF("inverse vs input: %f\n", rms);
-    if (rms > k_thresh)
-    {
-        return false;
-    }
-    */
-}
+    sprintf(testName, "fft_%d", count);
+    test(testName, doc, testers, input, output, false);
 
-void test()
-{
-    Timer::init();
+    sprintf(testName, "invfft_%d", count);
+    test(testName, doc, testers, output, invOutput, true);
 
-    vector<FftTester*> testers;
-    testers.push_back(new CkFftTester());
-    testers.push_back(new KissTester());
-#if CKFFT_PLATFORM_IOS || CKFFT_PLATFORM_MACOS
-    testers.push_back(new AccelerateTester());
-#endif
-
-    ResultsMap prevResultsMap;
-    readResults(prevResultsMap);
-    CKFFT_PRINTF("\n");
-
-    ResultsMap resultsMap;
-    test(testers, resultsMap, prevResultsMap);
-
-    CKFFT_PRINTF("\n");
-    writeResults(resultsMap);
+    writeResults(doc);
 
     for (int i = 0; i < testers.size(); ++i)
     {
         delete testers[i];
     }
-
-    CKFFT_PRINTF("done!\n");
 }
 
 

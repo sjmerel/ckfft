@@ -173,7 +173,10 @@
 			buildSettings = {
 				DSTROOT = /tmp/ckfft_ios.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				HEADER_SEARCH_PATHS = ../../inc;
+				HEADER_SEARCH_PATHS = (
+					../../inc,
+					../../src,
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -185,7 +188,10 @@
 			buildSettings = {
 				DSTROOT = /tmp/ckfft_ios.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				HEADER_SEARCH_PATHS = ../../inc;
+				HEADER_SEARCH_PATHS = (
+					../../inc,
+					../../src,
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

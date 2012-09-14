@@ -1,4 +1,12 @@
 <ckfft_test>
-    <ckfft error="0" time="0.907004" />
-    <kiss_fft error="1.94594e-06" time="0.223184" />
+    <fft_512>
+        <ckfft error="0" time="0.250411" />
+        <kiss_fft error="1.94594e-06" time="0.22266" />
+        <accelerate error="1.90203e-06" time="0.0154236" />
+    </fft_512>
+    <invfft_512>
+        <ckfft error="0" time="0.250797" />
+        <kiss_fft error="4.30872e-05" time="0.22274" />
+        <accelerate error="4.2629e-05" time="0.0152944" />
+    </invfft_512>
 </ckfft_test>
