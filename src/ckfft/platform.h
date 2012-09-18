@@ -5,6 +5,7 @@
 #undef CKFFT_PLATFORM_ANDROID
 #undef CKFFT_PLATFORM_MACOS
 #undef CKFFT_PLATFORM_WIN
+#undef CKFFT_ARM_NEON
 
 #if __APPLE__
 #  include <TargetConditionals.h>
@@ -17,6 +18,10 @@
 #  define CKFFT_PLATFORM_ANDROID 1
 #elif defined(_WIN64) || defined(_WIN32)
 #  define CKFFT_PLATFORM_WIN 1
+#endif
+
+#if __arm__ && __ARM_NEON__
+#  define CKFFT_ARM_NEON 1
 #endif
 
 #if !CKFFT_PLATFORM_IOS && !CKFFT_PLATFORM_ANDROID && !CKFFT_PLATFORM_MACOS && !CKFFT_PLATFORM_WIN

@@ -3,6 +3,10 @@
 #include <assert.h>
 #include <math.h>
 
+#if CKFFT_PLATFORM_ANDROID
+#  include <cpu-features.h>
+#endif
+
 ////////////////////////////////////////
 // OPTIMIZATIONS:
 //  - factor out count/2, etc
@@ -20,13 +24,26 @@ struct _CkFftContext
     _CkFftContext(int count);
     ~_CkFftContext();
 
+    bool neon;
     int count;
     CkFftComplex* expTable;
 };
 
 _CkFftContext::_CkFftContext(int _count) :
-    count(_count)
+    neon(false),
+    count(_count),
+    expTable(NULL)
 {
+#if CKFFT_PLATFORM_ANDROID
+    // on Android, need to check for NEON support at runtime
+    neon = ((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_NEON) == ANDROID_CPU_ARM_FEATURE_NEON);
+#elif CKFFT_PLATFORM_IOS
+    // on iOS, all armv7(s) devices support NEON
+#  if CKFFT_ARM_NEON
+    neon = true;
+#  endif
+#endif
+
     expTable = new CkFftComplex[count]; // TODO memory allocation
     // store cosines & sines separately?  only need count/2?
 
