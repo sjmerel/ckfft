@@ -158,7 +158,7 @@ void writeInput(int count)
 
 ////////////////////////////////////////
 
-const int k_reps = 5000;
+const int k_reps = 1000;
 
 class FftTester
 {
@@ -171,6 +171,7 @@ public:
 
     virtual float test(const CkFftComplex* input, CkFftComplex* output, int count, bool inverse)
     {
+        m_stats.reset();
         m_input = input;
         m_output = output;
         m_count = count;
@@ -187,7 +188,9 @@ public:
             fft();
 
             timer.stop();
-            m_stats.sample(timer.getElapsedMs());
+
+            float ms = timer.getElapsedMs();
+            m_stats.sample(ms);
         }
 
         shutdown();
@@ -530,6 +533,7 @@ void test(const char* testName,
 void test()
 {
     Timer::init();
+    writeInput(1024);
 
     vector<FftTester*> testers;
     testers.push_back(new CkFftTester());
@@ -571,6 +575,17 @@ void test()
     char testName[128];
 
     // TODO other sizes of FFT
+
+    sprintf(testName, "fft_%d", count);
+    test(testName, doc, testers, input, output, false);
+
+    sprintf(testName, "invfft_%d", count);
+    test(testName, doc, testers, output, invOutput, true);
+
+    count /= 2;
+    input.resize(count);
+    output.resize(count);
+    invOutput.resize(count);
 
     sprintf(testName, "fft_%d", count);
     test(testName, doc, testers, input, output, false);

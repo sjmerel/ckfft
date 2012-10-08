@@ -261,7 +261,6 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../DerivedData/ckfft/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -278,7 +277,6 @@
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
-					"\"$(SRCROOT)/../../DerivedData/ckfft/Build/Products/Debug\"",
 					"\"$(SRCROOT)/../../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug\"",
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
