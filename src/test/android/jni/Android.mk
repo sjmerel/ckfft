@@ -22,7 +22,7 @@ LOCAL_CFLAGS += -Wno-psabi # fix warning about va_args in ndk r8b
 LOCAL_C_INCLUDES := \
    $(LOCAL_PATH)/../../../ \
    $(LOCAL_PATH)/../../../../ext
-LOCAL_STATIC_LIBRARIES := ckfft
+LOCAL_STATIC_LIBRARIES := ckfft 
 
 include $(BUILD_SHARED_LIBRARY)
 

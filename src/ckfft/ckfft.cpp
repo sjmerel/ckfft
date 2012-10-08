@@ -1,65 +1,19 @@
 #include "ckfft/ckfft.h"
+#include "ckfft/ckfft_neon.h"
 #include "ckfft/debug.h"
+#include "ckfft/context.h"
 #include <assert.h>
-#include <math.h>
-
-#if CKFFT_PLATFORM_ANDROID
-#  include <cpu-features.h>
-#endif
 
 ////////////////////////////////////////
 // OPTIMIZATIONS:
-//  - factor out count/2, etc
-//  - Complex operations as members? As plain functions?
 //  - NEON
 //  - more special cases than count==1
-//  - precalculate expf factors?  
-//  - lookup table for expf factors? (save space with lookup table for cos only?)
+//  - larger radices
 //  - fixed point?
 //  - optimizations for real inputs?
+//  - is DIF better than DIT for NEON optimization?
 //  - memory allocations
 
-struct _CkFftContext
-{
-    _CkFftContext(int count);
-    ~_CkFftContext();
-
-    bool neon;
-    int count;
-    CkFftComplex* expTable;
-};
-
-_CkFftContext::_CkFftContext(int _count) :
-    neon(false),
-    count(_count),
-    expTable(NULL)
-{
-#if CKFFT_PLATFORM_ANDROID
-    // on Android, need to check for NEON support at runtime
-    neon = ((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_NEON) == ANDROID_CPU_ARM_FEATURE_NEON);
-#elif CKFFT_PLATFORM_IOS
-    // on iOS, all armv7(s) devices support NEON
-#  if CKFFT_ARM_NEON
-    neon = true;
-#  endif
-#endif
-
-    expTable = new CkFftComplex[count]; // TODO memory allocation
-    // store cosines & sines separately?  only need count/2?
-
-    for (int i = 0; i < count; ++i)
-    {
-        float theta = -2.0f * M_PI * i / count;
-        expTable[i].real = cosf(theta);
-        expTable[i].imag = sinf(theta);
-    }
-}
-
-_CkFftContext::~_CkFftContext()
-{
-    delete[] expTable;
-    expTable = NULL;
-}
 
 ////////////////////////////////////////
 
@@ -81,53 +35,181 @@ inline void subtract(const CkFftComplex& a, const CkFftComplex& b, CkFftComplex&
 inline void multiply(const CkFftComplex& a, const CkFftComplex& b, CkFftComplex& out)
 {
     out.real = a.real * b.real - a.imag * b.imag;
-    out.imag = a.imag * b.real + b.imag * a.real;
+    out.imag = a.imag * b.real + a.real * b.imag;
 }
 
-inline void expi(float a, CkFftComplex& out)
-{
-    out.real = cosf(a);
-    out.imag = sinf(a);
-}
-
-void fftimpl(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride, bool inverse)
+void fftimpl(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride)
 {
     if (count == 1)
     {
         *output = *input;
     }
+    /*
+    else if (count == 2)
+    {
+
+        //output[0] = input[0] + input[stride];
+        //output[1] = input[0] - input[stride];
+        add(input[0], input[stride], output[0]);
+        subtract(input[0], input[stride], output[1]);
+    }
+    else if (count == 4)
+    {
+        //output[0] = input[0] + input[stride*2];
+        //output[1] = input[0] - input[stride*2];
+        add(input[0], input[stride*2], output[0]);
+        subtract(input[0], input[stride*2], output[1]);
+
+        // output[2] = input[stride] + input[stride*3];
+        // output[3] = input[stride] - input[stride*3];
+        add(input[stride], input[stride*3], output[2]);
+        subtract(input[stride], input[stride*3], output[3]);
+
+        CkFftComplex tmp;
+        tmp = output[0];
+
+        // output[0] = tmp + output[2];
+        // output[2] = tmp - output[2];
+        add(tmp, output[2], output[0]);
+        subtract(tmp, output[2], output[2]);
+
+        CkFftComplex a;
+        a.real = context->cos(stride);
+        a.imag = context->sin(stride);
+        if (!inverse)
+        {
+            a.imag = -a.imag;
+        }
+
+        tmp = output[1];
+
+        // output[1] = tmp + a * output[3];
+        // output[3] = tmp - a * output[3];
+        CkFftComplex b;
+        multiply(a, output[3], b);
+        add(tmp, b, output[1]);
+        subtract(tmp, b, output[3]);
+    }
+    */
     else
     {
-        // DFT of even and odd elements
-        fftimpl(context, input, output, count/2, stride*2, inverse);
-        fftimpl(context, input + stride, output + count/2, count/2, stride*2, inverse);
-
-        // reshuffle
-        CkFftComplex tmp;
-        int n = count / 2;
-        int expIndex = 0;
-        for (int i = 0; i < n; ++i)
+        if ((count & 0x3) == 0)
         {
-            tmp = output[i];
+            // radix-4
+            // see http://www.cmlab.csie.ntu.edu.tw/cml/dsp/training/coding/transform/fft.html
 
-            // output[i]           = tmp + exp(-2*pi*I*i/count) * output[i + count/2];
-            // output[i + count/2] = tmp - exp(-2*pi*I*i/count) * output[i + count/2];
+            int n = count / 4;
+            int s4 = stride * 4;
 
-            assert(expIndex < context->count);
-            CkFftComplex a = context->expTable[expIndex];
-            if (inverse)
+            const CkFftComplex* in = input;
+            CkFftComplex* out = output;
+            for (int i = 0; i < 4; ++i)
             {
-                a.imag = -a.imag;
+                fftimpl(context, in, out, n, s4);
+                in += stride;
+                out += n;
             }
-            expIndex += stride;
 
-//            CKFFT_PRINTF("%f/%f + i %f/%f\n", a.real, x.real, a.imag, x.imag);
+            CkFftComplex* exp1 = context->expTable;
+            CkFftComplex* exp2 = exp1;
+            CkFftComplex* exp3 = exp1;
 
-            CkFftComplex b;
-            multiply(a, output[i + n], b);
+            CkFftComplex f1w, f2w2, f3w3;
+            CkFftComplex sum02, diff02, sum13, diff13;
+            for (int i = 0; i < n; ++i)
+            {
+                // NOTE: use vmla and vmls when vectorizing!
+                /*
+                   W = exp(-2*pi*I/N)
 
-            add(tmp, b, output[i]);
-            subtract(tmp, b, output[i + n]);
+                   X0 = F0 +   F1*W + F2*W2 +   F3*W3
+                   X1 = F0 - I*F1*W - F2*W2 + I*F3*W3
+                   X2 = F0 -   F1*W + F2*W2 -   F3*W3
+                   X3 = F0 + I*F1*W - F2*W2 - I*F3*W3
+
+                   X0 = (F0 + F2*W2) +   (F1*W + F3*W3) = sum02 + sum13
+                   X1 = (F0 - F2*W2) - I*(F1*W - F3*W3) = diff02 - I*diff13
+                   X2 = (F0 + F2*W2) -   (F1*W + F3*W3) = sum02 - sum13
+                   X3 = (F0 - F2*W2) + I*(F1*W - F3*W3) = diff02 + I*diff13
+
+                 */
+
+                // f1w = F1*W
+                // f2w2 = F2*W2
+                // f3w3 = F3*W3
+                multiply(output[i+n], *exp1, f1w);
+                multiply(output[i+2*n], *exp2, f2w2);
+                multiply(output[i+3*n], *exp3, f3w3);
+
+                // sum02  = F0 + f2w2
+                // diff02 = F0 - f2w2
+                // sum13  = f1w + f3w3
+                // diff13 = f1w - f3w3
+                add(output[i], f2w2, sum02);
+                subtract(output[i], f2w2, diff02);
+                add(f1w, f3w3, sum13);
+                subtract(f1w, f3w3, diff13);
+
+                // x + I*y = (x.real + I*x.imag) + I*(y.real + I*y.imag)
+                //         = x.real + I*x.imag + I*y.real - y.imag
+                //         = (x.real - y.imag) + I*(x.imag + y.real)
+                // x - I*y = (x.real + I*x.imag) - I*(y.real + I*y.imag)
+                //         = x.real + I*x.imag - I*y.real + y.imag
+                //         = (x.real + y.imag) + I*(x.imag - y.real)
+                add(sum02, sum13, output[i]);
+                subtract(sum02, sum13, output[i+n*2]);
+                if (context->inverse)
+                {
+                    output[i+n].real = diff02.real - diff13.imag;
+                    output[i+n].imag = diff02.imag + diff13.real;
+                    output[i+3*n].real = diff02.real + diff13.imag;
+                    output[i+3*n].imag = diff02.imag - diff13.real;
+                }
+                else
+                {
+                    output[i+n].real = diff02.real + diff13.imag;
+                    output[i+n].imag = diff02.imag - diff13.real;
+                    output[i+3*n].real = diff02.real - diff13.imag;
+                    output[i+3*n].imag = diff02.imag + diff13.real;
+                }
+
+                exp1 += stride;
+                exp2 += 2*stride;
+                exp3 += 3*stride;
+            }
+        }
+        else
+        {
+            // radix-2
+            int n = count / 2;
+            int s2 = stride * 2;
+
+            // DFT of even and odd elements
+            fftimpl(context, input, output, n, s2);
+            fftimpl(context, input + stride, output + n, n, s2);
+
+            // combine
+            CkFftComplex* out0 = output;
+            CkFftComplex* out1 = output + n;
+            CkFftComplex* exp = context->expTable;
+            CkFftComplex tmp, b;
+            do
+            {
+                // tmp = output[i];
+                // output[i]           = tmp + exp(-2*pi*I*i/count) * output[i + count/2];
+                // output[i + count/2] = tmp - exp(-2*pi*I*i/count) * output[i + count/2];
+
+                multiply(*exp, *out1, b);
+
+                tmp = *out0;
+                add(tmp, b, *out0);
+                subtract(tmp, b, *out1);
+
+                ++out0;
+                ++out1;
+                exp += stride;
+                --n;
+            } while (n);
         }
     }
 }
@@ -137,6 +219,27 @@ bool isPowerOfTwo(unsigned int x)
     return ((x != 0) && !(x & (x - 1)));
 }
 
+void fft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output, int count)
+{
+    // XXX better error handling?
+    assert(isPowerOfTwo(count)); 
+    assert(count > 0);
+    assert(input != output);
+
+#if 0
+    if (context->neon)
+    {
+        fftimpl_neon(context, input, output, count, 1);
+    }
+    else
+    {
+        fftimpl(context, input, output, count, 1);
+    }
+#else
+    fftimpl(context, input, output, count, 1);
+#endif
+}
+
 }
 
 ////////////////////////////////////////
@@ -144,35 +247,21 @@ bool isPowerOfTwo(unsigned int x)
 extern "C"
 {
 
-CkFftContext* CkFftInit(int count) 
+CkFftContext* CkFftInit(int count, int inverse) 
 {
     // XXX better error handling?
     assert(isPowerOfTwo(count)); 
     assert(count > 0);
 
     // TODO memory allocation
-    CkFftContext* context = new CkFftContext(count);
+    CkFftContext* context = new CkFftContext(count, (inverse != 0));
     return context;
 }
 
 void CkFft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output, int count)
 {
-    // XXX better error handling?
-    assert(isPowerOfTwo(count)); 
-    assert(count > 0);
-    assert(input != output);
-
-    fftimpl(context, input, output, count, 1, false);
-}
-
-void CkInvFft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output, int count)
-{
-    // XXX better error handling?
-    assert(isPowerOfTwo(count)); 
-    assert(count > 0);
-    assert(input != output);
-
-    fftimpl(context, input, output, count, 1, true);
+    // TODO do we need count here?
+    fft(context, input, output, count);
 }
 
 void CkFftShutdown(CkFftContext* context)  

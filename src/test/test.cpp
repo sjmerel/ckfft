@@ -158,7 +158,7 @@ void writeInput(int count)
 
 ////////////////////////////////////////
 
-const int k_reps = 500;
+const int k_reps = 5000;
 
 class FftTester
 {
@@ -217,19 +217,12 @@ public:
 protected:
     virtual void init()
     {
-        m_context = CkFftInit(m_count);
+        m_context = CkFftInit(m_count, m_inverse);
     }
 
     virtual void fft()
     {
-        if (m_inverse)
-        {
-            CkInvFft(m_context, m_input, m_output, m_count);
-        }
-        else
-        {
-            CkFft(m_context, m_input, m_output, m_count);
-        }
+        CkFft(m_context, m_input, m_output, m_count);
     }
 
     virtual void shutdown()
@@ -482,7 +475,7 @@ void test(const char* testName,
 
     CKFFT_PRINTF("\n");
     CKFFT_PRINTF("%s:\n", testName);
-    CKFFT_PRINTF("        name       err      time      norm    change\n");
+    CKFFT_PRINTF("        name       err  time(ms)      norm    change\n");
     CKFFT_PRINTF("----------------------------------------------------\n");
 
     // find XML element containing results for this test (or create one)
@@ -558,6 +551,13 @@ void test()
     vector<CkFftComplex> output;
     output.resize(count);
 
+#if 0
+    count = 32;
+    CkFftContext* context = CkFftInit(count);
+    CkFft(context, &input[0], &output[0], count);
+    CkFftShutdown(context);
+#else
+
     // allocate inverse output
     vector<CkFftComplex> invOutput;
     invOutput.resize(count);
@@ -584,6 +584,7 @@ void test()
     {
         delete testers[i];
     }
+#endif
 }
 
 
