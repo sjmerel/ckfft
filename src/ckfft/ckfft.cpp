@@ -41,12 +41,12 @@ inline void multiply(const CkFftComplex& a, const CkFftComplex& b, CkFftComplex&
 // see http://www.cmlab.csie.ntu.edu.tw/cml/dsp/training/coding/transform/fft.html
 void fftimpl(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride)
 {
-    if (count == 1)
+    if (count == 2)
     {
-        *output = *input;
-    }
-    else if (count == 2)
-    {
+        // radix-2 loop unrolled
+
+        // this code will be called at the deepest recursion level for FFT sizes
+        // that are not a power of 4.
 
         //output[0] = input[0] + input[stride];
         //output[1] = input[0] - input[stride];
@@ -57,10 +57,15 @@ void fftimpl(CkFftContext* context, const CkFftComplex* input, CkFftComplex* out
     }
     else if (count == 4)
     {
-#if 1
+        // radix-4 loop unrolled
+
+        // this code will be called at the deepest recursion level for FFT sizes
+        // that are a power of 4.
+
         const CkFftComplex* in = input;
         CkFftComplex* out = output;
-        for (int i = 0; i < 4; ++i)
+        CkFftComplex* outEnd = out + 4;
+        while (out < outEnd)
         {
             *out = *in;
             in += stride;
@@ -95,139 +100,109 @@ void fftimpl(CkFftContext* context, const CkFftComplex* input, CkFftComplex* out
             out3->real = diff02.real - diff13.imag;
             out3->imag = diff02.imag + diff13.real;
         }
-
-#else
-        //output[0] = input[0] + input[stride*2];
-        //output[1] = input[0] - input[stride*2];
-        add(input[0], input[stride*2], output[0]);
-        subtract(input[0], input[stride*2], output[1]);
-
-        // output[2] = input[stride] + input[stride*3];
-        // output[3] = input[stride] - input[stride*3];
-        add(input[stride], input[stride*3], output[2]);
-        subtract(input[stride], input[stride*3], output[3]);
-
-        CkFftComplex tmp;
-        tmp = output[0];
-
-        // output[0] = tmp + output[2];
-        // output[2] = tmp - output[2];
-        add(tmp, output[2], output[0]);
-        subtract(tmp, output[2], output[2]);
-
-        CkFftComplex* a = context->expTable + stride;
-
-        tmp = output[1];
-
-        // output[1] = tmp + a * output[3];
-        // output[3] = tmp - a * output[3];
-        CkFftComplex b;
-        multiply(*a, output[3], b);
-        add(tmp, b, output[1]);
-        subtract(tmp, b, output[3]);
-#endif
     }
     else
     {
-        if ((count & 0x3) == 0)
+        // radix-4
+        assert((count & 0x3) == 0);
+
+        int n = count / 4;
+        int s4 = stride * 4;
+
+        // calculate FFT of each 1/4
+        const CkFftComplex* in = input;
+        CkFftComplex* out = output;
+        CkFftComplex* outEnd = out + n*4;
+        while (out < outEnd)
         {
-            // radix-4
-
-            int n = count / 4;
-            int s4 = stride * 4;
-
-            // calculate FFT of each 1/4
-            const CkFftComplex* in = input;
-            CkFftComplex* out = output;
-            for (int i = 0; i < 4; ++i)
-            {
-                fftimpl(context, in, out, n, s4);
-                in += stride;
-                out += n;
-            }
-
-            CkFftComplex* exp1 = context->expTable;
-            CkFftComplex* exp2 = exp1;
-            CkFftComplex* exp3 = exp1;
-
-            CkFftComplex f1w, f2w2, f3w3;
-            CkFftComplex sum02, diff02, sum13, diff13;
-
-            CkFftComplex* out0 = output;
-            CkFftComplex* out1 = out0 + n;
-            CkFftComplex* out2 = out1 + n;
-            CkFftComplex* out3 = out2 + n;
-
-            for (int i = 0; i < n; ++i)
-            {
-                // NOTE: use vmla and vmls when vectorizing!
-                /*
-                   W = exp(-2*pi*I/N)
-
-                   X0 = F0 +   F1*W + F2*W2 +   F3*W3
-                   X1 = F0 - I*F1*W - F2*W2 + I*F3*W3
-                   X2 = F0 -   F1*W + F2*W2 -   F3*W3
-                   X3 = F0 + I*F1*W - F2*W2 - I*F3*W3
-
-                   X0 = (F0 + F2*W2) +   (F1*W + F3*W3) = sum02 + sum13
-                   X1 = (F0 - F2*W2) - I*(F1*W - F3*W3) = diff02 - I*diff13
-                   X2 = (F0 + F2*W2) -   (F1*W + F3*W3) = sum02 - sum13
-                   X3 = (F0 - F2*W2) + I*(F1*W - F3*W3) = diff02 + I*diff13
-
-                 */
-
-                // f1w = F1*W
-                // f2w2 = F2*W2
-                // f3w3 = F3*W3
-                multiply(*out1, *exp1, f1w);
-                multiply(*out2, *exp2, f2w2);
-                multiply(*out3, *exp3, f3w3);
-
-                // sum02  = F0 + f2w2
-                // diff02 = F0 - f2w2
-                // sum13  = f1w + f3w3
-                // diff13 = f1w - f3w3
-                add(*out0, f2w2, sum02);
-                subtract(*out0, f2w2, diff02);
-                add(f1w, f3w3, sum13);
-                subtract(f1w, f3w3, diff13);
-
-                // x + I*y = (x.real + I*x.imag) + I*(y.real + I*y.imag)
-                //         = x.real + I*x.imag + I*y.real - y.imag
-                //         = (x.real - y.imag) + I*(x.imag + y.real)
-                // x - I*y = (x.real + I*x.imag) - I*(y.real + I*y.imag)
-                //         = x.real + I*x.imag - I*y.real + y.imag
-                //         = (x.real + y.imag) + I*(x.imag - y.real)
-                add(sum02, sum13, *out0);
-                subtract(sum02, sum13, *out2);
-                if (context->inverse)
-                {
-                    out1->real = diff02.real - diff13.imag;
-                    out1->imag = diff02.imag + diff13.real;
-                    out3->real = diff02.real + diff13.imag;
-                    out3->imag = diff02.imag - diff13.real;
-                }
-                else
-                {
-                    out1->real = diff02.real + diff13.imag;
-                    out1->imag = diff02.imag - diff13.real;
-                    out3->real = diff02.real - diff13.imag;
-                    out3->imag = diff02.imag + diff13.real;
-                }
-
-                exp1 += stride;
-                exp2 += 2*stride;
-                exp3 += 3*stride;
-
-                ++out0;
-                ++out1;
-                ++out2;
-                ++out3;
-            }
+            fftimpl(context, in, out, n, s4);
+            in += stride;
+            out += n;
         }
+
+        CkFftComplex* exp1 = context->expTable;
+        CkFftComplex* exp2 = exp1;
+        CkFftComplex* exp3 = exp1;
+
+        CkFftComplex f1w, f2w2, f3w3;
+        CkFftComplex sum02, diff02, sum13, diff13;
+
+        CkFftComplex* out0 = output;
+        CkFftComplex* out1 = out0 + n;
+        CkFftComplex* out2 = out1 + n;
+        CkFftComplex* out3 = out2 + n;
+
+        for (int i = 0; i < n; ++i)
+        {
+            // NOTE: use vmla and vmls when vectorizing!
+            /*
+               W = exp(-2*pi*I/N)
+
+               X0 = F0 +   F1*W + F2*W2 +   F3*W3
+               X1 = F0 - I*F1*W - F2*W2 + I*F3*W3
+               X2 = F0 -   F1*W + F2*W2 -   F3*W3
+               X3 = F0 + I*F1*W - F2*W2 - I*F3*W3
+
+               X0 = (F0 + F2*W2) +   (F1*W + F3*W3) = sum02 + sum13
+               X1 = (F0 - F2*W2) - I*(F1*W - F3*W3) = diff02 - I*diff13
+               X2 = (F0 + F2*W2) -   (F1*W + F3*W3) = sum02 - sum13
+               X3 = (F0 - F2*W2) + I*(F1*W - F3*W3) = diff02 + I*diff13
+
+             */
+
+            // f1w = F1*W
+            // f2w2 = F2*W2
+            // f3w3 = F3*W3
+            multiply(*out1, *exp1, f1w);
+            multiply(*out2, *exp2, f2w2);
+            multiply(*out3, *exp3, f3w3);
+
+            // sum02  = F0 + f2w2
+            // diff02 = F0 - f2w2
+            // sum13  = f1w + f3w3
+            // diff13 = f1w - f3w3
+            add(*out0, f2w2, sum02);
+            subtract(*out0, f2w2, diff02);
+            add(f1w, f3w3, sum13);
+            subtract(f1w, f3w3, diff13);
+
+            // x + I*y = (x.real + I*x.imag) + I*(y.real + I*y.imag)
+            //         = x.real + I*x.imag + I*y.real - y.imag
+            //         = (x.real - y.imag) + I*(x.imag + y.real)
+            // x - I*y = (x.real + I*x.imag) - I*(y.real + I*y.imag)
+            //         = x.real + I*x.imag - I*y.real + y.imag
+            //         = (x.real + y.imag) + I*(x.imag - y.real)
+            add(sum02, sum13, *out0);
+            subtract(sum02, sum13, *out2);
+            if (context->inverse)
+            {
+                out1->real = diff02.real - diff13.imag;
+                out1->imag = diff02.imag + diff13.real;
+                out3->real = diff02.real + diff13.imag;
+                out3->imag = diff02.imag - diff13.real;
+            }
+            else
+            {
+                out1->real = diff02.real + diff13.imag;
+                out1->imag = diff02.imag - diff13.real;
+                out3->real = diff02.real - diff13.imag;
+                out3->imag = diff02.imag + diff13.real;
+            }
+
+            exp1 += stride;
+            exp2 += 2*stride;
+            exp3 += 3*stride;
+
+            ++out0;
+            ++out1;
+            ++out2;
+            ++out3;
+        }
+        /*
         else
         {
             // radix-2
+            // this is never called; radix-2 is only used for count==2 above
 
             int n = count / 2;
             int s2 = stride * 2;
@@ -239,9 +214,10 @@ void fftimpl(CkFftContext* context, const CkFftComplex* input, CkFftComplex* out
             // combine
             CkFftComplex* out0 = output;
             CkFftComplex* out1 = output + n;
+            CkFftComplex* out0End = output + n;
             CkFftComplex* exp = context->expTable;
             CkFftComplex tmp, b;
-            do
+            while (out0 < out0End)
             {
                 // tmp = output[i];
                 // output[i]           = tmp + exp(-2*pi*I*i/count) * output[i + count/2];
@@ -256,9 +232,9 @@ void fftimpl(CkFftContext* context, const CkFftComplex* input, CkFftComplex* out
                 ++out0;
                 ++out1;
                 exp += stride;
-                --n;
-            } while (n);
+            }
         }
+        */
     }
 }
 
@@ -274,18 +250,26 @@ void fft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output,
     assert(count > 0);
     assert(input != output);
 
-#if 0
-    if (context->neon)
+    // handle trivial case here, so we don't have to check for it in fftimpl
+    if (count == 1)
     {
-        fftimpl_neon(context, input, output, count, 1);
+        *output = *input;
     }
     else
     {
-        fftimpl(context, input, output, count, 1);
-    }
+#if 0
+        if (context->neon)
+        {
+            fftimpl_neon(context, input, output, count, 1);
+        }
+        else
+        {
+            fftimpl(context, input, output, count, 1);
+        }
 #else
-    fftimpl(context, input, output, count, 1);
+        fftimpl(context, input, output, count, 1);
 #endif
+    }
 }
 
 }
