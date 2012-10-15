@@ -225,7 +225,7 @@ protected:
 
     virtual void fft()
     {
-        CkFft(m_context, m_input, m_output, m_count);
+        CkFft(m_context, m_input, m_output);
     }
 
     virtual void shutdown()
@@ -556,9 +556,9 @@ void test()
     output.resize(count);
 
 #if 0
-    count = 32;
-    CkFftContext* context = CkFftInit(count);
-    CkFft(context, &input[0], &output[0], count);
+    count = 512;
+    CkFftContext* context = CkFftInit(count, false);
+    CkFft(context, &input[0], &output[0]);
     CkFftShutdown(context);
 #else
 
