@@ -11,26 +11,8 @@
 // periodically.
 
 
-void* doTest(void*)
+void* testThreadProc(void*)
 {
-    /*
-    Stats stats;
-    int outliers = 0;
-    for (int i = 0; i < 1000; ++i)
-    {
-        uint64_t start = mach_absolute_time();
-        for (int j = 0; j < 100000; ++j);
-        uint64_t stop = mach_absolute_time();
-        int t = (int) (stop-start);
-        stats.sample(t);
-        if (stats.getCount() > 2 && t > stats.getMean() * 2.0f)
-        {
-            ++outliers;
-        }
-        printf("%llu\n", stop-start);
-    }
-    printf("%d outliers; mean %f, max %f\n", outliers, stats.getMean(), stats.getMax());
-    */
     test();
 
     return NULL;
@@ -51,7 +33,7 @@ void startTest()
     PTHREAD_VERIFY( pthread_attr_setschedparam(&attr, &param) );
 
     pthread_t threadId;
-    PTHREAD_VERIFY( pthread_create(&threadId, &attr, &doTest, NULL) );
+    PTHREAD_VERIFY( pthread_create(&threadId, &attr, &testThreadProc, NULL) );
 
     void* ret;
     pthread_join(threadId, &ret);

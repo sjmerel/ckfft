@@ -3,17 +3,16 @@
 #include "ckfft/debug.h"
 #include "ckfft/context.h"
 #include <assert.h>
+#include <new>
 
 ////////////////////////////////////////
 // OPTIMIZATIONS:
 //  - NEON
-//  - more special cases than count==1
-//  - larger radices
 //  - fixed point?
+//  - alignment?
 //  - optimizations for real inputs?
 //  - is DIF better than DIT for NEON optimization?
-//  - memory allocations
-
+//  - stride for when complex values aren't in their own array?
 
 ////////////////////////////////////////
 
@@ -94,8 +93,10 @@ void fftimpl(CkFftContext* context, const CkFftComplex* input, CkFftComplex* out
         // this code will be called at the deepest recursion level for FFT sizes
         // that are not a power of 4.
 
-        // having a special case for count == 8 only speeds things up by a few
-        // percent here, but is necessary for the NEON implementation.
+        // Having a special case for count == 8 only speeds things up by a few
+        // percent here. In the NEON implementation, however, this case is required,
+        // since the general case processes 4 elements at a time, and this case only
+        // requires 2 elements.
 
         // calculate FFT of each 1/4
         const CkFftComplex* in0 = input;
@@ -320,20 +321,11 @@ void fftimpl(CkFftContext* context, const CkFftComplex* input, CkFftComplex* out
     }
 }
 
-bool isPowerOfTwo(unsigned int x)
-{
-    return ((x != 0) && !(x & (x - 1)));
-}
-
 void fft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output)
 {
     int count = context->count;
-    // XXX better error handling?
-    assert(isPowerOfTwo(count)); 
-    assert(count > 0);
-    assert(input != output);
 
-    // handle trivial cases here, so we don't have to check for it in fftimpl
+    // handle trivial cases here, so we don't have to check for them in fftimpl
     if (count == 1)
     {
         *output = *input;
@@ -364,6 +356,11 @@ void fft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output)
     }
 }
 
+bool isPowerOfTwo(unsigned int x)
+{
+    return ((x != 0) && !(x & (x - 1)));
+}
+
 }
 
 ////////////////////////////////////////
@@ -371,25 +368,75 @@ void fft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output)
 extern "C"
 {
 
-CkFftContext* CkFftInit(int count, int inverse) 
+CkFftContext* CkFftInit(int count, int inverse, void* userBuf, size_t* userBufSize) 
 {
-    // XXX better error handling?
-    assert(isPowerOfTwo(count)); 
-    assert(count > 0);
+    if (count <= 0)
+    {
+        return NULL;
+    }
+    if (!isPowerOfTwo(count))
+    {
+        return NULL;
+    }
+    if (userBuf && !userBufSize)
+    {
+        return NULL;
+    }
 
-    // TODO memory allocation
-    CkFftContext* context = new CkFftContext(count, (inverse != 0));
+    // calculate bytes needed for the context object and its lookup table
+    int contextSize = sizeof(CkFftContext);
+    if (contextSize % sizeof(CkFftComplex))
+    {
+        contextSize += sizeof(CkFftComplex) - (contextSize % sizeof(CkFftComplex));
+    }
+    int expTableSize = count * sizeof(CkFftComplex);
+    int reqBufSize = contextSize + expTableSize;
+
+    if (userBufSize && (!userBuf || *userBufSize < reqBufSize))
+    {
+        *userBufSize = reqBufSize;
+        return NULL;
+    }
+
+    void* buf = NULL;
+    if (userBuf)
+    {
+        buf = userBuf;
+    }
+    else
+    {
+        // allocate buffer
+        buf = malloc(reqBufSize);
+        if (!buf)
+        {
+            return NULL;
+        }
+    }
+
+    CkFftContext* context = new (buf) CkFftContext(count, inverse != 0, (char*) buf + contextSize, userBuf == NULL);
+        
     return context;
 }
 
-void CkFft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output)
+int CkFft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output)
 {
-    fft(context, input, output);
+    if (!context || !input || !output || input == output)
+    {
+        return 0;
+    }
+    else
+    {
+        fft(context, input, output);
+        return 1;
+    }
 }
 
 void CkFftShutdown(CkFftContext* context)  
 {
-    delete context;
+    if (context && context->ownBuf)
+    {
+        free(context);
+    }
 }
 
 }

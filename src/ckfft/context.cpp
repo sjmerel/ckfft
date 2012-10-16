@@ -2,16 +2,18 @@
 #include "ckfft/platform.h"
 #include "ckfft/debug.h"
 #include <math.h>
+#include <new>
 
 #if CKFFT_PLATFORM_ANDROID
 #  include <cpu-features.h>
 #endif
 
-_CkFftContext::_CkFftContext(int _count, bool _inverse) :
+_CkFftContext::_CkFftContext(int _count, bool _inverse, void* expTableBuf, bool _ownBuf) :
     neon(false),
     inverse(_inverse),
     count(_count),
-    expTable(NULL)
+    expTable((CkFftComplex*) expTableBuf),
+    ownBuf(_ownBuf)
 {
 #if CKFFT_PLATFORM_ANDROID
     // on Android, need to check for NEON support at runtime
@@ -23,9 +25,6 @@ _CkFftContext::_CkFftContext(int _count, bool _inverse) :
 #  endif
 #endif
 
-    // TODO
-    // - memory allocation
-    expTable = new CkFftComplex[count];
     for (int i = 0; i < count; ++i)
     {
         float theta = -2.0f * M_PI * i / count;
@@ -38,9 +37,4 @@ _CkFftContext::_CkFftContext(int _count, bool _inverse) :
     }
 }
 
-_CkFftContext::~_CkFftContext()
-{
-    delete[] expTable;
-    expTable = NULL;
-}
 

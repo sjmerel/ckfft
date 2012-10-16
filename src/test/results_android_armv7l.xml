@@ -1,6 +1,18 @@
 <ckfft_test>
     <fft_512>
-        <ckfft error="0" time="3.23183" />
-        <kiss_fft error="1.84622e-06" time="0.356164" />
+        <ckfft error="0" time="0.14776" />
+        <kiss_fft error="1.59861e-06" time="0.315721" />
     </fft_512>
+    <fft_1024>
+        <ckfft error="0" time="0.238548" />
+        <kiss_fft error="2.38842e-06" time="0.738356" />
+    </fft_1024>
+    <invfft_1024>
+        <ckfft error="0" time="0.211994" />
+        <kiss_fft error="7.32174e-05" time="0.696602" />
+    </invfft_1024>
+    <invfft_512>
+        <ckfft error="0" time="0.141816" />
+        <kiss_fft error="3.48697e-05" time="0.344531" />
+    </invfft_512>
 </ckfft_test>

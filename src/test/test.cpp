@@ -169,7 +169,12 @@ public:
 
     virtual const char* getName() = 0;
 
-    virtual float test(const CkFftComplex* input, CkFftComplex* output, int count, bool inverse)
+    const Stats& getStats() const
+    {
+        return m_stats;
+    }
+
+    virtual void test(const CkFftComplex* input, CkFftComplex* output, int count, bool inverse)
     {
         m_stats.reset();
         m_input = input;
@@ -194,8 +199,6 @@ public:
         }
 
         shutdown();
-
-        return m_stats.getMean();
     }
 
 protected:
@@ -220,7 +223,7 @@ public:
 protected:
     virtual void init()
     {
-        m_context = CkFftInit(m_count, m_inverse);
+        m_context = CkFftInit(m_count, m_inverse, NULL, NULL);
     }
 
     virtual void fft()
@@ -478,8 +481,8 @@ void test(const char* testName,
 
     CKFFT_PRINTF("\n");
     CKFFT_PRINTF("%s:\n", testName);
-    CKFFT_PRINTF("        name       err  time(ms)      norm    change\n");
-    CKFFT_PRINTF("----------------------------------------------------\n");
+    CKFFT_PRINTF("        name       err      mean       min       max      norm    change\n");
+    CKFFT_PRINTF("------------------------------------------------------------------------\n");
 
     // find XML element containing results for this test (or create one)
     TiXmlElement* rootElem = doc.FirstChildElement("ckfft_test");
@@ -495,7 +498,9 @@ void test(const char* testName,
     {
         // calculate output
         FftTester* tester = testers[i];
-        float time = tester->test(&input[0], (i == 0 ? &output[0] : &refOutput[0]), count, inverse);
+        tester->test(&input[0], (i == 0 ? &output[0] : &refOutput[0]), count, inverse);
+        const Stats& stats = tester->getStats();
+        float time = stats.getMean();
 
         if (i == 0)
         {
@@ -521,7 +526,7 @@ void test(const char* testName,
         testerElem->SetDoubleAttribute("error", err);
         testerElem->SetDoubleAttribute("time", time);
 
-        CKFFT_PRINTF("%12s: %f  %f  %f  %7.2f%%", tester->getName(), err, time, time/baseTime, 100.0f*(time - prevTime)/prevTime);
+        CKFFT_PRINTF("%12s: %f  %f  %f  %f  %f  %7.2f%%", tester->getName(), err, time, stats.getMin(), stats.getMax(), time/baseTime, 100.0f*(time - prevTime)/prevTime);
         if (err > k_thresh)
         {
             CKFFT_PRINTF("   ****** FAILED ******");
@@ -557,7 +562,7 @@ void test()
 
 #if 0
     count = 512;
-    CkFftContext* context = CkFftInit(count, false);
+    CkFftContext* context = CkFftInit(count, false, NULL);
     CkFft(context, &input[0], &output[0]);
     CkFftShutdown(context);
 #else
@@ -601,5 +606,4 @@ void test()
     }
 #endif
 }
-
 
