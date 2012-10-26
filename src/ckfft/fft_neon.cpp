@@ -1,69 +1,16 @@
-#include "ckfft/ckfft.h"
 #include "ckfft/platform.h"
 #include "ckfft/debug.h"
 #include "ckfft/context.h"
+#include "ckfft/math.h"
+#include <assert.h>
 
 #if CKFFT_ARM_NEON
 #include <arm_neon.h>
 
+using namespace ckfft;
+
 namespace
 {
-
-#if 0
-inline void vmul(const CkFftComplex* x, const CkFftComplex* y, CkFftComplex* out)
-{
-    // (a + bi)(c + di) = (ac - bd) + (bc + ad)i
-    // vld1: a b , c d
-    // vmul: a b , c d , ac bd
-    // vrev: b a , c d , ac bd
-    // vmul: b a , bc ad , ac bd
-    // vneg: b a , bc ad , ac -bd
-    // vtrn: b a , -bd ad , ac bc 
-    // vadd: ac-bd bc+ad , -bd ad , ac bc 
-
-    asm volatile
-        (
-         "vld1.32 d0, [%[x]]\n\t"   // a b
-         "vld1.32 d1, [%[y]]\n\t"   // a b         | c d
-         "vmul.f32 d2, d0, d1\n\t"  // a b         | c d    | ac bd
-         "vrev64.32 d0, d0\n\t"     // b a         | c d    | ac bd
-         "vmul.f32 d1, d0, d1\n\t"  // b a         | bc ad  | ac bd
-         "vneg.f32 s5, s5\n\t"      // b a         | bc ad  | ac -bd
-         "vtrn.32 d2, d1\n\t"       // b a         | -bd ad | ac bc
-         "vadd.f32 d0, d1, d2\n\t"  // ac-bd bc+ad | -bd ad | ac bc
-         "vst1.32 d0, [%[out]]\n\t"
-
-         : [out] "+r" (out)
-         : [x] "r" (x), [y] "r" (y)
-         : "d0", "d1", "d2", "cc" // ??
-        );
-}
-
-inline void vmulq(const CkFftComplex* x0, const CkFftComplex* y0, CkFftComplex* out0,
-                  const CkFftComplex* x1, const CkFftComplex* y1, CkFftComplex* out1)
-{
-    asm volatile
-        (
-         "vld1.32 d0, [%[x0]]\n\t"   // a0 b0
-         "vld1.32 d1, [%[x1]]\n\t"   // a0 b0 | a1 b1
-         "vld1.32 d2, [%[y0]]\n\t"   // a0 b0 | a1 b1 | c0 d0
-         "vld1.32 d3, [%[y1]]\n\t"   // a0 b0 | a1 b1 | c0 d0     | c1 d1
-         "vmul.f32 q2, q0, q1\n\t"   // a0 b0 | a1 b1 | c0 d0     | c1 d1     | a0c0 b0d0 | a1c1 b1d1
-         "vrev64.32 q0, q0\n\t"      // b0 a0 | b1 a1 | c0 d0     | c1 d1     | a0c0 b0d0 | a1c1 b1d1
-         "vmul.f32 q1, q0, q1\n\t"   // b0 a0 | b1 a1 | b0c0 a0d0 | b1c1 a1d1 | a0c0 b0d0 | a1c1 b1d1
-
-         "vneg.f32 s5, s5\n\t"      // b a         | bc ad  | ac -bd
-         "vtrn.32 d2, d1\n\t"       // b a         | -bd ad | ac bc
-         "vadd.f32 d0, d1, d2\n\t"  // ac-bd bc+ad | -bd ad | ac bc
-         "vst1.32 d0, [%[out]]\n\t"
-
-         : [out] "+r" (out)
-         : [x] "r" (x), [y] "r" (y)
-         : "d0", "d1", "d2", "cc" // ??
-        );
-}
-
-#endif
 
 inline void vmul(const float32x4x2_t& x, const float32x4x2_t& y, float32x4x2_t& out)
 {
@@ -111,81 +58,15 @@ inline void vsub(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& 
     out.val[1] = vsub_f32(x.val[1], y.val[1]);
 }
 
-inline void add(const CkFftComplex& x, const CkFftComplex& y, CkFftComplex& out)
-{
-#if 0
-    register float* px = (float*) &x;
-    register float* py = (float*) &y;
-    register float* pout = (float*) &out;
-    asm volatile
-        (
-         "vld1.32 d0, [%[px]]\n\t"
-         "vld1.32 d1, [%[py]]\n\t"
-         "vadd.f32 d0, d0, d1\n\t"
-         "vst1.32 d0, [%[pout]]\n\t"
-
-         : [pout] "=r" (pout)
-         : [px] "r" (px), [py] "r" (py)
-         : "d0", "d1", "cc", "memory"// ??
-        );
-#else
-    out.real = x.real + y.real;
-    out.imag = x.imag + y.imag;
-#endif
-}
-
-inline void subtract(const CkFftComplex& a, const CkFftComplex& b, CkFftComplex& out)
-{
-    out.real = a.real - b.real;
-    out.imag = a.imag - b.imag;
-}
-
-inline void multiply(const CkFftComplex& a, const CkFftComplex& b, CkFftComplex& out)
-{
-    out.real = a.real * b.real - a.imag * b.imag;
-    out.imag = a.imag * b.real + a.real * b.imag;
-}
-
-}
+} // namespace
 
 ////////////////////////////////////////
 
-void fftimpl_neon(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride)
+namespace ckfft
 {
-    /*
-    if (count == 2)
-    {
-#if 0
-        register int inc = stride * sizeof(CkFftComplex);
-        asm volatile
-            (
-             "vld1.32 d0, [%[input]], %[inc]\n\t" // d0 = *input
-             "vld1.32 d1, [%[input]]\n\t"         // d1 = *(input + stride)
-             "vsub.f32 d2, d0, d1\n\t"            // d2 = d0 - d1
-             "vadd.f32 d1, d0, d1\n\t"            // d1 = d0 + d1
-             "vst1.32 {d1-d2}, [%[output]]\n\t"   // *output = d1, *(output+1) = d2
 
-             :
-             : [input] "r" (input), [inc] "r" (inc), [output] "r" (output)
-             : "d0", "d1", "d2", "memory"
-            );
-#else
-        float32x2_t input0_v;
-        input0_v = vld1_f32((const float*) input);
-        float32x2_t inputs_v;
-        inputs_v = vld1_f32((const float*) (input + stride));
-
-        float32x2_t output0_v;
-        output0_v = vadd_f32(input0_v, inputs_v);
-        float32x2_t output1_v;
-        output1_v = vsub_f32(input0_v, inputs_v);
-
-        float32x4_t output_v = vcombine_f32(output0_v, output1_v);
-        vst1q_f32((float*) output, output_v);
-#endif
-    }
-    */
-
+void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride)
+{
     if (count == 4)
     {
         // TODO vectorize?
@@ -248,7 +129,7 @@ void fftimpl_neon(CkFftContext* context, const CkFftComplex* input, CkFftComplex
             out += 2;
         }
 
-        CkFftComplex* exp = context->expTable;
+        const CkFftComplex* exp = context->expTable;
 
         float32x2x2_t f1w_v, f2w2_v, f3w3_v;
         float32x2x2_t sum02_v, diff02_v, sum13_v, diff13_v;
@@ -322,14 +203,14 @@ void fftimpl_neon(CkFftContext* context, const CkFftComplex* input, CkFftComplex
         CkFftComplex* outEnd = out + count;
         while (out < outEnd)
         {
-            fftimpl_neon(context, in, out, n, stride4);
+            fft_neon(context, in, out, n, stride4);
             in += stride;
             out += n;
         }
 
-        CkFftComplex* exp1 = context->expTable;
-        CkFftComplex* exp2 = exp1;
-        CkFftComplex* exp3 = exp1;
+        const CkFftComplex* exp1 = context->expTable;
+        const CkFftComplex* exp2 = exp1;
+        const CkFftComplex* exp3 = exp1;
 
         float32x4x2_t f1w_v, f2w2_v, f3w3_v;
         float32x4x2_t sum02_v, diff02_v, sum13_v, diff13_v;
@@ -420,8 +301,13 @@ void fftimpl_neon(CkFftContext* context, const CkFftComplex* input, CkFftComplex
         }
     }
 }
+}
 #else
-void fftimpl_neon(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride) {}
+namespace ckfft
+{
+    void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride) {}
+} 
 #endif
+
 
 

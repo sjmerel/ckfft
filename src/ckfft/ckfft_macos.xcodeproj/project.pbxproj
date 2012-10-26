@@ -8,15 +8,31 @@
 
 /* Begin PBXBuildFile section */
 		AA75B5EB15EC6429008151B6 /* ckfft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA75B5EA15EC6429008151B6 /* ckfft.cpp */; };
+		AA8DE003163649B100D67317 /* context.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DDFFB163649B100D67317 /* context.h */; };
+		AA8DE004163649B100D67317 /* debug.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DDFFC163649B100D67317 /* debug.h */; };
+		AA8DE005163649B100D67317 /* fft_neon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA8DDFFD163649B100D67317 /* fft_neon.cpp */; };
+		AA8DE006163649B100D67317 /* fft_neon.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DDFFE163649B100D67317 /* fft_neon.h */; };
+		AA8DE007163649B100D67317 /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA8DDFFF163649B100D67317 /* fft.cpp */; };
+		AA8DE008163649B100D67317 /* fft.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DE000163649B100D67317 /* fft.h */; };
+		AA8DE009163649B100D67317 /* math.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DE001163649B100D67317 /* math.h */; };
+		AA8DE00A163649B100D67317 /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DE002163649B100D67317 /* platform.h */; };
+		AA8DE0501637A61400D67317 /* ckfft_real.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA8DE04F1637A61400D67317 /* ckfft_real.cpp */; };
 		AAD326C21608FE7900984DE2 /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAD326C11608FE7900984DE2 /* context.cpp */; };
-		AAD326CA160A3A0600984DE2 /* ckfft_neon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAD326C9160A3A0600984DE2 /* ckfft_neon.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		AA75B5DD15EC6395008151B6 /* libckfft_macos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libckfft_macos.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA75B5EA15EC6429008151B6 /* ckfft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ckfft.cpp; sourceTree = "<group>"; };
+		AA8DDFFB163649B100D67317 /* context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = context.h; sourceTree = "<group>"; };
+		AA8DDFFC163649B100D67317 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
+		AA8DDFFD163649B100D67317 /* fft_neon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft_neon.cpp; sourceTree = "<group>"; };
+		AA8DDFFE163649B100D67317 /* fft_neon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_neon.h; sourceTree = "<group>"; };
+		AA8DDFFF163649B100D67317 /* fft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft.cpp; sourceTree = "<group>"; };
+		AA8DE000163649B100D67317 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
+		AA8DE001163649B100D67317 /* math.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
+		AA8DE002163649B100D67317 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
+		AA8DE04F1637A61400D67317 /* ckfft_real.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ckfft_real.cpp; sourceTree = "<group>"; };
 		AAD326C11608FE7900984DE2 /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context.cpp; sourceTree = "<group>"; };
-		AAD326C9160A3A0600984DE2 /* ckfft_neon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ckfft_neon.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -33,9 +49,17 @@
 		AA75B5D215EC6395008151B6 = {
 			isa = PBXGroup;
 			children = (
-				AAD326C9160A3A0600984DE2 /* ckfft_neon.cpp */,
-				AAD326C11608FE7900984DE2 /* context.cpp */,
+				AA8DE04F1637A61400D67317 /* ckfft_real.cpp */,
 				AA75B5EA15EC6429008151B6 /* ckfft.cpp */,
+				AAD326C11608FE7900984DE2 /* context.cpp */,
+				AA8DDFFB163649B100D67317 /* context.h */,
+				AA8DDFFC163649B100D67317 /* debug.h */,
+				AA8DDFFF163649B100D67317 /* fft.cpp */,
+				AA8DE000163649B100D67317 /* fft.h */,
+				AA8DDFFD163649B100D67317 /* fft_neon.cpp */,
+				AA8DDFFE163649B100D67317 /* fft_neon.h */,
+				AA8DE001163649B100D67317 /* math.h */,
+				AA8DE002163649B100D67317 /* platform.h */,
 				AA75B5DE15EC6395008151B6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -55,6 +79,12 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA8DE003163649B100D67317 /* context.h in Headers */,
+				AA8DE004163649B100D67317 /* debug.h in Headers */,
+				AA8DE006163649B100D67317 /* fft_neon.h in Headers */,
+				AA8DE008163649B100D67317 /* fft.h in Headers */,
+				AA8DE009163649B100D67317 /* math.h in Headers */,
+				AA8DE00A163649B100D67317 /* platform.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -111,7 +141,9 @@
 			files = (
 				AA75B5EB15EC6429008151B6 /* ckfft.cpp in Sources */,
 				AAD326C21608FE7900984DE2 /* context.cpp in Sources */,
-				AAD326CA160A3A0600984DE2 /* ckfft_neon.cpp in Sources */,
+				AA8DE005163649B100D67317 /* fft_neon.cpp in Sources */,
+				AA8DE007163649B100D67317 /* fft.cpp in Sources */,
+				AA8DE0501637A61400D67317 /* ckfft_real.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -142,6 +174,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				USE_HEADERMAP = NO;
 			};
 			name = Debug;
 		};
@@ -162,6 +195,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.7;
 				SDKROOT = macosx;
+				USE_HEADERMAP = NO;
 			};
 			name = Release;
 		};

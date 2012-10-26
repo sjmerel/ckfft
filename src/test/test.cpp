@@ -12,6 +12,7 @@
 #include <algorithm>
 
 #include "ckfft/ckfft.h"
+#include "ckfft/ckfft_real.h"
 #include "ckfft/platform.h"
 #include "ckfft/debug.h"
 
@@ -24,6 +25,7 @@
 #endif
 
 #include "kiss_fft130/kiss_fft.h"
+#include "kiss_fft130/tools/kiss_fftr.h"
 #include "tinyxml/tinyxml.h"
 
 
@@ -38,7 +40,7 @@ void print(const CkFftComplex* values, int count)
     for (int i = 0; i < count; ++i)
     {
         CkFftComplex value = values[i];
-        CKFFT_PRINTF("%f + %f i\n", value.real, value.imag);
+        CKFFT_PRINTF("%d: %f + %f i\n", i, value.real, value.imag);
     }
 }
 
@@ -116,14 +118,20 @@ void zero(vector<CkFftComplex>& values)
 }
 
 // compare two data sets; return RMS difference of all components
-float compare(const vector<CkFftComplex>& values1, const vector<CkFftComplex>& values2)
+float compare(const vector<CkFftComplex>& values1, const vector<CkFftComplex>& values2, int count = -1)
 {
     // calculate rms of real and imaginary terms.
     // (would it be better to compare magnitudes of complex differences?)
     assert(values1.size() == values2.size());
     assert(!values1.empty());
+
+    if (count < 0)
+    {
+        count = (int) values1.size();
+    }
+
     float sumSq = 0.0f;
-    for (int i = 0; i < values1.size(); ++i)
+    for (int i = 0; i < count; ++i)
     {
         const CkFftComplex& v1 = values1[i];
         const CkFftComplex& v2 = values2[i];
@@ -135,7 +143,7 @@ float compare(const vector<CkFftComplex>& values1, const vector<CkFftComplex>& v
         sumSq += diffImag * diffImag;
     }
 
-    return sqrtf(sumSq / (values1.size() * 2));
+    return sqrtf(sumSq / (count * 2));
 }
 
 // generate input file
@@ -158,12 +166,13 @@ void writeInput(int count)
 
 ////////////////////////////////////////
 
-const int k_reps = 1000;
+//const int k_reps = 1000;
+const int k_reps = 1;
 
 class FftTester
 {
 public:
-    FftTester() : m_input(NULL), m_output(NULL), m_count(0), m_inverse(false) {}
+    FftTester() : m_input(NULL), m_output(NULL), m_count(0), m_inverse(false), m_real(false) {}
 
     virtual ~FftTester() {}
 
@@ -174,13 +183,14 @@ public:
         return m_stats;
     }
 
-    virtual void test(const CkFftComplex* input, CkFftComplex* output, int count, bool inverse)
+    virtual void test(const CkFftComplex* input, CkFftComplex* output, int count, bool inverse, bool real)
     {
         m_stats.reset();
         m_input = input;
         m_output = output;
         m_count = count;
         m_inverse = inverse;
+        m_real = real;
         zero(output, count);
 
         init();
@@ -206,6 +216,7 @@ protected:
     CkFftComplex* m_output;
     int m_count;
     bool m_inverse;
+    bool m_real;
 
     virtual void init() = 0;
     virtual void fft() = 0;
@@ -218,26 +229,57 @@ private:
 class CkFftTester : public FftTester
 {
 public:
+    CkFftTester() : FftTester(), m_context(NULL), m_realContext(NULL) {}
+
     virtual const char* getName() { return "ckfft"; }
 
 protected:
     virtual void init()
     {
-        m_context = CkFftInit(m_count, m_inverse, NULL, NULL);
+        if (m_real)
+        {
+            m_realContext = CkFftRealInit(m_count, m_inverse, NULL, NULL);
+        }
+        else
+        {
+            m_context = CkFftInit(m_count, m_inverse, NULL, NULL);
+        }
     }
 
     virtual void fft()
     {
-        CkFft(m_context, m_input, m_output);
+        if (m_real)
+        {
+            if (m_inverse)
+            {
+                CkFftRealInverse(m_realContext, m_input, (float*) m_output);
+            }
+            else
+            {
+                CkFftReal(m_realContext, (float*) m_input, m_output);
+            }
+        }
+        else
+        {
+            CkFft(m_context, m_input, m_output);
+        }
     }
 
     virtual void shutdown()
     {
-        CkFftShutdown(m_context);
+        if (m_real)
+        {
+            CkFftRealShutdown(m_realContext);
+        }
+        else
+        {
+            CkFftShutdown(m_context);
+        }
     }
 
 private:
     CkFftContext* m_context;
+    CkFftRealContext* m_realContext;
 };
 
 // TODO: use fixed-point KISS?
@@ -258,51 +300,66 @@ protected:
 
         m_kissOutput.resize(m_count);
 
-        m_cfg = kiss_fft_alloc(m_count, m_inverse, 0, 0);
+        if (m_real)
+        {
+            m_realCfg = kiss_fftr_alloc(m_count, m_inverse, 0, 0);
+        }
+        else
+        {
+            m_cfg = kiss_fft_alloc(m_count, m_inverse, 0, 0);
+        }
     }
 
     virtual void fft()
     {
-        kiss_fft(m_cfg, &m_kissInput[0], &m_kissOutput[0]);
+        if (m_real)
+        {
+            if (m_inverse)
+            {
+                kiss_fftri(m_realCfg, &m_kissInput[0], (float*) &m_kissOutput[0]);
+            }
+            else
+            {
+                kiss_fftr(m_realCfg, (float*) &m_kissInput[0], &m_kissOutput[0]);
+            }
+        }
+        else
+        {
+            kiss_fft(m_cfg, &m_kissInput[0], &m_kissOutput[0]);
+        }
     }
 
     virtual void shutdown()
     {
-        for (int i = 0; i < m_count; ++i)
+        float scale = 1.0f;
+        if (m_real && !m_inverse)
         {
-            m_output[i].real = m_kissOutput[i].r;
-            m_output[i].imag = m_kissOutput[i].i;
+            scale = 2.0f;
         }
 
-        free(m_cfg);
+        for (int i = 0; i < m_count; ++i)
+        {
+            m_output[i].real = m_kissOutput[i].r * scale;
+            m_output[i].imag = m_kissOutput[i].i * scale;
+        }
+
+        if (m_real)
+        {
+            free(m_realCfg);
+        }
+        else
+        {
+            free(m_cfg);
+        }
     }
 
 private:
     vector<kiss_fft_cpx> m_kissInput;
     vector<kiss_fft_cpx> m_kissOutput;
     kiss_fft_cfg m_cfg;
+    kiss_fftr_cfg m_realCfg;
 };
 
-class LibAVTester : public FftTester
-{
-public:
-    virtual const char* getName() { return "libav"; }
-
-protected:
-    virtual void init()
-    {
-    }
-
-    virtual void fft()
-    {
-    }
-
-    virtual void shutdown()
-    {
-    }
-
-private:
-};
 
 #if CKFFT_PLATFORM_IOS || CKFFT_PLATFORM_MACOS
 class AccelerateTester : public FftTester
@@ -322,6 +379,13 @@ protected:
         }
         m_accInput.realp = &m_accInputR[0];
         m_accInput.imagp = &m_accInputI[0];
+
+        if (m_real && m_inverse)
+        {
+            // input[0] and input[n/2] are real, so they pack input[n/2].real into
+            // input[0].imag
+            m_accInput.imagp[0] = m_accInput.realp[m_count/2];
+        }
 
         m_accOutputR.resize(m_count);
         m_accOutputI.resize(m_count);
@@ -349,16 +413,32 @@ protected:
 
     virtual void fft()
     {
-        vDSP_fft_zopt(
-                m_setup,//FFTSetup __vDSP_setup,
-                &m_accInput, // DSPSplitComplex *__vDSP_signal,
-                1, //vDSP_Stride __vDSP_signalStride,
-                &m_accOutput, //DSPSplitComplex *__vDSP_result,
-                1, //vDSP_Stride __vDSP_strideResult,
-                &m_accTemp,
-                m_logCount, //vDSP_Length __vDSP_log2n,
-                (m_inverse ? kFFTDirection_Inverse : kFFTDirection_Forward) //FFTDirection __vDSP_direction
-                );
+        if (m_real)
+        {
+            vDSP_fft_zropt(
+                    m_setup,//FFTSetup __vDSP_setup,
+                    &m_accInput, // DSPSplitComplex *__vDSP_signal,
+                    1, //vDSP_Stride __vDSP_signalStride,
+                    &m_accOutput, //DSPSplitComplex *__vDSP_result,
+                    1, //vDSP_Stride __vDSP_strideResult,
+                    &m_accTemp,
+                    m_logCount, //vDSP_Length __vDSP_log2n,
+                    (m_inverse ? kFFTDirection_Inverse : kFFTDirection_Forward) //FFTDirection __vDSP_direction
+                    );
+        }
+        else
+        {
+            vDSP_fft_zopt(
+                    m_setup,//FFTSetup __vDSP_setup,
+                    &m_accInput, // DSPSplitComplex *__vDSP_signal,
+                    1, //vDSP_Stride __vDSP_signalStride,
+                    &m_accOutput, //DSPSplitComplex *__vDSP_result,
+                    1, //vDSP_Stride __vDSP_strideResult,
+                    &m_accTemp,
+                    m_logCount, //vDSP_Length __vDSP_log2n,
+                    (m_inverse ? kFFTDirection_Inverse : kFFTDirection_Forward) //FFTDirection __vDSP_direction
+                    );
+        }
 
     }
 
@@ -369,6 +449,16 @@ protected:
             m_output[i].real = m_accOutputR[i];
             m_output[i].imag = m_accOutputI[i];
         }
+
+        if (m_real && !m_inverse)
+        {
+            // output[0] and output[n/2] are real, so they pack output[n/2].real into
+            // output[0].imag
+            m_output[m_count/2].real = m_output[0].imag;
+            m_output[m_count/2].imag = 0.0f;
+            m_output[0].imag = 0.0f;
+        }
+
         free(m_accTemp.realp);
         free(m_accTemp.imagp);
         vDSP_destroy_fftsetup(m_setup);
@@ -467,9 +557,10 @@ void test(const char* testName,
           vector<FftTester*>& testers, 
           const vector<CkFftComplex>& input, 
           vector<CkFftComplex>& output, 
-          bool inverse)
+          bool inverse, 
+          bool real)
 {
-    const float k_thresh = 0.0001f; // threshold for RMS comparison
+    const float k_thresh = 0.001f; // threshold for RMS comparison
 
     int count = (int) input.size();
 
@@ -498,7 +589,7 @@ void test(const char* testName,
     {
         // calculate output
         FftTester* tester = testers[i];
-        tester->test(&input[0], (i == 0 ? &output[0] : &refOutput[0]), count, inverse);
+        tester->test(&input[0], (i == 0 ? &output[0] : &refOutput[0]), count, inverse, real);
         const Stats& stats = tester->getStats();
         float time = stats.getMean();
 
@@ -507,7 +598,33 @@ void test(const char* testName,
             baseTime = time;
         }
 
-        float err = (i == 0 ? 0.0f : compare(output, refOutput));
+        int outputCount;
+        if (real)
+        {
+            if (inverse)
+            {
+                outputCount = count/2;
+            }
+            else
+            {
+                outputCount = count/2 + 1;
+            }
+        }
+        else
+        {
+            outputCount = count;
+        }
+        
+        /*
+        for (int i = 0; i < outputCount; ++i)
+        {
+            CKFFT_PRINTF("   output %d: %f,%f %f,%f\n", i, 
+                    output[i].real, output[i].imag,
+                    refOutput[i].real, refOutput[i].imag);
+        }
+        */
+
+        float err = (i == 0 ? 0.0f : compare(output, refOutput, outputCount));
 
         float prevTime = time;
 
@@ -538,12 +655,11 @@ void test(const char* testName,
 void test()
 {
     Timer::init();
-    writeInput(1024);
+//    writeInput(4096);
 
     vector<FftTester*> testers;
     testers.push_back(new CkFftTester());
     testers.push_back(new KissTester());
-//    testers.push_back(new LibAVTester());
 #if CKFFT_PLATFORM_IOS || CKFFT_PLATFORM_MACOS
     testers.push_back(new AccelerateTester());
 #endif
@@ -561,10 +677,49 @@ void test()
     output.resize(count);
 
 #if 0
-    count = 512;
-    CkFftContext* context = CkFftInit(count, false, NULL);
+    count = 16;
+    for (int i = 0; i < count; ++i)
+    {
+        input[i].imag = 0;
+    }
+    CKFFT_PRINTF("\n");
+    CkFftContext* context = CkFftInit(count, false, NULL, NULL);
     CkFft(context, &input[0], &output[0]);
+    print(output, count);
     CkFftShutdown(context);
+
+    ////////////////////////////////////////
+    // real-only
+    CKFFT_PRINTF("-----\n");
+    float* inr = new float[count];
+    for (int i = 0; i < count; ++i)
+    {
+        inr[i] = input[i].real;
+    }
+    zero(output);
+    CkFftRealContext* contextr = CkFftRealInit(count, false, NULL, NULL);
+    CkFftReal(contextr, inr, &output[0]);
+    CkFftRealShutdown(contextr);
+    print(output, count/2 + 1);
+
+    CKFFT_PRINTF("-----\n");
+    float* outr = new float[count];
+    for (int i = 0; i < count; ++i)
+    {
+        outr[i] = 0.0f;
+    }
+    contextr = CkFftRealInit(count, true, NULL, NULL);
+    CkFftRealInverse(contextr, &output[0], outr);
+    CkFftRealShutdown(contextr);
+
+    for (int i = 0; i < count/2+1; ++i)
+    {
+        CKFFT_PRINTF("%f %f\n", inr[i], outr[i]/8);
+    }
+
+    delete[] inr;
+    delete[] outr;
+
 #else
 
     // allocate inverse output
@@ -579,24 +734,25 @@ void test()
 
     char testName[128];
 
-    // TODO other sizes of FFT
+    while (count > 128)
+    {
+        sprintf(testName, "fft_%d", count);
+        test(testName, doc, testers, input, output, false, false);
 
-    sprintf(testName, "fft_%d", count);
-    test(testName, doc, testers, input, output, false);
+        sprintf(testName, "fft_inv_%d", count);
+        test(testName, doc, testers, output, invOutput, true, false);
 
-    sprintf(testName, "invfft_%d", count);
-    test(testName, doc, testers, output, invOutput, true);
+        sprintf(testName, "fft_real_%d", count);
+        test(testName, doc, testers, input, output, false, true);
 
-    count /= 2;
-    input.resize(count);
-    output.resize(count);
-    invOutput.resize(count);
+        sprintf(testName, "fft_inv_real_%d", count);
+        test(testName, doc, testers, output, invOutput, true, true);
 
-    sprintf(testName, "fft_%d", count);
-    test(testName, doc, testers, input, output, false);
-
-    sprintf(testName, "invfft_%d", count);
-    test(testName, doc, testers, output, invOutput, true);
+        count /= 2;
+        input.resize(count);
+        output.resize(count);
+        invOutput.resize(count);
+    }
 
     writeResults(doc);
 

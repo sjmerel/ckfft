@@ -9,8 +9,9 @@
 /* Begin PBXBuildFile section */
 		AA75B5BF15EC62B5008151B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA75B5BE15EC62B5008151B6 /* Foundation.framework */; };
 		AA75B5D015EC6335008151B6 /* ckfft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA75B5CF15EC6335008151B6 /* ckfft.cpp */; };
+		AA8DE01516364D1000D67317 /* fft_neon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA8DE00F16364D1000D67317 /* fft_neon.cpp */; };
+		AA8DE01616364D1000D67317 /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA8DE01116364D1000D67317 /* fft.cpp */; };
 		AAD326C51608FE8500984DE2 /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAD326C41608FE8500984DE2 /* context.cpp */; };
-		AAD326C81609204000984DE2 /* ckfft_neon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAD326C71609204000984DE2 /* ckfft_neon.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -29,8 +30,15 @@
 		AA75B5BB15EC62B5008151B6 /* libckfft_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libckfft_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA75B5BE15EC62B5008151B6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AA75B5CF15EC6335008151B6 /* ckfft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ckfft.cpp; sourceTree = "<group>"; };
+		AA8DE00D16364D1000D67317 /* context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = context.h; sourceTree = "<group>"; };
+		AA8DE00E16364D1000D67317 /* debug.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = debug.h; sourceTree = "<group>"; };
+		AA8DE00F16364D1000D67317 /* fft_neon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft_neon.cpp; sourceTree = "<group>"; };
+		AA8DE01016364D1000D67317 /* fft_neon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_neon.h; sourceTree = "<group>"; };
+		AA8DE01116364D1000D67317 /* fft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft.cpp; sourceTree = "<group>"; };
+		AA8DE01216364D1000D67317 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
+		AA8DE01316364D1000D67317 /* math.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
+		AA8DE01416364D1000D67317 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
 		AAD326C41608FE8500984DE2 /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context.cpp; sourceTree = "<group>"; };
-		AAD326C71609204000984DE2 /* ckfft_neon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ckfft_neon.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,9 +56,16 @@
 		AA75B5B015EC62B5008151B6 = {
 			isa = PBXGroup;
 			children = (
-				AAD326C71609204000984DE2 /* ckfft_neon.cpp */,
-				AAD326C41608FE8500984DE2 /* context.cpp */,
 				AA75B5CF15EC6335008151B6 /* ckfft.cpp */,
+				AAD326C41608FE8500984DE2 /* context.cpp */,
+				AA8DE00D16364D1000D67317 /* context.h */,
+				AA8DE00E16364D1000D67317 /* debug.h */,
+				AA8DE01116364D1000D67317 /* fft.cpp */,
+				AA8DE01216364D1000D67317 /* fft.h */,
+				AA8DE00F16364D1000D67317 /* fft_neon.cpp */,
+				AA8DE01016364D1000D67317 /* fft_neon.h */,
+				AA8DE01316364D1000D67317 /* math.h */,
+				AA8DE01416364D1000D67317 /* platform.h */,
 				AA75B5BD15EC62B5008151B6 /* Frameworks */,
 				AA75B5BC15EC62B5008151B6 /* Products */,
 			);
@@ -125,7 +140,8 @@
 			files = (
 				AA75B5D015EC6335008151B6 /* ckfft.cpp in Sources */,
 				AAD326C51608FE8500984DE2 /* context.cpp in Sources */,
-				AAD326C81609204000984DE2 /* ckfft_neon.cpp in Sources */,
+				AA8DE01516364D1000D67317 /* fft_neon.cpp in Sources */,
+				AA8DE01616364D1000D67317 /* fft.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

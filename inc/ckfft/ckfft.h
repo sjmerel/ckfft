@@ -1,18 +1,12 @@
 #pragma once
 #include <stdlib.h>
+#include "ckfft/complex.h"
 
 #ifdef __cplusplus
 extern "C"
 {
 #endif
 
-
-typedef struct
-{
-    float real;
-    float imag;
-}
-CkFftComplex;
 
 typedef struct _CkFftContext CkFftContext;
 
@@ -67,12 +61,16 @@ CkFftContext* CkFftInit(int count, int inverse, void* buf, size_t* bufSize);
 int CkFft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output);
 
 
-
 // Destroy an FFT context.
 //
 // If you let CkFftInit() allocate its own memory buffer, then this will free that buffer.
 //
 void CkFftShutdown(CkFftContext*);
+
+
+
+
+
 
 
 

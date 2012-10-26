@@ -4,19 +4,19 @@
         <kiss_fft error="1.67482e-06" time="0.220585" />
         <accelerate error="1.72202e-06" time="0.0146967" />
     </fft_512>
-    <invfft_512>
+    <fft_inv_512>
         <ckfft error="0" time="0.0554482" />
         <kiss_fft error="3.74915e-05" time="0.220734" />
         <accelerate error="3.78324e-05" time="0.0147522" />
-    </invfft_512>
+    </fft_inv_512>
     <fft_1024>
         <ckfft error="0" time="0.118018" />
         <kiss_fft error="2.46933e-06" time="0.365855" />
         <accelerate error="2.46933e-06" time="0.0346462" />
     </fft_1024>
-    <invfft_1024>
+    <fft_inv_1024>
         <ckfft error="0" time="0.113466" />
         <kiss_fft error="7.75755e-05" time="0.363347" />
         <accelerate error="7.75755e-05" time="0.0342701" />
-    </invfft_1024>
+    </fft_inv_1024>
 </ckfft_test>
