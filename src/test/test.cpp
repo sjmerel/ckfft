@@ -166,8 +166,7 @@ void writeInput(int count)
 
 ////////////////////////////////////////
 
-//const int k_reps = 1000;
-const int k_reps = 1;
+const int k_reps = 1000;
 
 class FftTester
 {
@@ -616,11 +615,11 @@ void test(const char* testName,
         }
         
         /*
-        for (int i = 0; i < outputCount; ++i)
+        for (int j = 0; j < outputCount; ++j)
         {
-            CKFFT_PRINTF("   output %d: %f,%f %f,%f\n", i, 
-                    output[i].real, output[i].imag,
-                    refOutput[i].real, refOutput[i].imag);
+            CKFFT_PRINTF("   output %d: %f,%f %f,%f\n", j, 
+                    output[j].real, output[j].imag,
+                    refOutput[j].real, refOutput[j].imag);
         }
         */
 
@@ -671,6 +670,10 @@ void test()
     path += "/input.txt";
     read(input, path.c_str());
     int count = (int) input.size();
+
+//    // XXX
+//    count = 16;
+//    input.resize(count);
 
     // allocate output
     vector<CkFftComplex> output;

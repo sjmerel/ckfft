@@ -11,6 +11,7 @@ using namespace ckfft;
 //  - NEON
 //  - fixed point?
 //  - alignment?
+//  - java wrapper for Android?
 //  - optimizations for real inputs?
 //  - is DIF better than DIT for NEON optimization?
 //  - stride for when complex values aren't in their own array?
@@ -22,6 +23,7 @@ using namespace ckfft;
 //  - expTable should only be n-1 elements, not n
 //  - notes about memory requirements, scaling
 //  - for real fft, pack last value into first's imaginary part?
+//  - for real fft, pass tmpInput storage in, instead of putting it in context
 
 ////////////////////////////////////////
 

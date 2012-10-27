@@ -5,54 +5,7 @@
 
 using namespace ckfft;
 
-namespace
-{
-
 // see http://www.engineeringproductivitytools.com/stuff/T0001/PT10.HTM
-
-void separate(const CkFftComplex& exp, const CkFftComplex& a, const CkFftComplex& b, CkFftComplex& out)
-{
-    CkFftComplex bConj;
-    bConj.real = b.real;
-    bConj.imag = -b.imag;
-
-    CkFftComplex sum;
-    add(a, bConj, sum);
-    CkFftComplex diff;
-    subtract(a, bConj, diff);
-
-    CkFftComplex f;
-    f.real = -exp.imag;
-    f.imag = exp.real;
-
-    CkFftComplex c;
-    multiply(f, diff, c);
-    subtract(sum, c, out);
-}
-
-void separateInv(const CkFftComplex& exp, const CkFftComplex& a, const CkFftComplex& b, CkFftComplex& out)
-{
-    CkFftComplex bConj;
-    bConj.real = b.real;
-    bConj.imag = -b.imag;
-
-    CkFftComplex sum;
-    add(a, bConj, sum);
-    CkFftComplex diff;
-    subtract(a, bConj, diff);
-
-    CkFftComplex f;
-    f.real = -exp.imag;
-    f.imag = exp.real;
-
-    CkFftComplex c;
-    multiply(f, diff, c);
-    add(sum, c, out);
-}
-
-} // namespace
-
-////////////////////////////////////////
 
 extern "C"
 {
@@ -84,33 +37,45 @@ int CkFftReal(CkFftRealContext* context, const float* input, CkFftComplex* outpu
     else
     {
         int count = context->count;
-        int halfCount = count/2;
-        fft(context, (const CkFftComplex*) input, output, halfCount, 2);
+        int countDiv2 = count/2;
 
-        CkFftComplex z = output[0];
-        output[halfCount] = z;
+        fft(context, (const CkFftComplex*) input, output, countDiv2, 2);
+
+        output[countDiv2] = output[0];
 
         const CkFftComplex* exp0 = context->expTable;
-        const CkFftComplex* exp1 = context->expTable + halfCount;
-        int quarterCount = halfCount/2;
-        for (int i = 0; i < quarterCount+1; ++i)
+        const CkFftComplex* exp1 = context->expTable + countDiv2;
+        int m = count/4 + 1;
+        for (int i = 0; i < m; ++i)
         {
-            // XXX note that this actually calculates output[quarterCount] twice
+            // XXX note that this actually calculates output[count/4] twice
             CkFftComplex z0 = output[i];
-            CkFftComplex z1 = output[halfCount - i];
-            separate(*exp0, z0, z1, output[i]);
-            separate(*exp1, z1, z0, output[halfCount - i]);
+            CkFftComplex z1 = output[countDiv2 - i];
+
+            CkFftComplex sum;
+            CkFftComplex diff;
+            CkFftComplex f;
+            CkFftComplex c;
+
+            sum.real = z0.real + z1.real;
+            sum.imag = z0.imag - z1.imag;
+            diff.real = z0.real - z1.real;
+            diff.imag = z0.imag + z1.imag;
+            f.real = -(exp0->imag);
+            f.imag = exp0->real;
+            multiply(f, diff, c);
+            subtract(sum, c, output[i]);
+
+            diff.real = -diff.real;
+            sum.imag = -sum.imag;
+            f.real = -(exp1->imag);
+            f.imag = exp1->real;
+            multiply(f, diff, c);
+            subtract(sum, c, output[countDiv2 - i]);
+
             ++exp0;
             --exp1;
         }
-
-        /*
-        // center term
-        CkFftComplex center;
-        center.real = z.real - z.imag;
-        center.imag = 0.0f;
-        output[halfCount] = center;
-        */
 
         return 1;
     }
@@ -126,31 +91,45 @@ int CkFftRealInverse(CkFftRealContext* context, const CkFftComplex* input, float
     else
     {
         int count = context->count;
-        int halfCount = count/2;
+        int countDiv2 = count/2;
 
         CkFftComplex* inputBuf = context->inputBuf;
 
         const CkFftComplex* exp0 = context->expTable;
-        const CkFftComplex* exp1 = context->expTable + halfCount;
-        int quarterCount = halfCount/2;
-        for (int i = 0; i < quarterCount+1; ++i)
+        const CkFftComplex* exp1 = context->expTable + countDiv2;
+        int m = count/4 + 1;
+        for (int i = 0; i < m; ++i)
         {
-            // XXX note that this actually calculates output[quarterCount] twice
-            separateInv(*exp0, input[i], input[halfCount-i], inputBuf[i]);
-            separateInv(*exp1, input[halfCount-i], input[i], inputBuf[halfCount - i]);
+            // XXX note that this actually calculates output[count/4] twice
+            CkFftComplex z0 = input[i];
+            CkFftComplex z1 = input[countDiv2 - i];
+
+            CkFftComplex sum;
+            CkFftComplex diff;
+            CkFftComplex f;
+            CkFftComplex c;
+
+            sum.real = z0.real + z1.real;
+            sum.imag = z0.imag - z1.imag;
+            diff.real = z0.real - z1.real;
+            diff.imag = z0.imag + z1.imag;
+            f.real = -(exp0->imag);
+            f.imag = exp0->real;
+            multiply(f, diff, c);
+            add(sum, c, inputBuf[i]);
+
+            diff.real = -diff.real;
+            sum.imag = -sum.imag;
+            f.real = -(exp1->imag);
+            f.imag = exp1->real;
+            multiply(f, diff, c);
+            add(sum, c, inputBuf[countDiv2 - i]);
+
             ++exp0;
             --exp1;
         }
 
-        /*
-        // center term
-        CkFftComplex center;
-        center.real = input[0].real - input[0].imag;
-        center.imag = 0.0f;
-        tmpInput[halfCount] = center;
-        */
-
-        fft(context, inputBuf, (CkFftComplex*) output, halfCount, 2);
+        fft(context, inputBuf, (CkFftComplex*) output, countDiv2, 2);
 
         return 1;
     }

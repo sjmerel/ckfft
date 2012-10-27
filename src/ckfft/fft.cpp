@@ -325,7 +325,7 @@ void fft(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex* out
 #if 1
         if (context->neon)
         {
-            fft_neon(context, input, output, count, 1);
+            fft_neon(context, input, output, count, 1, expTableDiv);
         }
         else
         {

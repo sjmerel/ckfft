@@ -5,11 +5,17 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE := ckfft
-LOCAL_SRC_FILES := ckfft.cpp context.cpp 
+
+LOCAL_SRC_FILES := \
+    ckfft.cpp \
+    ckfft_real.cpp \
+    context.cpp \
+    fft.cpp 
+
 ifeq ($(TARGET_ARCH_ABI),armeabi-v7a)
-LOCAL_SRC_FILES += ckfft_neon.cpp.neon
+LOCAL_SRC_FILES += fft_neon.cpp.neon
 else
-LOCAL_SRC_FILES += ckfft_neon.cpp
+LOCAL_SRC_FILES += fft_neon.cpp
 endif
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/../../inc $(LOCAL_PATH)/../../src
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)/../../inc

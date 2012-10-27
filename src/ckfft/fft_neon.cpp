@@ -65,7 +65,7 @@ inline void vsub(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& 
 namespace ckfft
 {
 
-void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride)
+void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride, int expTableDiv)
 {
     if (count == 4)
     {
@@ -112,13 +112,10 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
     }
     else if (count == 8)
     {
-        int stride2 = stride * 2;
-        int stride3 = stride * 3;
-        int stride4 = stride * 4;
-
         const CkFftComplex* in0 = input;
         CkFftComplex* out = output;
         CkFftComplex* outEnd = out + 8;
+        int stride4 = stride * 4;
         while (out < outEnd)
         {
             const CkFftComplex* in1 = in0 + stride4;
@@ -129,6 +126,7 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
             out += 2;
         }
 
+        int expTableStride = stride * expTableDiv;
         const CkFftComplex* exp = context->expTable;
 
         float32x2x2_t f1w_v, f2w2_v, f3w3_v;
@@ -146,15 +144,15 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
 
         float32x2x2_t exp1_v;
         exp1_v = vld2_lane_f32((const float*) exp, exp1_v, 0);
-        exp1_v = vld2_lane_f32((const float*) (exp + stride), exp1_v, 1);
+        exp1_v = vld2_lane_f32((const float*) (exp + expTableStride), exp1_v, 1);
 
         float32x2x2_t exp2_v;
         exp2_v = vld2_lane_f32((const float*) exp, exp2_v, 0);
-        exp2_v = vld2_lane_f32((const float*) (exp + stride2), exp2_v, 1);
+        exp2_v = vld2_lane_f32((const float*) (exp + expTableStride*2), exp2_v, 1);
 
         float32x2x2_t exp3_v;
         exp3_v = vld2_lane_f32((const float*) exp, exp3_v, 0);
-        exp3_v = vld2_lane_f32((const float*) (exp + stride3), exp3_v, 1);
+        exp3_v = vld2_lane_f32((const float*) (exp + expTableStride*3), exp3_v, 1);
 
         vmul(out1_v, exp1_v, f1w_v);
         vmul(out2_v, exp2_v, f2w2_v);
@@ -194,16 +192,14 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
         assert((count & 0x3) == 0);
 
         int n = count / 4;
-        int stride2 = stride * 2;
-        int stride3 = stride * 3;
-        int stride4 = stride * 4;
 
         const CkFftComplex* in = input;
         CkFftComplex* out = output;
         CkFftComplex* outEnd = out + count;
+        int stride4 = stride * 4;
         while (out < outEnd)
         {
-            fft_neon(context, in, out, n, stride4);
+            fft_neon(context, in, out, n, stride4, expTableDiv);
             in += stride;
             out += n;
         }
@@ -211,6 +207,9 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
         const CkFftComplex* exp1 = context->expTable;
         const CkFftComplex* exp2 = exp1;
         const CkFftComplex* exp3 = exp1;
+        int expTableStride1 = stride * expTableDiv;
+        int expTableStride2 = expTableStride1 * 2;
+        int expTableStride3 = expTableStride1 * 3;
 
         float32x4x2_t f1w_v, f2w2_v, f3w3_v;
         float32x4x2_t sum02_v, diff02_v, sum13_v, diff13_v;
@@ -230,33 +229,33 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
 
             float32x4x2_t exp1_v;
             exp1_v = vld2q_lane_f32((const float*) exp1, exp1_v, 0);
-            exp1 += stride;
+            exp1 += expTableStride1;
             exp1_v = vld2q_lane_f32((const float*) exp1, exp1_v, 1);
-            exp1 += stride;
+            exp1 += expTableStride1;
             exp1_v = vld2q_lane_f32((const float*) exp1, exp1_v, 2);
-            exp1 += stride;
+            exp1 += expTableStride1;
             exp1_v = vld2q_lane_f32((const float*) exp1, exp1_v, 3);
-            exp1 += stride;
+            exp1 += expTableStride1;
 
             float32x4x2_t exp2_v;
             exp2_v = vld2q_lane_f32((const float*) exp2, exp2_v, 0);
-            exp2 += stride2;
+            exp2 += expTableStride2;
             exp2_v = vld2q_lane_f32((const float*) exp2, exp2_v, 1);
-            exp2 += stride2;
+            exp2 += expTableStride2;
             exp2_v = vld2q_lane_f32((const float*) exp2, exp2_v, 2);
-            exp2 += stride2;
+            exp2 += expTableStride2;
             exp2_v = vld2q_lane_f32((const float*) exp2, exp2_v, 3);
-            exp2 += stride2;
+            exp2 += expTableStride2;
 
             float32x4x2_t exp3_v;
             exp3_v = vld2q_lane_f32((const float*) exp3, exp3_v, 0);
-            exp3 += stride3;
+            exp3 += expTableStride3;
             exp3_v = vld2q_lane_f32((const float*) exp3, exp3_v, 1);
-            exp3 += stride3;
+            exp3 += expTableStride3;
             exp3_v = vld2q_lane_f32((const float*) exp3, exp3_v, 2);
-            exp3 += stride3;
+            exp3 += expTableStride3;
             exp3_v = vld2q_lane_f32((const float*) exp3, exp3_v, 3);
-            exp3 += stride3;
+            exp3 += expTableStride3;
 
             // TODO use vmla, vmls?
             // alignment?
@@ -305,7 +304,7 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
 #else
 namespace ckfft
 {
-    void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride) {}
+    void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride, int expTableDiv) {}
 } 
 #endif
 
