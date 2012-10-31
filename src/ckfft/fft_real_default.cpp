@@ -112,5 +112,4 @@ void fft_real_inverse_default(
     fft_default(context, tmpBuf, (CkFftComplex*) output, countDiv2, true, 1, context->invExpTable, context->maxCount / countDiv2);
 }
 
-
-}
+} // namespace ckfft

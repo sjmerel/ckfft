@@ -75,8 +75,8 @@ void fft_real_neon(
         f_v.val[1] = exp_v.val[0];
 
         float32x4x2_t c_v;
-        vmul(f_v, diff_v, c_v);
-        vsub(sum_v, c_v, z0_v);
+        multiply(f_v, diff_v, c_v);
+        subtract(sum_v, c_v, z0_v);
         vst2q_f32((float*) p0, z0_v);
 
         diff_v.val[0] = vnegq_f32(diff_v.val[0]);
@@ -94,8 +94,8 @@ void fft_real_neon(
         f_v.val[0] = vnegq_f32(exp_v.val[1]);
         f_v.val[1] = exp_v.val[0];
 
-        vmul(f_v, diff_v, c_v);
-        vsub(sum_v, c_v, z1_v);
+        multiply(f_v, diff_v, c_v);
+        subtract(sum_v, c_v, z1_v);
 
         // reverse z1 real
         z1_v.val[0] = vrev64q_f32(z1_v.val[0]);
@@ -180,8 +180,8 @@ void fft_real_inverse_neon(
         f_v.val[1] = exp_v.val[0];
 
         float32x4x2_t c_v;
-        vmul(f_v, diff_v, c_v);
-        vadd(sum_v, c_v, z0_v);
+        multiply(f_v, diff_v, c_v);
+        add(sum_v, c_v, z0_v);
         vst2q_f32((float*) tmp0, z0_v);
 
         diff_v.val[0] = vnegq_f32(diff_v.val[0]);
@@ -199,8 +199,8 @@ void fft_real_inverse_neon(
         f_v.val[0] = vnegq_f32(exp_v.val[1]);
         f_v.val[1] = exp_v.val[0];
 
-        vmul(f_v, diff_v, c_v);
-        vadd(sum_v, c_v, z1_v);
+        multiply(f_v, diff_v, c_v);
+        add(sum_v, c_v, z1_v);
 
         // reverse z1 real
         z1_v.val[0] = vrev64q_f32(z1_v.val[0]);
@@ -248,5 +248,4 @@ void fft_real_inverse_neon(
 
 #endif
 
-
-}
+} // namespace ckfft

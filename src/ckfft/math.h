@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ckfft/ckfft.h"
+#include "ckfft/platform.h"
 
 #if CKFFT_ARM_NEON
 #  include <arm_neon.h>
@@ -32,7 +33,7 @@ namespace ckfft
     }
 
 #if CKFFT_ARM_NEON
-    inline void vmul(const float32x4x2_t& x, const float32x4x2_t& y, float32x4x2_t& out)
+    inline void multiply(const float32x4x2_t& x, const float32x4x2_t& y, float32x4x2_t& out)
     {
         // (a + bi)(c + di) = (ac - bd) + (bc + ad)i
         float32x4_t ac = vmulq_f32(x.val[0], y.val[0]);
@@ -43,7 +44,7 @@ namespace ckfft
         out.val[1] = vaddq_f32(bc, ad);
     }
 
-    inline void vmul(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& out)
+    inline void multiply(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& out)
     {
         // (a + bi)(c + di) = (ac - bd) + (bc + ad)i
         float32x2_t ac = vmul_f32(x.val[0], y.val[0]);
@@ -54,25 +55,25 @@ namespace ckfft
         out.val[1] = vadd_f32(bc, ad);
     }
 
-    inline void vadd(const float32x4x2_t& x, const float32x4x2_t& y, float32x4x2_t& out)
+    inline void add(const float32x4x2_t& x, const float32x4x2_t& y, float32x4x2_t& out)
     {
         out.val[0] = vaddq_f32(x.val[0], y.val[0]);
         out.val[1] = vaddq_f32(x.val[1], y.val[1]);
     }
 
-    inline void vadd(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& out)
+    inline void add(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& out)
     {
         out.val[0] = vadd_f32(x.val[0], y.val[0]);
         out.val[1] = vadd_f32(x.val[1], y.val[1]);
     }
 
-    inline void vsub(const float32x4x2_t& x, const float32x4x2_t& y, float32x4x2_t& out)
+    inline void subtract(const float32x4x2_t& x, const float32x4x2_t& y, float32x4x2_t& out)
     {
         out.val[0] = vsubq_f32(x.val[0], y.val[0]);
         out.val[1] = vsubq_f32(x.val[1], y.val[1]);
     }
 
-    inline void vsub(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& out)
+    inline void subtract(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& out)
     {
         out.val[0] = vsub_f32(x.val[0], y.val[0]);
         out.val[1] = vsub_f32(x.val[1], y.val[1]);

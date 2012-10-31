@@ -88,5 +88,5 @@ void fft_real_inverse(CkFftContext* context,
     }
 }
 
-}
+} // namespace ckfft
 

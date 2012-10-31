@@ -1,12 +1,11 @@
 #include "ckfft/ckfft.h"
 #include "ckfft/fft.h"
 #include "ckfft/fft_real.h"
-#include "ckfft/debug.h"
 #include "ckfft/context.h"
 #include "ckfft/math.h"
+#include "ckfft/debug.h"
 
 using namespace ckfft;
-
 
 extern "C"
 {
@@ -132,4 +131,4 @@ void CkFftShutdown(CkFftContext* context)
     CkFftContext::destroy(context);
 }
 
-}
+} // extern "C"

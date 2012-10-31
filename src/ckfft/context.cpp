@@ -1,5 +1,5 @@
-#include "ckfft/context.h"
 #include "ckfft/platform.h"
+#include "ckfft/context.h"
 #include "ckfft/debug.h"
 #include <math.h>
 #include <new>

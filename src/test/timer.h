@@ -43,14 +43,14 @@ public:
     bool isRunning() const { return m_startTick != 0; }
 
 private:
-    uint64 m_startTick;
-    uint64 m_elapsedTicks;
+    ckfft::uint64 m_startTick;
+    ckfft::uint64 m_elapsedTicks;
     static float s_msPerTick;
 #if CKFFT_PLATFORM_ANDROID
     static timespec s_startTime;
 #endif
 
-    uint64 getTick() const
+    ckfft::uint64 getTick() const
     {
 #if CKFFT_PLATFORM_ANDROID
         timespec now;

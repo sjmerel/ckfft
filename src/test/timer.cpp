@@ -17,7 +17,7 @@ void Timer::reset()
 
 float Timer::getElapsedMs() const
 {
-    uint64 elapsed = m_elapsedTicks;
+    ckfft::uint64 elapsed = m_elapsedTicks;
     if (isRunning())
     {
         elapsed += getTick() - m_startTick;

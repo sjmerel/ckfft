@@ -1,7 +1,7 @@
 #include "ckfft/platform.h"
-#include "ckfft/debug.h"
 #include "ckfft/context.h"
 #include "ckfft/math.h"
+#include "ckfft/debug.h"
 #include <assert.h>
 
 #if CKFFT_ARM_NEON
@@ -110,17 +110,17 @@ void fft_neon(
         exp3_v = vld2_lane_f32((const float*) exp, exp3_v, 0);
         exp3_v = vld2_lane_f32((const float*) (exp + expTableStride1*3), exp3_v, 1);
 
-        vmul(out1_v, exp1_v, f1w_v);
-        vmul(out2_v, exp2_v, f2w2_v);
-        vmul(out3_v, exp3_v, f3w3_v);
+        multiply(out1_v, exp1_v, f1w_v);
+        multiply(out2_v, exp2_v, f2w2_v);
+        multiply(out3_v, exp3_v, f3w3_v);
 
-        vadd(out0_v, f2w2_v, sum02_v);
-        vsub(out0_v, f2w2_v, diff02_v);
-        vadd(f1w_v, f3w3_v, sum13_v);
-        vsub(f1w_v, f3w3_v, diff13_v);
+        add(out0_v, f2w2_v, sum02_v);
+        subtract(out0_v, f2w2_v, diff02_v);
+        add(f1w_v, f3w3_v, sum13_v);
+        subtract(f1w_v, f3w3_v, diff13_v);
 
-        vadd(sum02_v, sum13_v, out0_v);
-        vsub(sum02_v, sum13_v, out2_v);
+        add(sum02_v, sum13_v, out0_v);
+        subtract(sum02_v, sum13_v, out2_v);
 
         // TODO optimize this?
         if (inverse)
@@ -216,17 +216,17 @@ void fft_neon(
             // TODO use vmla, vmls?
             // alignment?
 
-            vmul(out1_v, exp1_v, f1w_v);
-            vmul(out2_v, exp2_v, f2w2_v);
-            vmul(out3_v, exp3_v, f3w3_v);
+            multiply(out1_v, exp1_v, f1w_v);
+            multiply(out2_v, exp2_v, f2w2_v);
+            multiply(out3_v, exp3_v, f3w3_v);
 
-            vadd(out0_v, f2w2_v, sum02_v);
-            vsub(out0_v, f2w2_v, diff02_v);
-            vadd(f1w_v, f3w3_v, sum13_v);
-            vsub(f1w_v, f3w3_v, diff13_v);
+            add(out0_v, f2w2_v, sum02_v);
+            subtract(out0_v, f2w2_v, diff02_v);
+            add(f1w_v, f3w3_v, sum13_v);
+            subtract(f1w_v, f3w3_v, diff13_v);
 
-            vadd(sum02_v, sum13_v, out0_v);
-            vsub(sum02_v, sum13_v, out2_v);
+            add(sum02_v, sum13_v, out0_v);
+            subtract(sum02_v, sum13_v, out2_v);
 
             // TODO optimize this?
             if (inverse)

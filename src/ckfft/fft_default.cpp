@@ -265,8 +265,10 @@ void fft_default(
         /*
         else
         {
-            // radix-2
-            // this is never called; radix-2 is only used for count==2 above
+            // radix-2 algorithm
+            //
+            // This is never actually used, apart from trivial count=2 case in fft(),
+            // but is left here for reference.
 
             int n = count / 2;
             int stride2 = stride * 2;
