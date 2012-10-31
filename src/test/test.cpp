@@ -12,7 +12,6 @@
 #include <algorithm>
 
 #include "ckfft/ckfft.h"
-#include "ckfft/ckfft_real.h"
 #include "ckfft/platform.h"
 #include "ckfft/debug.h"
 
@@ -31,6 +30,16 @@
 
 
 using namespace std;
+
+////////////////////////////////////////
+
+inline void CkFftVerify(int result)
+{
+    if (!result)
+    {
+        assert(false);
+    }
+}
 
 ////////////////////////////////////////
 
@@ -166,7 +175,7 @@ void writeInput(int count)
 
 ////////////////////////////////////////
 
-const int k_reps = 1000;
+const int k_reps = 500;
 
 class FftTester
 {
@@ -205,6 +214,7 @@ public:
 
             float ms = timer.getElapsedMs();
             m_stats.sample(ms);
+            sleep(0);
         }
 
         shutdown();
@@ -228,20 +238,19 @@ private:
 class CkFftTester : public FftTester
 {
 public:
-    CkFftTester() : FftTester(), m_context(NULL), m_realContext(NULL) {}
+    CkFftTester() : FftTester(), m_context(NULL), m_tmpBuf(NULL), m_tmpBufSize(0) {}
 
     virtual const char* getName() { return "ckfft"; }
 
 protected:
     virtual void init()
     {
-        if (m_real)
+        m_context = CkFftInit(m_count, (m_inverse ? kCkFftDirection_Inverse : kCkFftDirection_Forward), NULL, NULL);
+
+        if (m_real && m_inverse)
         {
-            m_realContext = CkFftRealInit(m_count, m_inverse, NULL, NULL);
-        }
-        else
-        {
-            m_context = CkFftInit(m_count, m_inverse, NULL, NULL);
+            CkFftRealInverse(NULL, m_count, NULL, NULL, NULL, &m_tmpBufSize);
+            m_tmpBuf = malloc(m_tmpBufSize);
         }
     }
 
@@ -251,34 +260,37 @@ protected:
         {
             if (m_inverse)
             {
-                CkFftRealInverse(m_realContext, m_input, (float*) m_output);
+                CkFftVerify( CkFftRealInverse(m_context, m_count, m_input, (float*) m_output, m_tmpBuf, &m_tmpBufSize) );
             }
             else
             {
-                CkFftReal(m_realContext, (float*) m_input, m_output);
+                CkFftVerify( CkFftRealForward(m_context, m_count, (float*) m_input, m_output) );
             }
         }
         else
         {
-            CkFft(m_context, m_input, m_output);
+            if (m_inverse)
+            {
+                CkFftVerify( CkFftComplexInverse(m_context, m_count, m_input, m_output) );
+            }
+            else
+            {
+                CkFftVerify( CkFftComplexForward(m_context, m_count, m_input, m_output) );
+            }
         }
     }
 
     virtual void shutdown()
     {
-        if (m_real)
-        {
-            CkFftRealShutdown(m_realContext);
-        }
-        else
-        {
-            CkFftShutdown(m_context);
-        }
+        CkFftShutdown(m_context);
+        free(m_tmpBuf);
+        m_tmpBuf = NULL;
     }
 
 private:
     CkFftContext* m_context;
-    CkFftRealContext* m_realContext;
+    void* m_tmpBuf;
+    size_t m_tmpBufSize;
 };
 
 // TODO: use fixed-point KISS?
@@ -617,9 +629,12 @@ void test(const char* testName,
         /*
         for (int j = 0; j < outputCount; ++j)
         {
-            CKFFT_PRINTF("   output %d: %f,%f %f,%f\n", j, 
+            CKFFT_PRINTF("   output %d: %f,%f %f,%f   %f %f\n", j, 
                     output[j].real, output[j].imag,
-                    refOutput[j].real, refOutput[j].imag);
+                    refOutput[j].real, refOutput[j].imag,
+                    output[j].real - refOutput[j].real,
+                    output[j].imag - refOutput[j].imag
+                    );
         }
         */
 
@@ -656,13 +671,6 @@ void test()
     Timer::init();
 //    writeInput(4096);
 
-    vector<FftTester*> testers;
-    testers.push_back(new CkFftTester());
-    testers.push_back(new KissTester());
-#if CKFFT_PLATFORM_IOS || CKFFT_PLATFORM_MACOS
-    testers.push_back(new AccelerateTester());
-#endif
-
     // read input
     vector<CkFftComplex> input;
     string path;
@@ -671,60 +679,11 @@ void test()
     read(input, path.c_str());
     int count = (int) input.size();
 
-//    // XXX
-//    count = 16;
-//    input.resize(count);
-
     // allocate output
     vector<CkFftComplex> output;
     output.resize(count);
 
-#if 0
-    count = 16;
-    for (int i = 0; i < count; ++i)
-    {
-        input[i].imag = 0;
-    }
-    CKFFT_PRINTF("\n");
-    CkFftContext* context = CkFftInit(count, false, NULL, NULL);
-    CkFft(context, &input[0], &output[0]);
-    print(output, count);
-    CkFftShutdown(context);
-
-    ////////////////////////////////////////
-    // real-only
-    CKFFT_PRINTF("-----\n");
-    float* inr = new float[count];
-    for (int i = 0; i < count; ++i)
-    {
-        inr[i] = input[i].real;
-    }
-    zero(output);
-    CkFftRealContext* contextr = CkFftRealInit(count, false, NULL, NULL);
-    CkFftReal(contextr, inr, &output[0]);
-    CkFftRealShutdown(contextr);
-    print(output, count/2 + 1);
-
-    CKFFT_PRINTF("-----\n");
-    float* outr = new float[count];
-    for (int i = 0; i < count; ++i)
-    {
-        outr[i] = 0.0f;
-    }
-    contextr = CkFftRealInit(count, true, NULL, NULL);
-    CkFftRealInverse(contextr, &output[0], outr);
-    CkFftRealShutdown(contextr);
-
-    for (int i = 0; i < count/2+1; ++i)
-    {
-        CKFFT_PRINTF("%f %f\n", inr[i], outr[i]/8);
-    }
-
-    delete[] inr;
-    delete[] outr;
-
-#else
-
+#if 1
     // allocate inverse output
     vector<CkFftComplex> invOutput;
     invOutput.resize(count);
@@ -733,9 +692,23 @@ void test()
     TiXmlDocument doc;
     readResults(doc);
 
+    vector<FftTester*> testers;
+    testers.push_back(new CkFftTester());
+    testers.push_back(new KissTester());
+#if CKFFT_PLATFORM_IOS || CKFFT_PLATFORM_MACOS
+    testers.push_back(new AccelerateTester());
+#endif
+
     CKFFT_PRINTF("\n%d iterations\n", k_reps);
 
     char testName[128];
+
+    // XXX
+//    count=32;
+//    input.resize(count);
+//    output.resize(count);
+//    invOutput.resize(count);
+
 
     while (count > 128)
     {
@@ -763,6 +736,42 @@ void test()
     {
         delete testers[i];
     }
+#else 
+    count = 32;
+    input.resize(count);
+    output.resize(count);
+
+    float* inr = new float[count];
+    for (int i = 0; i < count; ++i)
+    {
+        inr[i] = input[i].real;
+    }
+    zero(output);
+    CkFftContext* context = CkFftInit(count, kCkFftDirection_Both, NULL, NULL);
+    CkFftRealForward(context, count, inr, &output[0]);
+    CkFftShutdown(context);
+    print(output, count/2 + 1);
+
+    /*
+    CKFFT_PRINTF("-----\n");
+    float* outr = new float[count];
+    for (int i = 0; i < count; ++i)
+    {
+        outr[i] = 0.0f;
+    }
+    contextr = CkFftRealInit(count, true, NULL, NULL);
+    CkFftRealInverse(contextr, &output[0], outr);
+    CkFftRealShutdown(contextr);
+
+    for (int i = 0; i < count/2+1; ++i)
+    {
+        CKFFT_PRINTF("%f %f\n", inr[i], outr[i]/8);
+    }
+
+    delete[] inr;
+    delete[] outr;
+    */
+
 #endif
 }
 

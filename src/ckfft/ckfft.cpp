@@ -1,42 +1,27 @@
 #include "ckfft/ckfft.h"
 #include "ckfft/fft.h"
+#include "ckfft/fft_real.h"
 #include "ckfft/debug.h"
 #include "ckfft/context.h"
 #include "ckfft/math.h"
 
 using namespace ckfft;
 
-////////////////////////////////////////
-// TODO:
-//  - NEON
-//  - fixed point?
-//  - alignment?
-//  - java wrapper for Android?
-//  - optimizations for real inputs?
-//  - is DIF better than DIT for NEON optimization?
-//  - stride for when complex values aren't in their own array?
-//  - optimized way to interleave non-interleaved complex data?
-//  - optimized way to scale data?
-//  - is non-interleaved data faster? it might simplify API.
-//  - Windows build
-//  - SIMD optimizations for Windows, Mac?
-//  - expTable should only be n-1 elements, not n
-//  - notes about memory requirements, scaling
-//  - for real fft, pack last value into first's imaginary part?
-//  - for real fft, pass tmpInput storage in, instead of putting it in context
-
-////////////////////////////////////////
 
 extern "C"
 {
 
-CkFftContext* CkFftInit(int count, int inverse, void* userBuf, size_t* userBufSize) 
+CkFftContext* CkFftInit(int maxCount, CkFftDirection direction, void* userBuf, size_t* userBufSize) 
 {
-    if (count <= 0)
+    if (maxCount <= 0)
     {
         return NULL;
     }
-    if (!isPowerOfTwo(count))
+    if (!isPowerOfTwo(maxCount))
+    {
+        return NULL;
+    }
+    if (direction != kCkFftDirection_Forward && direction != kCkFftDirection_Inverse && direction != kCkFftDirection_Both)
     {
         return NULL;
     }
@@ -45,20 +30,101 @@ CkFftContext* CkFftInit(int count, int inverse, void* userBuf, size_t* userBufSi
         return NULL;
     }
 
-    return (CkFftContext*) CkFftContextBase::create(count, inverse, false, userBuf, userBufSize);
+    return (CkFftContext*) CkFftContext::create(maxCount, direction, userBuf, userBufSize);
 }
 
-int CkFft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output)
+int CkFftRealForward(CkFftContext* context, int count, const float* input, CkFftComplex* output)
 {
-    if (!context || context->real || !input || !output || input == output)
+    if (!context || !context->fwdExpTable)
     {
         return 0;
     }
-    else
+    if (!isPowerOfTwo(count) || count > context->maxCount)
     {
-        fft(context, input, output, context->count);
-        return 1;
+        return 0;
     }
+    if (!input || !output || (void*) input == (void*) output)
+    {
+        return 0;
+    }
+
+    fft_real(context, input, output, count);
+    return 1;
+}
+
+int CkFftRealInverse(CkFftContext* context, int count, const CkFftComplex* input, float* output, void* tmpBuf, size_t* tmpBufSize)
+{
+    if (!tmpBuf)
+    {
+        fft_real_inverse(context, input, output, count, tmpBuf, tmpBufSize);
+        return 0;
+    }
+    if (!context || !context->invExpTable)
+    {
+        return 0;
+    }
+    if (!isPowerOfTwo(count) || count > context->maxCount)
+    {
+        return 0;
+    }
+    if (!input || !output || (void*) input == (void*) output)
+    {
+        return 0;
+    }
+    if (!tmpBufSize)
+    {
+        return 0;
+    }
+    if (tmpBuf)
+    {
+        size_t minSize;
+        fft_real_inverse(context, input, output, count, NULL, &minSize);
+        if (*tmpBufSize < minSize)
+        {
+            return 0;
+        }
+    }
+
+    fft_real_inverse(context, input, output, count, tmpBuf, tmpBufSize);
+    return 1;
+}
+
+int CkFftComplexForward(CkFftContext* context, int count, const CkFftComplex* input, CkFftComplex* output)
+{
+    if (!context || !context->fwdExpTable)
+    {
+        return 0;
+    }
+    if (!isPowerOfTwo(count) || count > context->maxCount)
+    {
+        return 0;
+    }
+    if (!input || !output || input == output)
+    {
+        return 0;
+    }
+
+    fft(context, input, output, count, false);
+    return 1;
+}
+
+int CkFftComplexInverse(CkFftContext* context, int count, const CkFftComplex* input, CkFftComplex* output)
+{
+    if (!context || !context->invExpTable)
+    {
+        return 0;
+    }
+    if (!isPowerOfTwo(count) || count > context->maxCount)
+    {
+        return 0;
+    }
+    if (!input || !output || input == output)
+    {
+        return 0;
+    }
+
+    fft(context, input, output, count, true);
+    return 1;
 }
 
 void CkFftShutdown(CkFftContext* context)  

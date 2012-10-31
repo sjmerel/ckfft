@@ -7,6 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA04D3E5163F0F8500878E08 /* fft_default.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA04D3E3163F0F8500878E08 /* fft_default.cpp */; };
+		AA04D3E6163F0F8500878E08 /* fft_default.h in Headers */ = {isa = PBXBuildFile; fileRef = AA04D3E4163F0F8500878E08 /* fft_default.h */; };
+		AA04D3E8163F0F9400878E08 /* ckfft.h in Headers */ = {isa = PBXBuildFile; fileRef = AA04D3E7163F0F9400878E08 /* ckfft.h */; };
+		AA3FA24C163F338D0064264C /* fft_real_default.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA3FA248163F338D0064264C /* fft_real_default.cpp */; };
+		AA3FA24D163F338D0064264C /* fft_real_default.h in Headers */ = {isa = PBXBuildFile; fileRef = AA3FA249163F338D0064264C /* fft_real_default.h */; };
+		AA3FA24E163F338D0064264C /* fft_real.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA3FA24A163F338D0064264C /* fft_real.cpp */; };
+		AA3FA24F163F338D0064264C /* fft_real.h in Headers */ = {isa = PBXBuildFile; fileRef = AA3FA24B163F338D0064264C /* fft_real.h */; };
+		AA3FA252163F81840064264C /* fft_real_neon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA3FA250163F81840064264C /* fft_real_neon.cpp */; };
+		AA3FA253163F81840064264C /* fft_real_neon.h in Headers */ = {isa = PBXBuildFile; fileRef = AA3FA251163F81840064264C /* fft_real_neon.h */; };
 		AA75B5EB15EC6429008151B6 /* ckfft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA75B5EA15EC6429008151B6 /* ckfft.cpp */; };
 		AA8DE003163649B100D67317 /* context.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DDFFB163649B100D67317 /* context.h */; };
 		AA8DE004163649B100D67317 /* debug.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DDFFC163649B100D67317 /* debug.h */; };
@@ -16,11 +25,19 @@
 		AA8DE008163649B100D67317 /* fft.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DE000163649B100D67317 /* fft.h */; };
 		AA8DE009163649B100D67317 /* math.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DE001163649B100D67317 /* math.h */; };
 		AA8DE00A163649B100D67317 /* platform.h in Headers */ = {isa = PBXBuildFile; fileRef = AA8DE002163649B100D67317 /* platform.h */; };
-		AA8DE0501637A61400D67317 /* ckfft_real.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA8DE04F1637A61400D67317 /* ckfft_real.cpp */; };
 		AAD326C21608FE7900984DE2 /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAD326C11608FE7900984DE2 /* context.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AA04D3E3163F0F8500878E08 /* fft_default.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft_default.cpp; sourceTree = "<group>"; };
+		AA04D3E4163F0F8500878E08 /* fft_default.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_default.h; sourceTree = "<group>"; };
+		AA04D3E7163F0F9400878E08 /* ckfft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ckfft.h; path = ../../inc/ckfft/ckfft.h; sourceTree = "<group>"; };
+		AA3FA248163F338D0064264C /* fft_real_default.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft_real_default.cpp; sourceTree = "<group>"; };
+		AA3FA249163F338D0064264C /* fft_real_default.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_real_default.h; sourceTree = "<group>"; };
+		AA3FA24A163F338D0064264C /* fft_real.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft_real.cpp; sourceTree = "<group>"; };
+		AA3FA24B163F338D0064264C /* fft_real.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_real.h; sourceTree = "<group>"; };
+		AA3FA250163F81840064264C /* fft_real_neon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft_real_neon.cpp; sourceTree = "<group>"; };
+		AA3FA251163F81840064264C /* fft_real_neon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_real_neon.h; sourceTree = "<group>"; };
 		AA75B5DD15EC6395008151B6 /* libckfft_macos.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libckfft_macos.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA75B5EA15EC6429008151B6 /* ckfft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ckfft.cpp; sourceTree = "<group>"; };
 		AA8DDFFB163649B100D67317 /* context.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = context.h; sourceTree = "<group>"; };
@@ -31,7 +48,6 @@
 		AA8DE000163649B100D67317 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
 		AA8DE001163649B100D67317 /* math.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
 		AA8DE002163649B100D67317 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		AA8DE04F1637A61400D67317 /* ckfft_real.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ckfft_real.cpp; sourceTree = "<group>"; };
 		AAD326C11608FE7900984DE2 /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -49,15 +65,23 @@
 		AA75B5D215EC6395008151B6 = {
 			isa = PBXGroup;
 			children = (
-				AA8DE04F1637A61400D67317 /* ckfft_real.cpp */,
+				AA04D3E7163F0F9400878E08 /* ckfft.h */,
 				AA75B5EA15EC6429008151B6 /* ckfft.cpp */,
+				AA3FA250163F81840064264C /* fft_real_neon.cpp */,
+				AA3FA251163F81840064264C /* fft_real_neon.h */,
+				AA3FA248163F338D0064264C /* fft_real_default.cpp */,
+				AA3FA249163F338D0064264C /* fft_real_default.h */,
+				AA3FA24A163F338D0064264C /* fft_real.cpp */,
+				AA3FA24B163F338D0064264C /* fft_real.h */,
+				AA8DDFFF163649B100D67317 /* fft.cpp */,
+				AA8DE000163649B100D67317 /* fft.h */,
+				AA04D3E3163F0F8500878E08 /* fft_default.cpp */,
+				AA04D3E4163F0F8500878E08 /* fft_default.h */,
+				AA8DDFFD163649B100D67317 /* fft_neon.cpp */,
+				AA8DDFFE163649B100D67317 /* fft_neon.h */,
 				AAD326C11608FE7900984DE2 /* context.cpp */,
 				AA8DDFFB163649B100D67317 /* context.h */,
 				AA8DDFFC163649B100D67317 /* debug.h */,
-				AA8DDFFF163649B100D67317 /* fft.cpp */,
-				AA8DE000163649B100D67317 /* fft.h */,
-				AA8DDFFD163649B100D67317 /* fft_neon.cpp */,
-				AA8DDFFE163649B100D67317 /* fft_neon.h */,
 				AA8DE001163649B100D67317 /* math.h */,
 				AA8DE002163649B100D67317 /* platform.h */,
 				AA75B5DE15EC6395008151B6 /* Products */,
@@ -85,6 +109,11 @@
 				AA8DE008163649B100D67317 /* fft.h in Headers */,
 				AA8DE009163649B100D67317 /* math.h in Headers */,
 				AA8DE00A163649B100D67317 /* platform.h in Headers */,
+				AA04D3E6163F0F8500878E08 /* fft_default.h in Headers */,
+				AA04D3E8163F0F9400878E08 /* ckfft.h in Headers */,
+				AA3FA24D163F338D0064264C /* fft_real_default.h in Headers */,
+				AA3FA24F163F338D0064264C /* fft_real.h in Headers */,
+				AA3FA253163F81840064264C /* fft_real_neon.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -143,7 +172,10 @@
 				AAD326C21608FE7900984DE2 /* context.cpp in Sources */,
 				AA8DE005163649B100D67317 /* fft_neon.cpp in Sources */,
 				AA8DE007163649B100D67317 /* fft.cpp in Sources */,
-				AA8DE0501637A61400D67317 /* ckfft_real.cpp in Sources */,
+				AA04D3E5163F0F8500878E08 /* fft_default.cpp in Sources */,
+				AA3FA24C163F338D0064264C /* fft_real_default.cpp in Sources */,
+				AA3FA24E163F338D0064264C /* fft_real.cpp in Sources */,
+				AA3FA252163F81840064264C /* fft_real_neon.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +249,7 @@
 			buildSettings = {
 				COMBINE_HIDPI_IMAGES = YES;
 				EXECUTABLE_PREFIX = lib;
+				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				HEADER_SEARCH_PATHS = (
 					../../inc,
 					../../src,

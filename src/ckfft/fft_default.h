@@ -5,7 +5,7 @@
 namespace ckfft
 {
 
-void fft_neon(
+void fft_default(
         CkFftContext* context, 
         const CkFftComplex* input, 
         CkFftComplex* output, 
@@ -16,5 +16,6 @@ void fft_neon(
         int expTableStride);
 
 }
+
 
 

@@ -5,67 +5,23 @@
 #include <assert.h>
 
 #if CKFFT_ARM_NEON
-#include <arm_neon.h>
-
-using namespace ckfft;
-
-namespace
-{
-
-inline void vmul(const float32x4x2_t& x, const float32x4x2_t& y, float32x4x2_t& out)
-{
-    // (a + bi)(c + di) = (ac - bd) + (bc + ad)i
-    float32x4_t ac = vmulq_f32(x.val[0], y.val[0]);
-    float32x4_t bd = vmulq_f32(x.val[1], y.val[1]);
-    float32x4_t bc = vmulq_f32(x.val[1], y.val[0]);
-    float32x4_t ad = vmulq_f32(x.val[0], y.val[1]);
-    out.val[0] = vsubq_f32(ac, bd);
-    out.val[1] = vaddq_f32(bc, ad);
-}
-
-inline void vmul(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& out)
-{
-    // (a + bi)(c + di) = (ac - bd) + (bc + ad)i
-    float32x2_t ac = vmul_f32(x.val[0], y.val[0]);
-    float32x2_t bd = vmul_f32(x.val[1], y.val[1]);
-    float32x2_t bc = vmul_f32(x.val[1], y.val[0]);
-    float32x2_t ad = vmul_f32(x.val[0], y.val[1]);
-    out.val[0] = vsub_f32(ac, bd);
-    out.val[1] = vadd_f32(bc, ad);
-}
-
-inline void vadd(const float32x4x2_t& x, const float32x4x2_t& y, float32x4x2_t& out)
-{
-    out.val[0] = vaddq_f32(x.val[0], y.val[0]);
-    out.val[1] = vaddq_f32(x.val[1], y.val[1]);
-}
-
-inline void vadd(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& out)
-{
-    out.val[0] = vadd_f32(x.val[0], y.val[0]);
-    out.val[1] = vadd_f32(x.val[1], y.val[1]);
-}
-
-inline void vsub(const float32x4x2_t& x, const float32x4x2_t& y, float32x4x2_t& out)
-{
-    out.val[0] = vsubq_f32(x.val[0], y.val[0]);
-    out.val[1] = vsubq_f32(x.val[1], y.val[1]);
-}
-
-inline void vsub(const float32x2x2_t& x, const float32x2x2_t& y, float32x2x2_t& out)
-{
-    out.val[0] = vsub_f32(x.val[0], y.val[0]);
-    out.val[1] = vsub_f32(x.val[1], y.val[1]);
-}
-
-} // namespace
-
-////////////////////////////////////////
+#  include <arm_neon.h>
+#endif 
 
 namespace ckfft
 {
 
-void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride, int expTableDiv)
+#if CKFFT_ARM_NEON
+
+void fft_neon(
+        CkFftContext* context, 
+        const CkFftComplex* input, 
+        CkFftComplex* output, 
+        int count, 
+        bool inverse,
+        int stride, 
+        const CkFftComplex* expTable,
+        int expTableStride)
 {
     if (count == 4)
     {
@@ -95,7 +51,7 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
 
         add(sum02, sum13, *out0);
         subtract(sum02, sum13, *out2);
-        if (context->inverse)
+        if (inverse)
         {
             out1->real = diff02.real - diff13.imag;
             out1->imag = diff02.imag + diff13.real;
@@ -126,8 +82,8 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
             out += 2;
         }
 
-        int expTableStride = stride * expTableDiv;
-        const CkFftComplex* exp = context->expTable;
+        int expTableStride1 = stride * expTableStride;
+        const CkFftComplex* exp = expTable;
 
         float32x2x2_t f1w_v, f2w2_v, f3w3_v;
         float32x2x2_t sum02_v, diff02_v, sum13_v, diff13_v;
@@ -144,15 +100,15 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
 
         float32x2x2_t exp1_v;
         exp1_v = vld2_lane_f32((const float*) exp, exp1_v, 0);
-        exp1_v = vld2_lane_f32((const float*) (exp + expTableStride), exp1_v, 1);
+        exp1_v = vld2_lane_f32((const float*) (exp + expTableStride1), exp1_v, 1);
 
         float32x2x2_t exp2_v;
         exp2_v = vld2_lane_f32((const float*) exp, exp2_v, 0);
-        exp2_v = vld2_lane_f32((const float*) (exp + expTableStride*2), exp2_v, 1);
+        exp2_v = vld2_lane_f32((const float*) (exp + expTableStride1*2), exp2_v, 1);
 
         float32x2x2_t exp3_v;
         exp3_v = vld2_lane_f32((const float*) exp, exp3_v, 0);
-        exp3_v = vld2_lane_f32((const float*) (exp + expTableStride*3), exp3_v, 1);
+        exp3_v = vld2_lane_f32((const float*) (exp + expTableStride1*3), exp3_v, 1);
 
         vmul(out1_v, exp1_v, f1w_v);
         vmul(out2_v, exp2_v, f2w2_v);
@@ -167,7 +123,7 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
         vsub(sum02_v, sum13_v, out2_v);
 
         // TODO optimize this?
-        if (context->inverse)
+        if (inverse)
         {
             out1_v.val[0] = vsub_f32(diff02_v.val[0], diff13_v.val[1]);
             out1_v.val[1] = vadd_f32(diff02_v.val[1], diff13_v.val[0]);
@@ -199,15 +155,15 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
         int stride4 = stride * 4;
         while (out < outEnd)
         {
-            fft_neon(context, in, out, n, stride4, expTableDiv);
+            fft_neon(context, in, out, n, inverse, stride4, expTable, expTableStride);
             in += stride;
             out += n;
         }
 
-        const CkFftComplex* exp1 = context->expTable;
+        const CkFftComplex* exp1 = expTable;
         const CkFftComplex* exp2 = exp1;
         const CkFftComplex* exp3 = exp1;
-        int expTableStride1 = stride * expTableDiv;
+        int expTableStride1 = stride * expTableStride;
         int expTableStride2 = expTableStride1 * 2;
         int expTableStride3 = expTableStride1 * 3;
 
@@ -273,7 +229,7 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
             vsub(sum02_v, sum13_v, out2_v);
 
             // TODO optimize this?
-            if (context->inverse)
+            if (inverse)
             {
                 out1_v.val[0] = vsubq_f32(diff02_v.val[0], diff13_v.val[1]);
                 out1_v.val[1] = vaddq_f32(diff02_v.val[1], diff13_v.val[0]);
@@ -300,13 +256,23 @@ void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex
         }
     }
 }
-}
-#else
-namespace ckfft
-{
-    void fft_neon(CkFftContextBase* context, const CkFftComplex* input, CkFftComplex* output, int count, int stride, int expTableDiv) {}
-} 
-#endif
+
+#else // CKFFT_ARM_NEON
+
+void fft_neon(
+        CkFftContext* context, 
+        const CkFftComplex* input, 
+        CkFftComplex* output, 
+        int count, 
+        bool inverse,
+        int stride, 
+        const CkFftComplex* expTable,
+        int expTableStride)
+{}
+
+#endif // CKFFT_ARM_NEON
+
+} // namespace ckfft
 
 
 

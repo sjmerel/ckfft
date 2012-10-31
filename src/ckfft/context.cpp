@@ -8,37 +8,36 @@
 #  include <cpu-features.h>
 #endif
 
-CkFftContextBase::CkFftContextBase() :
+_CkFftContext::_CkFftContext() :
     neon(false),
-    inverse(false),
-    real(false),
-    count(0),
-    expTable(NULL),
-    inputBuf(NULL),
+    maxCount(0),
+    fwdExpTable(NULL),
+    invExpTable(NULL),
     ownBuf(false)
 {}
 
-CkFftContextBase* CkFftContextBase::create(int count, bool inverse, bool real, void* userBuf, size_t* userBufSize)
+_CkFftContext* _CkFftContext::create(int maxCount, CkFftDirection direction, void* userBuf, size_t* userBufSize)
 {
     // size of context object
-    int contextSize = sizeof(CkFftContextBase);
+    int contextSize = sizeof(_CkFftContext);
     if (contextSize % sizeof(CkFftComplex))
     {
         // alignment XXX
         contextSize += sizeof(CkFftComplex) - (contextSize % sizeof(CkFftComplex));
     }
 
-    // size of lookup table
-    int expTableSize = count * sizeof(CkFftComplex);
+    int reqBufSize = contextSize;
 
-    // size of temp input buf (for inverse real FFT only)
-    int inputBufSize = 0;
-    if (real && inverse)
+    // size of lookup table(s)
+    int expTableSize = maxCount * sizeof(CkFftComplex);
+    if (direction & kCkFftDirection_Forward)
     {
-        inputBufSize = (count/2 + 1) * sizeof(CkFftComplex);
+        reqBufSize += expTableSize;
     }
-
-    int reqBufSize = contextSize + expTableSize + inputBufSize;
+    if (direction & kCkFftDirection_Inverse)
+    {
+        reqBufSize += expTableSize;
+    }
 
     if (userBufSize && (!userBuf || *userBufSize < reqBufSize))
     {
@@ -63,7 +62,7 @@ CkFftContextBase* CkFftContextBase::create(int count, bool inverse, bool real, v
     }
 
     // initialize
-    CkFftContextBase* context = new (buf) CkFftContextBase();
+    _CkFftContext* context = new (buf) _CkFftContext();
 
     context->neon = false;
 #if CKFFT_PLATFORM_ANDROID
@@ -76,33 +75,50 @@ CkFftContextBase* CkFftContextBase::create(int count, bool inverse, bool real, v
 #  endif
 #endif
 
-    // lookup table
+    // lookup table(s)
+    CkFftComplex* fwdExpBuf = NULL;
+    CkFftComplex* invExpBuf = NULL;
     CkFftComplex* expBuf = (CkFftComplex*) ((char*) buf + contextSize);
-    for (int i = 0; i < count; ++i)
+    if (direction == kCkFftDirection_Forward)
     {
-        float theta = -2.0f * M_PI * i / count;
-        expBuf[i].real = cosf(theta);
-        expBuf[i].imag = sinf(theta);
-        if (inverse)
+        fwdExpBuf = expBuf;
+    }
+    else if (direction == kCkFftDirection_Inverse)
+    {
+        invExpBuf = expBuf;
+    }
+    else if (direction == kCkFftDirection_Both)
+    {
+        fwdExpBuf = expBuf;
+        invExpBuf = expBuf + maxCount;
+    }
+
+    for (int i = 0; i < maxCount; ++i)
+    {
+        float theta = -2.0f * M_PI * i / maxCount;
+        float c = cosf(theta);
+        float s = sinf(theta);
+        if (fwdExpBuf)
         {
-            expBuf[i].imag = -expBuf[i].imag;
+            fwdExpBuf[i].real = c;
+            fwdExpBuf[i].imag = s;
+        }
+        if (invExpBuf)
+        {
+            invExpBuf[i].real = c;
+            invExpBuf[i].imag = -s;
         }
     }
 
-    context->inverse = inverse;
-    context->real = real;
-    context->count = count;
-    context->expTable = expBuf;
-    if (real && inverse)
-    {
-        context->inputBuf = expBuf + count;
-    }
+    context->maxCount = maxCount;
+    context->fwdExpTable = fwdExpBuf;
+    context->invExpTable = invExpBuf;
     context->ownBuf = (userBuf == NULL);
 
     return context;
 }
 
-void CkFftContextBase::destroy(CkFftContextBase* context)
+void _CkFftContext::destroy(_CkFftContext* context)
 {
     if (context && context->ownBuf)
     {
@@ -110,4 +126,3 @@ void CkFftContextBase::destroy(CkFftContextBase* context)
     }
 }
 
-////////////////////////////////////////

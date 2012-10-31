@@ -1,24 +1,19 @@
 #pragma once
 #include "ckfft/ckfft.h"
 
-struct CkFftContextBase
+struct _CkFftContext
 {
     bool neon;
-    bool inverse;
-    bool real;
-    int count;
-    const CkFftComplex* expTable;
-    CkFftComplex* inputBuf;
+    int maxCount;
+    const CkFftComplex* fwdExpTable;
+    const CkFftComplex* invExpTable;
     bool ownBuf; // true if memory was allocated by us, rather than user
 
-    static CkFftContextBase* create(int count, bool inverse, bool real, void* buf, size_t* bufSize);
-    static void destroy(CkFftContextBase*);
+    static _CkFftContext* create(int maxCount, CkFftDirection, void* buf, size_t* bufSize);
+    static void destroy(_CkFftContext*);
 
 private:
-    CkFftContextBase();
+    _CkFftContext();
 };
 
-struct _CkFftContext : public CkFftContextBase {};
-
-struct _CkFftRealContext : public CkFftContextBase {};
 

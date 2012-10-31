@@ -92,8 +92,6 @@
 		AA75B5ED15EC6492008151B6 = {
 			isa = PBXGroup;
 			children = (
-				AA8DE0171637361E00D67317 /* test.c */,
-				AA8DDFF916325A9E00D67317 /* libckfft_macos.a */,
 				AABAE7F815F67F8900D4BE98 /* kiss_fft */,
 				AABAE7F715F67F7400D4BE98 /* tinyxml */,
 				AABAE7E915F66E9100D4BE98 /* stats.cpp */,
@@ -103,11 +101,13 @@
 				AA020F0315F45E8700C99C37 /* timer.h */,
 				AA07936B15ED44A700CA8D95 /* test.cpp */,
 				AA07936C15ED44A700CA8D95 /* test.h */,
+				AA8DE0171637361E00D67317 /* test.c */,
 				AAEEDCE615F7D70300E43A09 /* platform.cpp */,
 				AA75B61515EC6560008151B6 /* main.cpp */,
 				AABAE7FB15F68CBE00D4BE98 /* results_macos_x86_64.xml */,
 				AA07936A15ED44A700CA8D95 /* input.txt */,
 				AA2EE78E1603964A00184F4B /* Frameworks */,
+				AA8DDFF916325A9E00D67317 /* libckfft_macos.a */,
 				AA75B5F915EC6492008151B6 /* Products */,
 			);
 			sourceTree = "<group>";

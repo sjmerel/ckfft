@@ -7,11 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AA04D3EF163F120000878E08 /* fft_default.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA04D3ED163F120000878E08 /* fft_default.cpp */; };
+		AA3FA25A163F819C0064264C /* fft_real_default.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA3FA254163F819C0064264C /* fft_real_default.cpp */; };
+		AA3FA25B163F819C0064264C /* fft_real_neon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA3FA256163F819C0064264C /* fft_real_neon.cpp */; };
+		AA3FA25C163F819C0064264C /* fft_real.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA3FA258163F819C0064264C /* fft_real.cpp */; };
 		AA75B5BF15EC62B5008151B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA75B5BE15EC62B5008151B6 /* Foundation.framework */; };
 		AA75B5D015EC6335008151B6 /* ckfft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA75B5CF15EC6335008151B6 /* ckfft.cpp */; };
 		AA8DE01516364D1000D67317 /* fft_neon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA8DE00F16364D1000D67317 /* fft_neon.cpp */; };
 		AA8DE01616364D1000D67317 /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA8DE01116364D1000D67317 /* fft.cpp */; };
-		AA8DE08F163B95F400D67317 /* ckfft_real.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA8DE08E163B95F400D67317 /* ckfft_real.cpp */; };
 		AAD326C51608FE8500984DE2 /* context.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AAD326C41608FE8500984DE2 /* context.cpp */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +31,15 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		AA04D3EC163F11F100878E08 /* ckfft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ckfft.h; path = ../../inc/ckfft/ckfft.h; sourceTree = "<group>"; };
+		AA04D3ED163F120000878E08 /* fft_default.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft_default.cpp; sourceTree = "<group>"; };
+		AA04D3EE163F120000878E08 /* fft_default.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_default.h; sourceTree = "<group>"; };
+		AA3FA254163F819C0064264C /* fft_real_default.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft_real_default.cpp; sourceTree = "<group>"; };
+		AA3FA255163F819C0064264C /* fft_real_default.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_real_default.h; sourceTree = "<group>"; };
+		AA3FA256163F819C0064264C /* fft_real_neon.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft_real_neon.cpp; sourceTree = "<group>"; };
+		AA3FA257163F819C0064264C /* fft_real_neon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_real_neon.h; sourceTree = "<group>"; };
+		AA3FA258163F819C0064264C /* fft_real.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fft_real.cpp; sourceTree = "<group>"; };
+		AA3FA259163F819C0064264C /* fft_real.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft_real.h; sourceTree = "<group>"; };
 		AA75B5BB15EC62B5008151B6 /* libckfft_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libckfft_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA75B5BE15EC62B5008151B6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AA75B5CF15EC6335008151B6 /* ckfft.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ckfft.cpp; sourceTree = "<group>"; };
@@ -39,7 +51,6 @@
 		AA8DE01216364D1000D67317 /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fft.h; sourceTree = "<group>"; };
 		AA8DE01316364D1000D67317 /* math.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = math.h; sourceTree = "<group>"; };
 		AA8DE01416364D1000D67317 /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		AA8DE08E163B95F400D67317 /* ckfft_real.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ckfft_real.cpp; sourceTree = "<group>"; };
 		AAD326C41608FE8500984DE2 /* context.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = context.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -58,15 +69,23 @@
 		AA75B5B015EC62B5008151B6 = {
 			isa = PBXGroup;
 			children = (
-				AA8DE08E163B95F400D67317 /* ckfft_real.cpp */,
+				AA04D3EC163F11F100878E08 /* ckfft.h */,
 				AA75B5CF15EC6335008151B6 /* ckfft.cpp */,
+				AA3FA254163F819C0064264C /* fft_real_default.cpp */,
+				AA3FA255163F819C0064264C /* fft_real_default.h */,
+				AA3FA256163F819C0064264C /* fft_real_neon.cpp */,
+				AA3FA257163F819C0064264C /* fft_real_neon.h */,
+				AA3FA258163F819C0064264C /* fft_real.cpp */,
+				AA3FA259163F819C0064264C /* fft_real.h */,
+				AA8DE01116364D1000D67317 /* fft.cpp */,
+				AA8DE01216364D1000D67317 /* fft.h */,
+				AA04D3ED163F120000878E08 /* fft_default.cpp */,
+				AA04D3EE163F120000878E08 /* fft_default.h */,
+				AA8DE00F16364D1000D67317 /* fft_neon.cpp */,
+				AA8DE01016364D1000D67317 /* fft_neon.h */,
 				AAD326C41608FE8500984DE2 /* context.cpp */,
 				AA8DE00D16364D1000D67317 /* context.h */,
 				AA8DE00E16364D1000D67317 /* debug.h */,
-				AA8DE01116364D1000D67317 /* fft.cpp */,
-				AA8DE01216364D1000D67317 /* fft.h */,
-				AA8DE00F16364D1000D67317 /* fft_neon.cpp */,
-				AA8DE01016364D1000D67317 /* fft_neon.h */,
 				AA8DE01316364D1000D67317 /* math.h */,
 				AA8DE01416364D1000D67317 /* platform.h */,
 				AA75B5BD15EC62B5008151B6 /* Frameworks */,
@@ -145,7 +164,10 @@
 				AAD326C51608FE8500984DE2 /* context.cpp in Sources */,
 				AA8DE01516364D1000D67317 /* fft_neon.cpp in Sources */,
 				AA8DE01616364D1000D67317 /* fft.cpp in Sources */,
-				AA8DE08F163B95F400D67317 /* ckfft_real.cpp in Sources */,
+				AA04D3EF163F120000878E08 /* fft_default.cpp in Sources */,
+				AA3FA25A163F819C0064264C /* fft_real_default.cpp in Sources */,
+				AA3FA25B163F819C0064264C /* fft_real_neon.cpp in Sources */,
+				AA3FA25C163F819C0064264C /* fft_real.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,6 +238,7 @@
 			buildSettings = {
 				DSTROOT = /tmp/ckfft_ios.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREPROCESSOR_DEFINITIONS = "NDEBUG=1";
 				HEADER_SEARCH_PATHS = (
 					../../inc,
 					../../src,

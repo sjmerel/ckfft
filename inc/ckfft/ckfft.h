@@ -1,6 +1,5 @@
 #pragma once
 #include <stdlib.h>
-#include "ckfft/complex.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -8,7 +7,24 @@ extern "C"
 #endif
 
 
+typedef struct
+{
+    float real;
+    float imag;
+}
+CkFftComplex;
+
+
 typedef struct _CkFftContext CkFftContext;
+
+
+typedef enum 
+{
+    kCkFftDirection_Forward = (1 << 0),
+    kCkFftDirection_Inverse = (1 << 1),
+    kCkFftDirection_Both    = (kCkFftDirection_Forward | kCkFftDirection_Inverse)
+}
+CkFftDirection;
 
 
 // Create an FFT context.
@@ -34,7 +50,7 @@ typedef struct _CkFftContext CkFftContext;
 //
 // Returns a context pointer if one could be created, or NULL if not.
 //
-CkFftContext* CkFftInit(int count, int inverse, void* buf, size_t* bufSize);
+CkFftContext* CkFftInit(int maxCount, CkFftDirection direction, void* buf, size_t* bufSize);
 
 
 
@@ -53,12 +69,17 @@ CkFftContext* CkFftInit(int count, int inverse, void* buf, size_t* bufSize);
 //  CkFft(context, (const CkFftComplex*) input, (CkFftComplex*) output);
 // 
 // No scaling is applied to the results of either the forward or inverse FFT, so if you 
-// apply both to a data set, the result will be scaled by count.
+// apply a forward FFT followed by an inverse FFT to a set of data, the result is
+// the original data, scaled by count.
 // 
 // Returns 1 if the FFT could be performed, or 0 if an error occurred (e.g. if the
 // context was NULL or if input == output).
 //
-int CkFft(CkFftContext* context, const CkFftComplex* input, CkFftComplex* output);
+
+int CkFftRealForward(CkFftContext* context, int count, const float* input, CkFftComplex* output);
+int CkFftRealInverse(CkFftContext* context, int count, const CkFftComplex* input, float* output, void* tmpBuf, size_t* tmpBufSize);
+int CkFftComplexForward(CkFftContext* context, int count, const CkFftComplex* input, CkFftComplex* output);
+int CkFftComplexInverse(CkFftContext* context, int count, const CkFftComplex* input, CkFftComplex* output);
 
 
 // Destroy an FFT context.

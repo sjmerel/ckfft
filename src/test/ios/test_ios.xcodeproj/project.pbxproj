@@ -77,7 +77,6 @@
 			isa = PBXGroup;
 			children = (
 				AA68EFAA162CA0DD004F38CB /* Default-568h@2x.png */,
-				AAD8A15615FFA50C004316E3 /* test.c */,
 				AABAE81415F709D900D4BE98 /* kiss_fft */,
 				AABAE80815F7099D00D4BE98 /* tinyxml */,
 				AABAE80915F709B600D4BE98 /* stats.cpp */,
@@ -87,6 +86,7 @@
 				AABAE80D15F709B600D4BE98 /* timer.h */,
 				AA07935815ED430D00CA8D95 /* test.cpp */,
 				AA07935915ED430D00CA8D95 /* test.h */,
+				AAD8A15615FFA50C004316E3 /* test.c */,
 				AA07934315ED417E00CA8D95 /* main.mm */,
 				AAEEDCE815F7D72A00E43A09 /* platform.mm */,
 				AAEEDCE215F7C27B00E43A09 /* results_ios_iPod4_1.xml */,
