@@ -21,9 +21,9 @@ void fft_real_default(
 
     output[countDiv2] = output[0];
 
-    const CkFftComplex* exp0 = context->fwdExpTable;
-    const CkFftComplex* exp1 = context->fwdExpTable + countDiv2;
     int expTableStride = context->maxCount/count;
+    const CkFftComplex* exp0 = context->fwdExpTable;
+    const CkFftComplex* exp1 = context->fwdExpTable + countDiv2 * expTableStride;
 
     int countDiv4 = count / 4;
     for (int i = 0; i < countDiv4; ++i)
@@ -70,9 +70,9 @@ void fft_real_inverse_default(
 {
     int countDiv2 = count / 2;
 
-    const CkFftComplex* exp0 = context->invExpTable;
-    const CkFftComplex* exp1 = context->invExpTable + countDiv2;
     int expTableStride = context->maxCount/count;
+    const CkFftComplex* exp0 = context->invExpTable;
+    const CkFftComplex* exp1 = context->invExpTable + countDiv2 * expTableStride;
 
     int countDiv4 = count / 4;
     for (int i = 0; i < countDiv4; ++i)

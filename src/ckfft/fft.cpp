@@ -3,6 +3,7 @@
 #include "ckfft/fft_default.h"
 #include "ckfft/math.h"
 #include "ckfft/context.h"
+#include "ckfft/debug.h"
 
 
 namespace ckfft
@@ -21,7 +22,7 @@ void fft(CkFftContext* context,
     }
     else if (count == 2)
     {
-        // radix-2 algorithm
+        // radix-2 
         // output[0] = input[0] + input[stride];
         // output[1] = input[0] - input[stride];
         add(input[0], input[1], output[0]);

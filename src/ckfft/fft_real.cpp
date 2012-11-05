@@ -2,6 +2,7 @@
 #include "ckfft/fft_real_default.h"
 #include "ckfft/fft_real_neon.h"
 #include "ckfft/math.h"
+#include "ckfft/debug.h"
 #include "ckfft/context.h"
 
 
@@ -14,18 +15,35 @@ void fft_real(CkFftContext* context,
          int count)
 {
     // handle trivial cases here, so we don't have to check for them in fft_real_default
+    // scale by 2 to match what fft_real_default would produce
     if (count == 1)
     {
-        output->real = *input;
+        output->real = *input * 2.0f;
         output->imag = 0.0f;
     }
     else if (count == 2)
     {
-        // radix-2 loop unrolled
-        output[0].real = input[0] + input[1];
+        // radix-2
+        output[0].real = (input[0] + input[1]) * 2.0f;
         output[0].imag = 0.0f;
-        output[1].real = input[0] - input[1];
+        output[1].real = (input[0] - input[1]) * 2.0f;
         output[1].imag = 0.0f;
+    }
+    else if (count == 4)
+    {
+        // radix-4 
+        float sum02 = (input[0] + input[2]) * 2.0f;
+        float diff02 = (input[0] - input[2]) * 2.0f;
+        float sum13 = (input[1] + input[3]) * 2.0f;
+        float diff13 = (input[1] - input[3]) * 2.0f;
+        output[0].real = sum02 + sum13;
+        output[0].imag = 0.0f;
+        output[1].real = diff02;
+        output[1].imag = -diff13;
+        output[2].real = sum02 - sum13;
+        output[2].imag = 0.0f;
+        output[3].real = diff02;
+        output[3].imag = diff13;
     }
     else
     {
@@ -54,7 +72,7 @@ void fft_real_inverse(CkFftContext* context,
 {
     if (tmpBuf == NULL)
     {
-        *tmpBufSize = count * sizeof(CkFftComplex);
+        *tmpBufSize = (count/2 + 1) * sizeof(CkFftComplex);
     }
     else
     {
@@ -65,9 +83,24 @@ void fft_real_inverse(CkFftContext* context,
         }
         else if (count == 2)
         {
-            // radix-2 loop unrolled
+            // radix-2 
             output[0] = input[0].real + input[1].real;
             output[1] = input[0].real - input[1].real;
+        }
+        else if (count == 4)
+        {
+            // radix-4
+            // note that input[3] = input[1]*
+            float sum02_r = input[0].real + input[2].real;
+            float sum13_r = 2.0f * input[1].real;
+            CkFftComplex diff02;
+            subtract(input[0], input[2], diff02);
+            float diff13_i = 2.0f * input[1].imag;
+
+            output[0] = sum02_r + sum13_r;
+            output[1] = diff02.real - diff13_i;
+            output[2] = sum02_r - sum13_r;
+            output[3] = diff02.real + diff13_i;
         }
         else
         {

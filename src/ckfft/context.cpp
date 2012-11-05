@@ -64,17 +64,6 @@ _CkFftContext* _CkFftContext::create(int maxCount, CkFftDirection direction, voi
     // initialize
     _CkFftContext* context = new (buf) _CkFftContext();
 
-    context->neon = false;
-#if CKFFT_PLATFORM_ANDROID
-    // on Android, need to check for NEON support at runtime
-    context->neon = ((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_NEON) == ANDROID_CPU_ARM_FEATURE_NEON);
-#elif CKFFT_PLATFORM_IOS
-#  if CKFFT_ARM_NEON
-    // on iOS, all armv7(s) devices support NEON
-    context->neon = true;
-#  endif
-#endif
-
     // lookup table(s)
     CkFftComplex* fwdExpBuf = NULL;
     CkFftComplex* invExpBuf = NULL;
@@ -110,6 +99,7 @@ _CkFftContext* _CkFftContext::create(int maxCount, CkFftDirection direction, voi
         }
     }
 
+    context->neon = isNeonSupported();
     context->maxCount = maxCount;
     context->fwdExpTable = fwdExpBuf;
     context->invExpTable = invExpBuf;
@@ -126,3 +116,18 @@ void _CkFftContext::destroy(_CkFftContext* context)
     }
 }
 
+bool _CkFftContext::isNeonSupported()
+{
+    bool neon = false;
+#if CKFFT_PLATFORM_ANDROID
+    // on Android, need to check for NEON support at runtime
+    neon = ((android_getCpuFeatures() & ANDROID_CPU_ARM_FEATURE_NEON) == ANDROID_CPU_ARM_FEATURE_NEON);
+#elif CKFFT_PLATFORM_IOS
+#  if CKFFT_ARM_NEON
+    // on iOS, all armv7(s) devices support NEON
+    neon = true;
+#  endif
+#endif
+
+    return neon;
+}

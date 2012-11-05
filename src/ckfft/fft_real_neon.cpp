@@ -26,9 +26,9 @@ void fft_real_neon(
 
     output[countDiv2] = output[0];
 
-    const CkFftComplex* exp0 = context->fwdExpTable;
-    const CkFftComplex* exp1 = context->fwdExpTable + countDiv2;
     int expTableStride = context->maxCount/count;
+    const CkFftComplex* exp0 = context->fwdExpTable;
+    const CkFftComplex* exp1 = context->fwdExpTable + countDiv2 * expTableStride;
 
     CkFftComplex* p0 = output;
     CkFftComplex* p1 = output + countDiv2 - 3;
@@ -115,9 +115,12 @@ void fft_real_neon(
         p1 -= 4;
     }
 
-    // middle:
-    p0->real = p0->real * 2.0f;
-    p0->imag = -p0->imag * 2.0f;
+    if (count > 8)
+    {
+        // middle:
+        p0->real = p0->real * 2.0f;
+        p0->imag = -p0->imag * 2.0f;
+    }
 }
 
 void fft_real_inverse_neon(
@@ -129,9 +132,9 @@ void fft_real_inverse_neon(
 {
     int countDiv2 = count/2;
 
-    const CkFftComplex* exp0 = context->invExpTable;
-    const CkFftComplex* exp1 = context->invExpTable + countDiv2;
     int expTableStride = context->maxCount/count;
+    const CkFftComplex* exp0 = context->invExpTable;
+    const CkFftComplex* exp1 = context->invExpTable + countDiv2 * expTableStride;
 
     const CkFftComplex* p0 = input;
     const CkFftComplex* p1 = input + countDiv2 - 3;

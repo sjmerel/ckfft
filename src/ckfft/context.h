@@ -12,6 +12,8 @@ struct _CkFftContext
     static _CkFftContext* create(int maxCount, CkFftDirection, void* buf, size_t* bufSize);
     static void destroy(_CkFftContext*);
 
+    static bool isNeonSupported();
+
 private:
     _CkFftContext();
 };
