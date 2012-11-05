@@ -626,7 +626,7 @@ void timingTest(const char* testName,
         tester->init(&input[0], &output[0], count, inverse, real);
 
         Stats stats;
-        for (int i = 0; i < k_reps; ++i)
+        for (int j = 0; j < k_reps; ++j)
         {
             Timer timer;
             timer.start();
@@ -914,6 +914,7 @@ void test()
 #if CKFFT_ARM_NEON
     CkFftTester::setNoNeon(true);
     success &= regressionTest();
+    CkFftTester::setNoNeon(false);
 #endif
     if (!success)
     {
