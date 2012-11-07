@@ -1,6 +1,11 @@
 #include "ckfft/platform.h"
 #include "ckfft/context.h"
 #include "ckfft/debug.h"
+
+#if CKFFT_PLATFORM_WIN
+#  define _USE_MATH_DEFINES
+#endif
+
 #include <math.h>
 #include <new>
 
@@ -39,7 +44,7 @@ _CkFftContext* _CkFftContext::create(int maxCount, CkFftDirection direction, voi
         reqBufSize += expTableSize;
     }
 
-    if (userBufSize && (!userBuf || *userBufSize < reqBufSize))
+    if (userBufSize && (!userBuf || (int) *userBufSize < reqBufSize))
     {
         *userBufSize = reqBufSize;
         return NULL;
@@ -84,7 +89,7 @@ _CkFftContext* _CkFftContext::create(int maxCount, CkFftDirection direction, voi
 
     for (int i = 0; i < maxCount; ++i)
     {
-        float theta = -2.0f * M_PI * i / maxCount;
+        float theta = -2.0f * (float) M_PI * i / maxCount;
         float c = cosf(theta);
         float s = sinf(theta);
         if (fwdExpBuf)
