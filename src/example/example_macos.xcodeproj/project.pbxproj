@@ -1,0 +1,218 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		AA201CFB164B128B0051D5DD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA201CFA164B128B0051D5DD /* main.cpp */; };
+		AA201CFD164B5B160051D5DD /* libckfft_macos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA201CFC164B5B160051D5DD /* libckfft_macos.a */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		AA201CD8164B12140051D5DD /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		AA201CDA164B12140051D5DD /* example_macos */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = example_macos; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA201CFA164B128B0051D5DD /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		AA201CFC164B5B160051D5DD /* libckfft_macos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libckfft_macos.a; path = "../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug/libckfft_macos.a"; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		AA201CD7164B12140051D5DD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA201CFD164B5B160051D5DD /* libckfft_macos.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		AA201CCF164B12140051D5DD = {
+			isa = PBXGroup;
+			children = (
+				AA201CFC164B5B160051D5DD /* libckfft_macos.a */,
+				AA201CFA164B128B0051D5DD /* main.cpp */,
+				AA201CDB164B12140051D5DD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		AA201CDB164B12140051D5DD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				AA201CDA164B12140051D5DD /* example_macos */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		AA201CD9164B12140051D5DD /* example_macos */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA201CE4164B12140051D5DD /* Build configuration list for PBXNativeTarget "example_macos" */;
+			buildPhases = (
+				AA201CD6164B12140051D5DD /* Sources */,
+				AA201CD7164B12140051D5DD /* Frameworks */,
+				AA201CD8164B12140051D5DD /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = example_macos;
+			productName = example_macos;
+			productReference = AA201CDA164B12140051D5DD /* example_macos */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		AA201CD1164B12140051D5DD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "Steven Merel";
+			};
+			buildConfigurationList = AA201CD4164B12140051D5DD /* Build configuration list for PBXProject "example_macos" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = AA201CCF164B12140051D5DD;
+			productRefGroup = AA201CDB164B12140051D5DD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				AA201CD9164B12140051D5DD /* example_macos */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		AA201CD6164B12140051D5DD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA201CFB164B128B0051D5DD /* main.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		AA201CE2164B12140051D5DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		AA201CE3164B12140051D5DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		AA201CE5164B12140051D5DD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = ../../inc;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		AA201CE6164B12140051D5DD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				HEADER_SEARCH_PATHS = ../../inc;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug\"",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		AA201CD4164B12140051D5DD /* Build configuration list for PBXProject "example_macos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA201CE2164B12140051D5DD /* Debug */,
+				AA201CE3164B12140051D5DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA201CE4164B12140051D5DD /* Build configuration list for PBXNativeTarget "example_macos" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA201CE5164B12140051D5DD /* Debug */,
+				AA201CE6164B12140051D5DD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = AA201CD1164B12140051D5DD /* Project object */;
+}
