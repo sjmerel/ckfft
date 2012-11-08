@@ -67,57 +67,49 @@ void fft_real_inverse(CkFftContext* context,
          const CkFftComplex* input, 
          float* output, 
          int count,
-         void* tmpBuf,
-         size_t* tmpBufSize)
+         CkFftComplex* tmpBuf)
 {
-    if (tmpBuf == NULL)
+    // handle trivial cases here, so we don't have to check for them in fft_real_default
+    if (count == 1)
     {
-        *tmpBufSize = (count/2 + 1) * sizeof(CkFftComplex);
+        *output = input->real;
+    }
+    else if (count == 2)
+    {
+        // radix-2 
+        output[0] = input[0].real + input[1].real;
+        output[1] = input[0].real - input[1].real;
+    }
+    else if (count == 4)
+    {
+        // radix-4
+        // note that input[3] = input[1]*
+        float sum02_r = input[0].real + input[2].real;
+        float sum13_r = 2.0f * input[1].real;
+        CkFftComplex diff02;
+        subtract(input[0], input[2], diff02);
+        float diff13_i = 2.0f * input[1].imag;
+
+        output[0] = sum02_r + sum13_r;
+        output[1] = diff02.real - diff13_i;
+        output[2] = sum02_r - sum13_r;
+        output[3] = diff02.real + diff13_i;
     }
     else
     {
-        // handle trivial cases here, so we don't have to check for them in fft_real_default
-        if (count == 1)
+#if 1
+        // NEON enabled
+        if (context->neon)
         {
-            *output = input->real;
-        }
-        else if (count == 2)
-        {
-            // radix-2 
-            output[0] = input[0].real + input[1].real;
-            output[1] = input[0].real - input[1].real;
-        }
-        else if (count == 4)
-        {
-            // radix-4
-            // note that input[3] = input[1]*
-            float sum02_r = input[0].real + input[2].real;
-            float sum13_r = 2.0f * input[1].real;
-            CkFftComplex diff02;
-            subtract(input[0], input[2], diff02);
-            float diff13_i = 2.0f * input[1].imag;
-
-            output[0] = sum02_r + sum13_r;
-            output[1] = diff02.real - diff13_i;
-            output[2] = sum02_r - sum13_r;
-            output[3] = diff02.real + diff13_i;
+            fft_real_inverse_neon(context, input, output, count, tmpBuf);
         }
         else
         {
-#if 1
-            // NEON enabled
-            if (context->neon)
-            {
-                fft_real_inverse_neon(context, input, output, count, (CkFftComplex*) tmpBuf);
-            }
-            else
-            {
-                fft_real_inverse_default(context, input, output, count, (CkFftComplex*) tmpBuf);
-            }
-#else
-            fft_real_inverse_default(context, input, output, count, (CkFftComplex*) tmpBuf);
-#endif
+            fft_real_inverse_default(context, input, output, count, tmpBuf);
         }
+#else
+        fft_real_inverse_default(context, input, output, count, tmpBuf);
+#endif
     }
 }
 

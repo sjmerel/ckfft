@@ -77,7 +77,7 @@ CkFftContext* CkFftInit(int maxCount, CkFftDirection direction, void* buf, size_
 //
 
 int CkFftRealForward(CkFftContext* context, int count, const float* input, CkFftComplex* output);
-int CkFftRealInverse(CkFftContext* context, int count, const CkFftComplex* input, float* output, void* tmpBuf, size_t* tmpBufSize);
+int CkFftRealInverse(CkFftContext* context, int count, const CkFftComplex* input, float* output, CkFftComplex* tmpBuf);
 int CkFftComplexForward(CkFftContext* context, int count, const CkFftComplex* input, CkFftComplex* output);
 int CkFftComplexInverse(CkFftContext* context, int count, const CkFftComplex* input, CkFftComplex* output);
 

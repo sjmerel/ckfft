@@ -16,8 +16,7 @@ void fft_real_inverse(
         const CkFftComplex* input, 
         float* output, 
         int count,
-        void* tmpBuf,
-        size_t* tmpBufSize);
+        CkFftComplex* tmpBuf);
 
 }
 

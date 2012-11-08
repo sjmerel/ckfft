@@ -51,11 +51,10 @@ int CkFftRealForward(CkFftContext* context, int count, const float* input, CkFft
     return 1;
 }
 
-int CkFftRealInverse(CkFftContext* context, int count, const CkFftComplex* input, float* output, void* tmpBuf, size_t* tmpBufSize)
+int CkFftRealInverse(CkFftContext* context, int count, const CkFftComplex* input, float* output, CkFftComplex* tmpBuf)
 {
     if (!tmpBuf)
     {
-        fft_real_inverse(context, input, output, count, tmpBuf, tmpBufSize);
         return 0;
     }
     if (!context || !context->invExpTable)
@@ -70,21 +69,8 @@ int CkFftRealInverse(CkFftContext* context, int count, const CkFftComplex* input
     {
         return 0;
     }
-    if (!tmpBufSize)
-    {
-        return 0;
-    }
-    if (tmpBuf)
-    {
-        size_t minSize;
-        fft_real_inverse(context, input, output, count, NULL, &minSize);
-        if (*tmpBufSize < minSize)
-        {
-            return 0;
-        }
-    }
 
-    fft_real_inverse(context, input, output, count, tmpBuf, tmpBufSize);
+    fft_real_inverse(context, input, output, count, tmpBuf);
     return 1;
 }
 
