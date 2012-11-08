@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AA201CFB164B128B0051D5DD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA201CFA164B128B0051D5DD /* main.cpp */; };
-		AA201CFD164B5B160051D5DD /* libckfft_macos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA201CFC164B5B160051D5DD /* libckfft_macos.a */; };
+		AA201D6B164B652F0051D5DD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA201D6A164B652F0051D5DD /* main.cpp */; };
+		AA201D6D164B65370051D5DD /* libckfft_macos.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA201D6C164B65370051D5DD /* libckfft_macos.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -25,8 +25,8 @@
 
 /* Begin PBXFileReference section */
 		AA201CDA164B12140051D5DD /* example_macos */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = example_macos; sourceTree = BUILT_PRODUCTS_DIR; };
-		AA201CFA164B128B0051D5DD /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		AA201CFC164B5B160051D5DD /* libckfft_macos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libckfft_macos.a; path = "../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug/libckfft_macos.a"; sourceTree = "<group>"; };
+		AA201D6A164B652F0051D5DD /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../main.cpp; sourceTree = "<group>"; };
+		AA201D6C164B65370051D5DD /* libckfft_macos.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libckfft_macos.a; path = "../../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Release/libckfft_macos.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -34,7 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA201CFD164B5B160051D5DD /* libckfft_macos.a in Frameworks */,
+				AA201D6D164B65370051D5DD /* libckfft_macos.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -44,8 +44,8 @@
 		AA201CCF164B12140051D5DD = {
 			isa = PBXGroup;
 			children = (
-				AA201CFC164B5B160051D5DD /* libckfft_macos.a */,
-				AA201CFA164B128B0051D5DD /* main.cpp */,
+				AA201D6C164B65370051D5DD /* libckfft_macos.a */,
+				AA201D6A164B652F0051D5DD /* main.cpp */,
 				AA201CDB164B12140051D5DD /* Products */,
 			);
 			sourceTree = "<group>";
@@ -109,7 +109,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA201CFB164B128B0051D5DD /* main.cpp in Sources */,
+				AA201D6B164B652F0051D5DD /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,11 +170,8 @@
 		AA201CE5164B12140051D5DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = ../../inc;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug\"",
-				);
+				HEADER_SEARCH_PATHS = ../../../inc;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -182,11 +179,8 @@
 		AA201CE6164B12140051D5DD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = ../../inc;
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug\"",
-				);
+				HEADER_SEARCH_PATHS = ../../../inc;
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;

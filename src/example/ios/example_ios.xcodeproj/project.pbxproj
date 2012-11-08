@@ -10,8 +10,8 @@
 		AA201D14164B60DD0051D5DD /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA201D13164B60DD0051D5DD /* UIKit.framework */; };
 		AA201D16164B60DD0051D5DD /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA201D15164B60DD0051D5DD /* Foundation.framework */; };
 		AA201D18164B60DD0051D5DD /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA201D17164B60DD0051D5DD /* CoreGraphics.framework */; };
-		AA201D50164B61DB0051D5DD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA201D4F164B61DB0051D5DD /* main.cpp */; };
-		AA201D52164B628A0051D5DD /* libckfft_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA201D51164B628A0051D5DD /* libckfft_ios.a */; };
+		AA201D70164B65750051D5DD /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA201D6F164B65750051D5DD /* main.cpp */; };
+		AA201D72164B658D0051D5DD /* libckfft_ios.a in Frameworks */ = {isa = PBXBuildFile; fileRef = AA201D71164B658D0051D5DD /* libckfft_ios.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,8 +19,8 @@
 		AA201D13164B60DD0051D5DD /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		AA201D15164B60DD0051D5DD /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		AA201D17164B60DD0051D5DD /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		AA201D4F164B61DB0051D5DD /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		AA201D51164B628A0051D5DD /* libckfft_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libckfft_ios.a; path = "../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug-iphoneos/libckfft_ios.a"; sourceTree = "<group>"; };
+		AA201D6F164B65750051D5DD /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = main.cpp; path = ../main.cpp; sourceTree = "<group>"; };
+		AA201D71164B658D0051D5DD /* libckfft_ios.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libckfft_ios.a; path = "../../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug-iphoneos/libckfft_ios.a"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -28,7 +28,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA201D52164B628A0051D5DD /* libckfft_ios.a in Frameworks */,
+				AA201D72164B658D0051D5DD /* libckfft_ios.a in Frameworks */,
 				AA201D14164B60DD0051D5DD /* UIKit.framework in Frameworks */,
 				AA201D16164B60DD0051D5DD /* Foundation.framework in Frameworks */,
 				AA201D18164B60DD0051D5DD /* CoreGraphics.framework in Frameworks */,
@@ -41,8 +41,8 @@
 		AA201D04164B60DD0051D5DD = {
 			isa = PBXGroup;
 			children = (
-				AA201D51164B628A0051D5DD /* libckfft_ios.a */,
-				AA201D4F164B61DB0051D5DD /* main.cpp */,
+				AA201D71164B658D0051D5DD /* libckfft_ios.a */,
+				AA201D6F164B65750051D5DD /* main.cpp */,
 				AA201D12164B60DD0051D5DD /* Frameworks */,
 				AA201D10164B60DD0051D5DD /* Products */,
 			);
@@ -127,7 +127,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA201D50164B61DB0051D5DD /* main.cpp in Sources */,
+				AA201D70164B65750051D5DD /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -187,12 +187,9 @@
 		AA201D2E164B60DD0051D5DD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = ../../inc;
-				INFOPLIST_FILE = "ios/example_ios-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug-iphoneos\"",
-				);
+				HEADER_SEARCH_PATHS = ../../../inc;
+				INFOPLIST_FILE = "example_ios-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};
@@ -201,12 +198,9 @@
 		AA201D2F164B60DD0051D5DD /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = ../../inc;
-				INFOPLIST_FILE = "ios/example_ios-Info.plist";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/../../../../Library/Developer/Xcode/DerivedData/ckfft-gbshqewdcaesgabwtpnvkmrsinic/Build/Products/Debug-iphoneos\"",
-				);
+				HEADER_SEARCH_PATHS = ../../../inc;
+				INFOPLIST_FILE = "example_ios-Info.plist";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
 			};

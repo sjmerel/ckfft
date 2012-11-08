@@ -2,6 +2,13 @@
 #include <math.h>
 #include "ckfft/ckfft.h"
 
+#if __ANDROID__
+#  include <android/log.h>
+#  define CKFFT_PRINTF(fmt, ...) __android_log_print(ANDROID_LOG_INFO, "CKFFT", fmt, ##__VA_ARGS__)
+#else
+#  define CKFFT_PRINTF printf
+#endif
+
 // real input data (1024 floats)
 float input[] =
 {
@@ -10,37 +17,37 @@ float input[] =
 
 int main(int argc, char* argv[]) 
 {
-    int n = sizeof(input) / sizeof(input[0]); // 1024
+    int count = sizeof(input) / sizeof(input[0]); // 1024
 
     // We are going to do a forward FFT on input, then an inverse FFT on the result;
-    // we expect to get back the original input, scaled by 2*n = 2048.
+    // we expect to get back the original input, scaled by 2*count = 2048.
 
     // First, create a context.  
     // Our input data will contain at most 1024 elements, so we pass in 1024 for maxCount.
     // Because we're going to do both the forward and inverse FFT, we specify kCkFftDirection_Both.  (If we were only doing one or the other, we could specify only one direction, and use less memory.)
     // We pass in NULL for both buf and bufSize, because we're going to let CkFftInit() to allocate memory for us.
-    CkFftContext* context = CkFftInit(n, kCkFftDirection_Both, NULL, NULL);
+    CkFftContext* context = CkFftInit(count, kCkFftDirection_Both, NULL, NULL);
 
     // Now do the forward FFT.
-    // Because the input data is real, we will only get n/2+1 = 513 output values.
-    CkFftComplex* forwardOutput = new CkFftComplex[n/2 + 1];
-    CkFftRealForward(context, n, input, forwardOutput);
+    // Because the input data is real, we will only get count/2+1 = 513 output values.
+    CkFftComplex* forwardOutput = new CkFftComplex[count/2 + 1];
+    CkFftRealForward(context, count, input, forwardOutput);
 
     // Now do the inverse FFT.
-    // For this one, we need a temporary buffer, with n/2+1 elements.
-    CkFftComplex* tmpBuf = new CkFftComplex[n/2 + 1];
-    float* inverseOutput = new float[n];
-    CkFftRealInverse(context, n, forwardOutput, inverseOutput, tmpBuf);
+    // For this one, we need a temporary buffer, with count/2+1 elements.
+    CkFftComplex* tmpBuf = new CkFftComplex[count/2 + 1];
+    float* inverseOutput = new float[count];
+    CkFftRealInverse(context, count, forwardOutput, inverseOutput, tmpBuf);
 
     // Calculate sum of squares of differences of the input data and the output data
-    // (compensating for the scale factor of 2n); this should be close to 0.
+    // (compensating for the scale factor of 2*count); this should be close to 0.
     float err = 0.0f;
-    for (int i = 0; i < n; ++i)
+    for (int i = 0; i < count; ++i)
     {
         float diff = inverseOutput[i] / 2048.0f - input[i];
         err += diff * diff;
     }
-    printf("error: %f\n", err);
+    CKFFT_PRINTF("error: %f\n", err);
 
     // Clean up
     delete[] forwardOutput;
