@@ -1,9 +1,10 @@
+#include "ckfft/platform.h"
+#include "ckfft/debug.h"
 #include "ckfft/ckfft.h"
 #include "ckfft/fft.h"
 #include "ckfft/fft_real.h"
 #include "ckfft/context.h"
-#include "ckfft/math.h"
-#include "ckfft/debug.h"
+#include "ckfft/math_util.h"
 
 using namespace ckfft;
 

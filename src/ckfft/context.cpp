@@ -1,6 +1,6 @@
 #include "ckfft/platform.h"
-#include "ckfft/context.h"
 #include "ckfft/debug.h"
+#include "ckfft/context.h"
 
 #if CKFFT_PLATFORM_WIN
 #  define _USE_MATH_DEFINES

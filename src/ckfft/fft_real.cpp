@@ -1,8 +1,9 @@
+#include "ckfft/platform.h"
+#include "ckfft/debug.h"
 #include "ckfft/fft.h"
 #include "ckfft/fft_real_default.h"
 #include "ckfft/fft_real_neon.h"
-#include "ckfft/math.h"
-#include "ckfft/debug.h"
+#include "ckfft/math_util.h"
 #include "ckfft/context.h"
 
 

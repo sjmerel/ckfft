@@ -2,16 +2,16 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:ckfft/ckfft_ios.xcodeproj">
+      location = "group:ckfft/ios/ckfft_ios.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:ckfft/ckfft_macos.xcodeproj">
+      location = "group:ckfft/macos/ckfft_macos.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:example/example_ios.xcodeproj">
+      location = "group:example/ios/example_ios.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:example/example_macos.xcodeproj">
+      location = "group:example/macos/example_macos.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:test/ios/test_ios.xcodeproj">

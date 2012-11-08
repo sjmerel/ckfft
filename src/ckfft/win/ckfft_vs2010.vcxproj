@@ -273,7 +273,7 @@
     <ClInclude Include="fft_real.h" />
     <ClInclude Include="fft_real_default.h" />
     <ClInclude Include="fft_real_neon.h" />
-    <ClInclude Include="math.h" />
+    <ClInclude Include="math_util.h" />
     <ClInclude Include="platform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

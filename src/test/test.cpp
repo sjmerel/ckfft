@@ -232,8 +232,7 @@ public:
         FftTester(), 
         m_context(NULL), 
         m_maxCount(-1),
-        m_tmpBuf(NULL), 
-        m_tmpBufSize(0) 
+        m_tmpBuf(NULL)
     {}
 
     void setMaxCount(int maxCount) { m_maxCount = maxCount; }
@@ -258,8 +257,7 @@ protected:
 
         if (m_real && m_inverse)
         {
-            CkFftRealInverse(NULL, m_count, NULL, NULL, NULL, &m_tmpBufSize);
-            m_tmpBuf = malloc(m_tmpBufSize);
+            m_tmpBuf = new CkFftComplex[m_maxCount/2 + 1];
         }
     }
 
@@ -269,7 +267,7 @@ protected:
         {
             if (m_inverse)
             {
-                CkFftVerify( CkFftRealInverse(m_context, m_count, m_input, (float*) m_output, m_tmpBuf, &m_tmpBufSize) );
+                CkFftVerify( CkFftRealInverse(m_context, m_count, m_input, (float*) m_output, m_tmpBuf) );
             }
             else
             {
@@ -293,15 +291,14 @@ protected:
     {
         CkFftShutdown(m_context);
         m_context = NULL;
-        free(m_tmpBuf);
+        delete[] m_tmpBuf;
         m_tmpBuf = NULL;
     }
 
 private:
     CkFftContext* m_context;
     int m_maxCount;
-    void* m_tmpBuf;
-    size_t m_tmpBufSize;
+    CkFftComplex* m_tmpBuf;
 
     static bool s_noNeon;
 };

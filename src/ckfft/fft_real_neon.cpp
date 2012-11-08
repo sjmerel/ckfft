@@ -1,8 +1,8 @@
 #include "ckfft/platform.h"
+#include "ckfft/debug.h"
 #include "ckfft/fft_neon.h"
 #include "ckfft/context.h"
-#include "ckfft/debug.h"
-#include "ckfft/math.h"
+#include "ckfft/math_util.h"
 #include <assert.h>
 
 #if CKFFT_ARM_NEON
