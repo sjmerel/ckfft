@@ -257,7 +257,7 @@ protected:
 
         if (m_real && m_inverse)
         {
-            m_tmpBuf = new CkFftComplex[m_maxCount/2 + 1];
+            m_tmpBuf = new CkFftComplex[m_count/2 + 1];
         }
     }
 
@@ -823,13 +823,13 @@ bool regressionTestReal(const CkFftComplex* realInput, const float* floatInput, 
     ckfft.shutdown();
 
     float sumSq = 0.0f;
-    for (int i = 0; i < count; ++i)
+    for (int i = 0; i < outputCount; ++i)
     {
         float diff = floatOutput[i] - invRefOutput[i].real;
         sumSq += diff * diff;
     }
 
-    err = sqrtf(sumSq / count);
+    err = sqrtf(sumSq / outputCount);
     CKFFT_PRINTF("count=%-5d, maxCount=%-5d, neon=%d, inverse real: err %f", count, maxCount, CkFftTester::isNeonEnabled(), err);
     if (err > k_thresh)
     {
