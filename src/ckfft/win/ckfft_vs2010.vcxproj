@@ -110,36 +110,36 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamic|Win32'">
-    <IntDir>$(ProjectDir)build\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\..\lib\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'">
-    <IntDir>$(ProjectDir)build\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\..\lib\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamic|Win32'">
-    <IntDir>$(ProjectDir)build\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\..\lib\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|Win32'">
-    <IntDir>$(ProjectDir)build\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\..\lib\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugDynamic|x64'">
-    <IntDir>$(ProjectDir)build\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\..\lib\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|x64'">
-    <IntDir>$(ProjectDir)build\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\..\lib\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseDynamic|x64'">
-    <IntDir>$(ProjectDir)build\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\..\lib\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseStatic|x64'">
-    <IntDir>$(ProjectDir)build\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
-    <OutDir>$(ProjectDir)..\..\lib\win\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>$(ProjectDir)\vs$(VisualStudioVersion)\$(Platform)\$(Configuration)\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugStatic|Win32'">
     <ClCompile>
@@ -147,7 +147,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..;../../inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;../../../inc</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -162,7 +162,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..;../../inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;../../../inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -176,7 +176,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..;../../inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;../../../inc</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -191,7 +191,7 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..;../../inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;../../../inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -204,7 +204,7 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..;../../inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;../../../inc</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -218,7 +218,7 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..;../../inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;../../../inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -231,7 +231,7 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..;../../inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;../../../inc</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -245,7 +245,7 @@
       <WarningLevel>Level3</WarningLevel>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <AdditionalIncludeDirectories>..;../../inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../..;../../../inc</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -254,27 +254,27 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ckfft.cpp" />
-    <ClCompile Include="context.cpp" />
-    <ClCompile Include="fft.cpp" />
-    <ClCompile Include="fft_default.cpp" />
-    <ClCompile Include="fft_neon.cpp" />
-    <ClCompile Include="fft_real.cpp" />
-    <ClCompile Include="fft_real_default.cpp" />
-    <ClCompile Include="fft_real_neon.cpp" />
+    <ClCompile Include="..\ckfft.cpp" />
+    <ClCompile Include="..\context.cpp" />
+    <ClCompile Include="..\fft.cpp" />
+    <ClCompile Include="..\fft_default.cpp" />
+    <ClCompile Include="..\fft_neon.cpp" />
+    <ClCompile Include="..\fft_real.cpp" />
+    <ClCompile Include="..\fft_real_default.cpp" />
+    <ClCompile Include="..\fft_real_neon.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\inc\ckfft\ckfft.h" />
-    <ClInclude Include="context.h" />
-    <ClInclude Include="debug.h" />
-    <ClInclude Include="fft.h" />
-    <ClInclude Include="fft_default.h" />
-    <ClInclude Include="fft_neon.h" />
-    <ClInclude Include="fft_real.h" />
-    <ClInclude Include="fft_real_default.h" />
-    <ClInclude Include="fft_real_neon.h" />
-    <ClInclude Include="math_util.h" />
-    <ClInclude Include="platform.h" />
+    <ClInclude Include="..\..\..\inc\ckfft\ckfft.h" />
+    <ClInclude Include="..\context.h" />
+    <ClInclude Include="..\debug.h" />
+    <ClInclude Include="..\fft.h" />
+    <ClInclude Include="..\fft_default.h" />
+    <ClInclude Include="..\fft_neon.h" />
+    <ClInclude Include="..\fft_real.h" />
+    <ClInclude Include="..\fft_real_default.h" />
+    <ClInclude Include="..\fft_real_neon.h" />
+    <ClInclude Include="..\math_util.h" />
+    <ClInclude Include="..\platform.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
