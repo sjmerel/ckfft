@@ -2,7 +2,6 @@
 #include <math.h>
 #include <stdlib.h>
 #include <sys/stat.h>
-#include <sys/utsname.h>
 
 #include <iostream>
 #include <fstream>
@@ -22,6 +21,10 @@
 
 #if CKFFT_PLATFORM_MACOS || CKFFT_PLATFORM_IOS
 #  include <Accelerate/Accelerate.h>
+#endif
+
+#if !CKFFT_PLATFORM_WIN
+#  include <sys/utsname.h>
 #endif
 
 #include "kiss_fft130/kiss_fft.h"
@@ -89,6 +92,8 @@ void read(vector<CkFftComplex>& values, const char* path)
     // read input
     ifstream inFile;
     inFile.open(path);
+    assert(inFile.good());
+
     CkFftComplex value;
     while (inFile.good() && !inFile.eof())
     {
@@ -107,7 +112,7 @@ void write(const vector<CkFftComplex>& values, const char* path)
     ofstream outFile;
     outFile.open(path);
     CkFftComplex value;
-    for (int i = 0; i < values.size(); ++i)
+    for (int i = 0; i < (int) values.size(); ++i)
     {
         value = values[i];
         outFile << value.real;
@@ -529,12 +534,25 @@ void getResultsName(string& name)
 
     name += "_";
 
+#if CKFFT_PLATFORM_WIN
+    SYSTEM_INFO systemInfo;
+    GetSystemInfo(&systemInfo);
+    switch (systemInfo.wProcessorArchitecture)
+    {
+        case PROCESSOR_ARCHITECTURE_AMD64: name += "x64";  break;
+        case PROCESSOR_ARCHITECTURE_ARM:   name += "arm";  break;
+        case PROCESSOR_ARCHITECTURE_IA64:  name += "ia64"; break;
+        case PROCESSOR_ARCHITECTURE_INTEL: name += "x86";  break;
+        default: break;
+    }
+#else
     struct utsname systemInfo;
     uname(&systemInfo);
 
     name += systemInfo.machine;
+#endif
 
-    for (int i = 0; i < name.size(); ++i)
+    for (int i = 0; i < (int) name.size(); ++i)
     {
         if (name[i] == ',')
         {
@@ -571,7 +589,11 @@ void writeResults(const TiXmlDocument& doc)
     getOutputDir(dir);
     dir += "/out";
 
+#if CKFFT_PLATFORM_WIN
+    CreateDirectory(dir.c_str(), NULL);
+#else
     mkdir(dir.c_str(), S_IRWXU | S_IRWXG | S_IRWXO);
+#endif
 
     string name;
     getResultsName(name);
@@ -616,7 +638,7 @@ void timingTest(const char* testName,
     }
 
     // note that testers[0] is ckfft
-    for (int i = 0; i < testers.size(); ++i)
+    for (int i = 0; i < (int) testers.size(); ++i)
     {
         // calculate output
         FftTester* tester = testers[i];
@@ -720,7 +742,7 @@ void timingTest()
 
     writeResults(doc);
 
-    for (int i = 0; i < testers.size(); ++i)
+    for (int i = 0; i < (int) testers.size(); ++i)
     {
         delete testers[i];
     }
@@ -878,7 +900,7 @@ bool regressionTest()
     vector<CkFftComplex> realInput = input;
     vector<float> floatInput;
     floatInput.resize(realInput.size());
-    for (int i = 0; i < realInput.size(); ++i)
+    for (int i = 0; i < (int) realInput.size(); ++i)
     {
         realInput[i].imag = 0.0f;
         floatInput[i] = realInput[i].real;

@@ -61,7 +61,7 @@ private:
 #elif CKFFT_PLATFORM_IOS || CKFFT_PLATFORM_MACOS
         return mach_absolute_time();
 #elif CKFFT_PLATFORM_WIN
-        uint64 now;
+        ckfft::uint64 now;
         QueryPerformanceCounter((LARGE_INTEGER*) &now);
         return now;
 #endif
