@@ -9,6 +9,7 @@
     <ClCompile Include="..\fft_real.cpp" />
     <ClCompile Include="..\fft_real_default.cpp" />
     <ClCompile Include="..\fft_real_neon.cpp" />
+    <ClCompile Include="..\debug.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\inc\ckfft\ckfft.h" />
