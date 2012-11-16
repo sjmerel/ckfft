@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\ckfft.cpp" />
+    <ClCompile Include="..\context.cpp" />
+    <ClCompile Include="..\fft.cpp" />
+    <ClCompile Include="..\fft_default.cpp" />
+    <ClCompile Include="..\fft_neon.cpp" />
+    <ClCompile Include="..\fft_real.cpp" />
+    <ClCompile Include="..\fft_real_default.cpp" />
+    <ClCompile Include="..\fft_real_neon.cpp" />
+    <ClCompile Include="..\debug.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\inc\ckfft\ckfft.h" />
+    <ClInclude Include="..\context.h" />
+    <ClInclude Include="..\debug.h" />
+    <ClInclude Include="..\fft.h" />
+    <ClInclude Include="..\fft_default.h" />
+    <ClInclude Include="..\fft_neon.h" />
+    <ClInclude Include="..\fft_real.h" />
+    <ClInclude Include="..\fft_real_default.h" />
+    <ClInclude Include="..\fft_real_neon.h" />
+    <ClInclude Include="..\math_util.h" />
+    <ClInclude Include="..\platform.h" />
+  </ItemGroup>
+</Project>

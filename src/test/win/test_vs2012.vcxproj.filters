@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="..\timer_win.cpp" />
+    <ClCompile Include="..\stats.cpp" />
+    <ClCompile Include="..\test.cpp" />
+    <ClCompile Include="..\timer.cpp" />
+    <ClCompile Include="..\..\..\ext\kiss_fft130\kiss_fft.c">
+      <Filter>kiss_fft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ext\kiss_fft130\tools\kiss_fftr.c">
+      <Filter>kiss_fft</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ext\tinyxml\tinystr.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ext\tinyxml\tinyxml.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ext\tinyxml\tinyxmlerror.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\ext\tinyxml\tinyxmlparser.cpp">
+      <Filter>tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="platform.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\stats.h" />
+    <ClInclude Include="..\test.h" />
+    <ClInclude Include="..\timer.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="kiss_fft">
+      <UniqueIdentifier>{1fcbf6d3-c435-4fc3-991e-511f917c5946}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="tinyxml">
+      <UniqueIdentifier>{0af1cd72-ddc0-4e6c-9b06-de666ebde568}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

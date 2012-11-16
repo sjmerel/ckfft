@@ -1,9 +1,9 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual C++ Express 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ckfft", "..\..\ckfft\win\ckfft_vs2010.vcxproj", "{F972C551-7C32-4051-8903-9856CBF3F8F8}"
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ckfft", "..\..\ckfft\win\ckfft_vs2012.vcxproj", "{F972C551-7C32-4051-8903-9856CBF3F8F8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example", "example_vs2010.vcxproj", "{B074D08E-C22B-4E1E-A6FF-DA239CF17D45}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "example", "example_vs2012.vcxproj", "{B074D08E-C22B-4E1E-A6FF-DA239CF17D45}"
 	ProjectSection(ProjectDependencies) = postProject
 		{F972C551-7C32-4051-8903-9856CBF3F8F8} = {F972C551-7C32-4051-8903-9856CBF3F8F8}
 	EndProjectSection
