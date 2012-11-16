@@ -4,7 +4,7 @@
 
 void CkDebugPrintf(const char* fmt, ...);
 
-#define CKFFT_PRINTF(fmt, ...) CkDebugPrintf(fmt, __VA_ARGS__)
+#define CKFFT_PRINTF(fmt, ...) CkDebugPrintf(fmt, ##__VA_ARGS__)
 
 
 
