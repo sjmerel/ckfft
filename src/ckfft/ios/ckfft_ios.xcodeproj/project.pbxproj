@@ -15,6 +15,7 @@
 		AA201DD1164C00170051D5DD /* fft_real_neon.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA201DC4164C00170051D5DD /* fft_real_neon.cpp */; };
 		AA201DD2164C00170051D5DD /* fft_real.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA201DC6164C00170051D5DD /* fft_real.cpp */; };
 		AA201DD3164C00170051D5DD /* fft.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA201DC8164C00170051D5DD /* fft.cpp */; };
+		AA3A95A51656AA2C00448310 /* debug.cpp in Sources */ = {isa = PBXBuildFile; fileRef = AA3A95A41656AA2C00448310 /* debug.cpp */; };
 		AA75B5BF15EC62B5008151B6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA75B5BE15EC62B5008151B6 /* Foundation.framework */; };
 /* End PBXBuildFile section */
 
@@ -50,6 +51,7 @@
 		AA201DC9164C00170051D5DD /* fft.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = fft.h; path = ../fft.h; sourceTree = "<group>"; };
 		AA201DCA164C00170051D5DD /* math_util.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = math_util.h; path = ../math_util.h; sourceTree = "<group>"; };
 		AA201DCB164C00170051D5DD /* platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = platform.h; path = ../platform.h; sourceTree = "<group>"; };
+		AA3A95A41656AA2C00448310 /* debug.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = debug.cpp; path = ../debug.cpp; sourceTree = "<group>"; };
 		AA75B5BB15EC62B5008151B6 /* libckfft_ios.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libckfft_ios.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA75B5BE15EC62B5008151B6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
@@ -73,6 +75,7 @@
 				AA04D3EC163F11F100878E08 /* ckfft.h */,
 				AA201DBB164C00170051D5DD /* context.cpp */,
 				AA201DBC164C00170051D5DD /* context.h */,
+				AA3A95A41656AA2C00448310 /* debug.cpp */,
 				AA201DBD164C00170051D5DD /* debug.h */,
 				AA201DC8164C00170051D5DD /* fft.cpp */,
 				AA201DC9164C00170051D5DD /* fft.h */,
@@ -168,6 +171,7 @@
 				AA201DD1164C00170051D5DD /* fft_real_neon.cpp in Sources */,
 				AA201DD2164C00170051D5DD /* fft_real.cpp in Sources */,
 				AA201DD3164C00170051D5DD /* fft.cpp in Sources */,
+				AA3A95A51656AA2C00448310 /* debug.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

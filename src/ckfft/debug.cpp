@@ -1,15 +1,12 @@
 #include "ckfft/debug.h"
 
+#include <stdarg.h>
+#include <stdio.h>
 
 #if CKFFT_PLATFORM_ANDROID
-#  include <stdarg.h>
 #  include <android/log.h>
 #elif CKFFT_PLATFORM_WIN
-#  include <stdio.h>
-#  include <stdarg.h>
 #  include <windows.h>
-#else
-#  include <stdio.h>
 #endif
 
 

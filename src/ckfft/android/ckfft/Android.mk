@@ -9,6 +9,7 @@ LOCAL_MODULE := ckfft
 LOCAL_SRC_FILES := \
     ../../ckfft.cpp \
     ../../context.cpp \
+    ../../debug.cpp \
     ../../fft.cpp \
     ../../fft_default.cpp \
     ../../fft_real.cpp \

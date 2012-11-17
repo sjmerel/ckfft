@@ -644,7 +644,7 @@ void timingTest(const char* testName,
         FftTester* tester = testers[i];
         tester->init(&input[0], &output[0], count, inverse, real);
 
-        Stats stats;
+        Stats stats(k_reps);
         for (int j = 0; j < k_reps; ++j)
         {
             Timer timer;
@@ -659,7 +659,7 @@ void timingTest(const char* testName,
 
         tester->shutdown();
 
-        float time = stats.getMean();
+        float time = stats.getMedian();
 
         if (i == 0)
         {

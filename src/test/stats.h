@@ -1,12 +1,12 @@
 #pragma once
 
 #include "ckfft/platform.h"
-#include <assert.h>
+#include <vector>
 
 class Stats
 {
 public:
-    Stats();
+    Stats(int reserve);
 
     void sample(float);
 
@@ -18,47 +18,12 @@ public:
     float getMin() const;
     float getSum() const;
     float getMean() const;
+    float getMedian() const;
+
+    void print();
 
 private:
-    float m_sum;
-    float m_max;
-    float m_min;
-    int m_count;
+    std::vector<float> m_values;
 };
 
-
-////////////////////////////////////////
-
-inline
-int Stats::getCount() const 
-{ 
-    return m_count; 
-}
-
-inline
-float Stats::getMax() const 
-{
-    assert(m_count > 0); 
-    return m_max; 
-}
-
-inline
-float Stats::getMin() const 
-{
-    assert(m_count > 0); 
-    return m_min; 
-}
-
-inline
-float Stats::getSum() const 
-{
-    return m_sum; 
-}
-
-inline
-float Stats::getMean() const 
-{
-    assert(m_count > 0); 
-    return m_sum/m_count; 
-}
 
