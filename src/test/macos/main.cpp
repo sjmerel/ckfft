@@ -2,9 +2,7 @@
 
 int main(int argc, char *argv[]) 
 {
-    test();
-
-    return 0;
+    return test() ? 0 : 1;
 }
 
 

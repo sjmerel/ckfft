@@ -1,4 +1,3 @@
 #pragma once
 
-void test();
-void testOnThread();
+bool test();

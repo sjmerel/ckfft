@@ -39,7 +39,7 @@ float Stats::getMin() const
 float Stats::getSum() const 
 {
     float sum = 0.0f;
-    for (int i = 0; i < m_values.size(); ++i)
+    for (int i = 0; i < (int) m_values.size(); ++i)
     {
         sum += m_values[i];
     }
@@ -78,7 +78,7 @@ void Stats::print()
     float binSize = (max-min)/numBins;
     float binMax = min + binSize;
     int binCount = 0;
-    for (int i = 0; i < m_values.size(); ++i)
+    for (int i = 0; i < (int) m_values.size(); ++i)
     {
         float value = m_values[i];
         if (value < binMax)

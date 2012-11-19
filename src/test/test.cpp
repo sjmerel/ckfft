@@ -923,7 +923,7 @@ bool regressionTest()
 
 ////////////////////////////////////////
 
-void test()
+bool test()
 {
     Timer::init();
 //    writeInput(4096);
@@ -935,12 +935,16 @@ void test()
     success &= regressionTest();
     CkFftTester::setNoNeon(false);
 #endif
+
     if (!success)
     {
         CKFFT_PRINTF("*********** SOME TESTS FAILED *************\n");
-        return;
+    }
+    else
+    {
+        timingTest();
     }
 
-    timingTest();
+    return success;
 }
 

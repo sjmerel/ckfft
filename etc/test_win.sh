@@ -27,10 +27,11 @@ fi
 echo
 
 
-rm -f build.log
+rm -f build.log test.log
 
+cd $CKFFT_ROOT_DIR/src/test/win
 
-# build ckfft VS2010
+# VS2010
 VisualStudioVersion=10.0
 export VisualStudioVersion
 for platform in Win32 x64
@@ -38,26 +39,32 @@ do
    for config in DebugStatic DebugDynamic ReleaseStatic ReleaseDynamic
    do
       # build
-      echo building ckfft vs2010 $platform $config
-      msbuild.exe $CKFFT_ROOT_DIR/src/ckfft/ckfft_vs2010.sln /t:ckfft /p:Configuration=$config /p:Platform=$platform >> build.log || (echo "error building ckfft vs2010 $config!"; exit 1)
+      echo building for vs2010 $platform $config
+      msbuild.exe test_vs2010.sln /t:test /p:Configuration=$config /p:Platform=$platform >> ../../../etc/build.log || (echo "error building test vs2010 $config!"; exit 1)
 
-      # TODO build & run test
+      # run
+      echo testing for vs2010 $platform $config
+      echo -e "testing for vs2010 $platform $config \r" >> ../../../etc/test.log
+      ./vs${VisualStudioVersion}/$platform/$config/test.exe >> ../../../etc/test.log || (echo "error running test vs2010 $config!"; exit 1)
    done
 done
 
 
-# build ckfft VS2012
+# VS2012
 VisualStudioVersion=11.0
 export VisualStudioVersion
 for platform in Win32 x64
 do
-   for config in DebugStatic DebugDynamic DebugMetro ReleaseStatic ReleaseDynamic ReleaseMetro
+   for config in DebugStatic DebugDynamic ReleaseStatic ReleaseDynamic 
    do
       # build
-      echo building ckfft vs2012 $platform $config
-      msbuild.exe $CKFFT_ROOT_DIR/src/ckfft/ckfft_vs2012.sln /t:ckfft /p:Configuration=$config /p:Platform=$platform >> build.log || (echo "error building ckfft vs2012 $config!"; exit 1)
+      echo building for vs2012 $platform $config
+      msbuild.exe test_vs2012.sln /t:test /p:Configuration=$config /p:Platform=$platform >> ../../../etc/build.log || (echo "error building test vs2012 $config!"; exit 1)
 
-      # TODO build & run test
+      # run
+      echo testing for vs2012 $platform $config
+      echo -e "testing for vs2012 $platform $config \r" >> ../../../etc/test.log
+      ./vs${VisualStudioVersion}/$platform/$config/test.exe >> ../../../etc/test.log || (echo "error running test vs2012 $config!"; exit 1)
    done
 done
 

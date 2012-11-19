@@ -13,14 +13,12 @@
 
 void* testThreadProc(void*)
 {
-    test();
-
-    return NULL;
+    return (void*) test() ? 0 : 1;
 }
 
 #define PTHREAD_VERIFY(x) { int ret = x; assert(ret == 0); }
 
-void startTest()
+int startTest()
 {
     pthread_attr_t attr;
     PTHREAD_VERIFY( pthread_attr_init(&attr) );
@@ -37,16 +35,15 @@ void startTest()
 
     void* ret;
     pthread_join(threadId, &ret);
+    return (int) ret;
 }
 
 int main(int argc, char *argv[]) 
 {
     @autoreleasepool
     {
-       startTest();
+       return startTest();
     }
-
-    return 0;
 }
 
 
