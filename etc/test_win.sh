@@ -36,7 +36,7 @@ VisualStudioVersion=10.0
 export VisualStudioVersion
 for platform in Win32 x64
 do
-   for config in DebugStatic DebugDynamic ReleaseStatic ReleaseDynamic
+   for config in Debug Release
    do
       # build
       echo building for vs2010 $platform $config
@@ -55,7 +55,7 @@ VisualStudioVersion=11.0
 export VisualStudioVersion
 for platform in Win32 x64
 do
-   for config in DebugStatic DebugDynamic ReleaseStatic ReleaseDynamic 
+   for config in Debug Release  
    do
       # build
       echo building for vs2012 $platform $config
