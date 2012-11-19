@@ -13,7 +13,8 @@
 
 void* testThreadProc(void*)
 {
-    return (void*) test() ? 0 : 1;
+    int val = test() ? 0 : 1;
+    return (void*) val;
 }
 
 #define PTHREAD_VERIFY(x) { int ret = x; assert(ret == 0); }
