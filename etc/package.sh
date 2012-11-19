@@ -27,10 +27,15 @@ VERSION_MAJOR_FILE=etc/version/major.txt
 VERSION=`cat $VERSION_MAJOR_FILE`.`cat $VERSION_MINOR_FILE`
 
 DIST_NAME=ckfft-$VERSION
-DIST_DEV_NAME=ckfft-dev-$VERSION
 DIST_DIR=dist/$DIST_NAME
-DIST_DEV_DIR=dist/$DIST_DEV_NAME
 svn export . $DIST_DIR
+
+# update changes.txt
+echo "$VERSION:" >> $DIST_DIR/doc/changes.txt
+cat doc/changes.txt >> $DIST_DIR/doc/changes.txt
+
+DIST_DEV_NAME=ckfft-dev-$VERSION
+DIST_DEV_DIR=dist/$DIST_DEV_NAME
 cp -r $DIST_DIR $DIST_DEV_DIR
 
 # remove dev-only stuff 
