@@ -30,8 +30,6 @@ svn commit -m "release version $VERSION" .
 
 # tag it
 SVN_ROOT=`svn info | grep 'Repository Root' | awk '{print $NF}'`
-echo $SVN_ROOT
-exit 0
 svn copy ${SVN_ROOT}/trunk ${SVN_ROOT}/tags/ckfft-${VERSION} -m "release version ${VERSION}"
 
 # increment minor version number
