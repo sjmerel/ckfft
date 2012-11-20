@@ -625,7 +625,7 @@ void timingTest(const char* testName,
 
     CKFFT_PRINTF("\n");
     CKFFT_PRINTF("%s:\n", testName);
-    CKFFT_PRINTF("        name        mean       min       max      norm    change\n");
+    CKFFT_PRINTF("        name    median       min       max      norm    change\n");
     CKFFT_PRINTF("--------------------------------------------------------------------\n");
 
     // find XML element containing results for this test (or create one)
