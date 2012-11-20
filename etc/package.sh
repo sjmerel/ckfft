@@ -31,7 +31,7 @@ DIST_DIR=dist/$DIST_NAME
 svn export . $DIST_DIR
 
 # update changes.txt
-echo "$VERSION:" >> $DIST_DIR/doc/changes.txt
+echo "$VERSION:" > $DIST_DIR/doc/changes.txt
 cat doc/changes.txt >> $DIST_DIR/doc/changes.txt
 
 DIST_DEV_NAME=ckfft-dev-$VERSION
