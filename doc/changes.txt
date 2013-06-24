@@ -1,3 +1,4 @@
+1.1:
   * Added missing resource files to Android example project
   * Cast to float32_t* instead of float* to fix compiler warnings in some versions of the Android NDK
 
