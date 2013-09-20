@@ -1,82 +1,82 @@
 <ckfft_test>
     <fft_4096>
-        <ckfft error="0" time="1.01917" />
-        <kiss_fft error="5.72972e-06" time="3.15565" />
+        <ckfft error="0" time="0.396765" />
+        <kiss_fft error="5.72972e-06" time="0.396765" />
     </fft_4096>
     <fft_inv_4096>
-        <ckfft error="0" time="1.01575" />
-        <kiss_fft error="0.000361216" time="3.01325" />
+        <ckfft error="0" time="0.396765" />
+        <kiss_fft error="0.000361216" time="0.396765" />
     </fft_inv_4096>
     <fft_real_4096>
-        <ckfft error="0" time="0.982083" />
-        <kiss_fft error="8.56246e-06" time="1.73665" />
+        <ckfft error="0" time="0.305203" />
+        <kiss_fft error="8.56246e-06" time="0.244163" />
     </fft_real_4096>
     <fft_inv_real_4096>
-        <ckfft error="0" time="0.977583" />
-        <kiss_fft error="0.000799395" time="1.65346" />
+        <ckfft error="0" time="0.274684" />
+        <kiss_fft error="0.000799395" time="0.244163" />
     </fft_inv_real_4096>
     <fft_2048>
-        <ckfft error="0" time="0.581542" />
-        <kiss_fft error="3.847e-06" time="1.44196" />
+        <ckfft error="0" time="0.183122" />
+        <kiss_fft error="3.847e-06" time="0.213643" />
     </fft_2048>
     <fft_inv_2048>
-        <ckfft error="0" time="0.581625" />
-        <kiss_fft error="0.000171479" time="1.40629" />
+        <ckfft error="0" time="0.183122" />
+        <kiss_fft error="0.000171479" time="0.213642" />
     </fft_inv_2048>
     <fft_real_2048>
-        <ckfft error="0" time="0.418" />
-        <kiss_fft error="5.36681e-06" time="0.722042" />
+        <ckfft error="0" time="0.122082" />
+        <kiss_fft error="5.36681e-06" time="0.091561" />
     </fft_real_2048>
     <fft_inv_real_2048>
-        <ckfft error="0" time="0.404" />
-        <kiss_fft error="0.000366038" time="0.71675" />
+        <ckfft error="0" time="0.122082" />
+        <kiss_fft error="0.000366038" time="0.091561" />
     </fft_inv_real_2048>
     <fft_1024>
-        <ckfft error="0" time="0.21775" />
-        <kiss_fft error="2.38842e-06" time="0.61025" />
+        <ckfft error="0" time="0.061041" />
+        <kiss_fft error="2.38842e-06" time="0.061041" />
     </fft_1024>
     <fft_inv_1024>
-        <ckfft error="0" time="0.217" />
-        <kiss_fft error="7.32174e-05" time="0.610458" />
+        <ckfft error="0" time="0.061041" />
+        <kiss_fft error="7.32174e-05" time="0.061041" />
     </fft_inv_1024>
     <fft_real_1024>
-        <ckfft error="0" time="0.235584" />
-        <kiss_fft error="3.75876e-06" time="0.355208" />
+        <ckfft error="0" time="0.061041" />
+        <kiss_fft error="3.75876e-06" time="0.030521" />
     </fft_real_1024>
     <fft_inv_real_1024>
-        <ckfft error="0" time="0.222" />
-        <kiss_fft error="0.000177138" time="0.344187" />
+        <ckfft error="0" time="0.061041" />
+        <kiss_fft error="0.000177138" time="0.06104" />
     </fft_inv_real_1024>
     <fft_512>
-        <ckfft error="0" time="0.139583" />
-        <kiss_fft error="1.59861e-06" time="0.290917" />
+        <ckfft error="0" time="0.03052" />
+        <kiss_fft error="1.59861e-06" time="0.030521" />
     </fft_512>
     <fft_inv_512>
-        <ckfft error="0" time="0.139542" />
-        <kiss_fft error="3.48697e-05" time="0.29075" />
+        <ckfft error="0" time="0.03052" />
+        <kiss_fft error="3.48697e-05" time="0.030521" />
     </fft_inv_512>
     <fft_real_512>
-        <ckfft error="0" time="0.096458" />
-        <kiss_fft error="2.4474e-06" time="0.150875" />
+        <ckfft error="0" time="0.03052" />
+        <kiss_fft error="2.4474e-06" time="0.03052" />
     </fft_real_512>
     <fft_inv_real_512>
-        <ckfft error="0" time="0.092833" />
-        <kiss_fft error="8.30614e-05" time="0.149292" />
+        <ckfft error="0" time="0.03052" />
+        <kiss_fft error="8.30614e-05" time="0.03052" />
     </fft_inv_real_512>
     <fft_256>
-        <ckfft error="0" time="0.045958" />
-        <kiss_fft error="1.07702e-06" time="0.122709" />
+        <ckfft error="0" time="0" />
+        <kiss_fft error="1.07702e-06" time="0" />
     </fft_256>
     <fft_inv_256>
-        <ckfft error="0" time="0.045791" />
-        <kiss_fft error="1.47177e-05" time="0.12275" />
+        <ckfft error="0" time="0" />
+        <kiss_fft error="1.47177e-05" time="0" />
     </fft_inv_256>
     <fft_real_256>
-        <ckfft error="0" time="0.053541" />
-        <kiss_fft error="1.64091e-06" time="0.078667" />
+        <ckfft error="0" time="0" />
+        <kiss_fft error="1.64091e-06" time="0" />
     </fft_real_256>
     <fft_inv_real_256>
-        <ckfft error="0" time="0.053417" />
-        <kiss_fft error="4.38379e-05" time="0.071292" />
+        <ckfft error="0" time="0" />
+        <kiss_fft error="4.38379e-05" time="0" />
     </fft_inv_real_256>
 </ckfft_test>

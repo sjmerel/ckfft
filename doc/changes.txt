@@ -1,3 +1,6 @@
+  * Updated for Xcode 5
+  * Added recommendation to build with clang for Android to documentation
+
 1.1:
   * Added missing resource files to Android example project
   * Cast to float32_t* instead of float* to fix compiler warnings in some versions of the Android NDK
