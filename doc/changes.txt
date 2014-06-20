@@ -1,3 +1,5 @@
+  * Updated Android makefiles
+
 1.2:
   * Updated for Xcode 5
   * Added recommendation to build with clang for Android to documentation

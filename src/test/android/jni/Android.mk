@@ -19,7 +19,6 @@ LOCAL_SRC_FILES := \
    ../../../../ext/kiss_fft130/tools/kiss_fftr.c \
 
 LOCAL_LDLIBS += -llog
-LOCAL_CFLAGS += -Wno-psabi # fix warning about va_args in ndk r8b
 LOCAL_C_INCLUDES := \
    $(LOCAL_PATH)/../../../ \
    $(LOCAL_PATH)/../../../../ext \
@@ -28,7 +27,7 @@ LOCAL_STATIC_LIBRARIES := ckfft
 
 include $(BUILD_SHARED_LIBRARY)
 
-$(call import-add-path,../../ckfft/android)
+$(call import-add-path,$(LOCAL_PATH)/../../../ckfft/android)
 $(call import-module,ckfft)
 
 

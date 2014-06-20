@@ -14,7 +14,7 @@
 void* testThreadProc(void*)
 {
     int val = test() ? 0 : 1;
-    return (void*) val;
+    return (void*) (size_t) val;
 }
 
 #define PTHREAD_VERIFY(x) { int ret = x; assert(ret == 0); }
@@ -36,7 +36,7 @@ int startTest()
 
     void* ret;
     pthread_join(threadId, &ret);
-    return (int) ret;
+    return (int) (size_t) ret;
 }
 
 int main(int argc, char *argv[]) 
